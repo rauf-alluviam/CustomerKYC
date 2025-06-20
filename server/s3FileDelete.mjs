@@ -7,10 +7,24 @@ dotenv.config();
 const router = express.Router();
 
 // Use environment variables for AWS credentials
-const AWS_REGION = process.env.AWS_REGION || "ap-south-1";
+const AWS_REGION = process.env.AWS_REGION ;
 const ACCESS_KEY = process.env.AWS_ACCESS_KEY_ID;
 const SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
-const S3_BUCKET = process.env.S3_BUCKET || "exim-test-upload";
+const S3_BUCKET = process.env.S3_BUCKET ;
+
+// Debug: Log environment variables (without exposing secrets)
+console.log('AWS Configuration:', {
+  region: AWS_REGION,
+  bucket: S3_BUCKET,
+  hasAccessKey: !!ACCESS_KEY,
+  hasSecretKey: !!SECRET_ACCESS_KEY
+});
+
+// Validate credentials
+if (!ACCESS_KEY || !SECRET_ACCESS_KEY) {
+  console.error('❌ Missing AWS credentials in environment variables');
+  console.error('Required: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY');
+}
 
 // Create S3 client with environment variables
 const s3 = new S3Client({

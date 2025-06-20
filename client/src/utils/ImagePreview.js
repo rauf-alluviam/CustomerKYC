@@ -54,7 +54,21 @@ const ImagePreview = ({ images, onDeleteImage, readOnly = false }) => {
     const imageUrl = imageArray[deleteIndex];
   
     try {
-      const key = new URL(imageUrl).pathname.slice(1); // correct key including folders
+      // Extract the S3 key from the URL correctly
+      let key;
+      if (imageUrl.includes('amazonaws.com/')) {
+        // For S3 URLs like https://bucket.s3.region.amazonaws.com/key
+        key = imageUrl.split('amazonaws.com/')[1];
+      } else if (imageUrl.includes('s3.')) {
+        // For S3 URLs like https://s3.region.amazonaws.com/bucket/key
+        const urlParts = imageUrl.split('/');
+        key = urlParts.slice(4).join('/'); // Skip protocol, domain, bucket
+      } else {
+        // Fallback: try to extract from pathname
+        key = new URL(imageUrl).pathname.slice(1);
+      }
+
+      console.log('Deleting S3 key:', key);
 
       const response = await fetch(`${process.env.REACT_APP_API_STRING}/api/delete-s3-file`, {
         method: "POST",
@@ -66,7 +80,10 @@ const ImagePreview = ({ images, onDeleteImage, readOnly = false }) => {
   
       if (response.ok) {
         onDeleteImage(deleteIndex);
+        console.log('Image deleted successfully from S3');
       } else {
+        const errorData = await response.json();
+        console.error('Failed to delete image from S3:', errorData);
         alert("Failed to delete image from S3.");
       }
     } catch (error) {
