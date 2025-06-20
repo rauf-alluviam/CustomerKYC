@@ -1,0 +1,114 @@
+import { useState } from 'react';
+import FileUpload from '../utils/FileUpload';
+import ImagePreview from '../utils/ImagePreview';
+
+const useSupportingDocuments = (formik) => {
+  const [fileSnackbar, setFileSnackbar] = useState(false);
+
+  const getSupportingDocs = () => {
+    const category = formik.values.category;
+    
+  const renderFileInput = (label, fieldName, multiple = false) => (
+    <div key={fieldName} style={{ marginBottom: '1rem' }}>
+      <label style={{ marginRight: '10px', fontWeight: 'bold', display: 'block', marginBottom: '0.5rem' }}>{label}:</label>
+      <FileUpload
+        label={`Upload ${label}`}
+        onFilesUploaded={(uploadedUrls, appendFiles = true) => {
+          if (multiple) {
+            const currentFiles = formik.values[fieldName] || [];
+            const newFiles = appendFiles ? [...currentFiles, ...uploadedUrls] : uploadedUrls;
+            formik.setFieldValue(fieldName, newFiles);
+          } else {
+            formik.setFieldValue(fieldName, uploadedUrls[0]);
+          }
+          setFileSnackbar(true);
+          setTimeout(() => setFileSnackbar(false), 3000);
+        }}
+        bucketPath={fieldName.replace(/_/g, '-')}
+        multiple={multiple}
+        appendFiles={multiple} // Only append for multi-file uploads
+        customerName={formik.values.name_of_individual}
+        acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png']}
+      />
+      {formik.values[fieldName] && (
+        <ImagePreview
+          images={Array.isArray(formik.values[fieldName]) ? formik.values[fieldName] : [formik.values[fieldName]]}
+          onDeleteImage={(index) => {
+            if (Array.isArray(formik.values[fieldName])) {
+              const updatedImages = formik.values[fieldName].filter((_, i) => i !== index);
+              formik.setFieldValue(fieldName, updatedImages);
+            } else {
+              formik.setFieldValue(fieldName, "");
+            }
+          }}
+        />
+      )}
+    </div>
+  );
+
+    switch (category) {
+      case 'Individual/ Proprietary Firm':
+        return (
+          <div>
+            <h5>Supporting Documents - Individual/Proprietary Firm</h5>
+            {renderFileInput('Passport', 'individual_passport_img', true)}
+            {renderFileInput('Voter Card', 'individual_voter_card_img', true)}
+            {renderFileInput('Driving License', 'individual_driving_license_img', true)}
+            {renderFileInput('Bank Statement', 'individual_bank_statement_img', true)}
+            {renderFileInput('Ration Card', 'individual_ration_card_img', true)}
+            {renderFileInput('Aadhar Card', 'individual_aadhar_card', true)}
+          </div>
+        );
+
+      case 'Partnership Firm':
+        return (
+          <div>
+            <h5>Supporting Documents - Partnership Firm</h5>
+            {renderFileInput('Registration Certificate', 'partnership_registration_certificate_img', true)}
+            {renderFileInput('Partnership Deed', 'partnership_deed_img', true)}
+            {renderFileInput('Power of Attorney', 'partnership_power_of_attorney_img', true)}
+            {renderFileInput('Valid Document', 'partnership_valid_document', true)}
+            {renderFileInput('Aadhar Card Front Photo', 'partnership_aadhar_card_front_photo', true)}
+            {renderFileInput('Aadhar Card Back Photo', 'partnership_aadhar_card_back_photo', true)}
+            {renderFileInput('Telephone Bill', 'partnership_telephone_bill', true)}
+          </div>
+        );
+
+      case 'Company':
+        return (
+          <div>
+            <h5>Supporting Documents - Company</h5>
+            {renderFileInput('Certificate of Incorporation', 'company_certificate_of_incorporation_img', true)}
+            {renderFileInput('Memorandum of Association', 'company_memorandum_of_association_img', true)}
+            {renderFileInput('Articles of Association', 'company_articles_of_association_img', true)}
+            {renderFileInput('Power of Attorney', 'company_power_of_attorney_img', true)}
+            {renderFileInput('Telephone Bill', 'company_telephone_bill_img', true)}
+            {renderFileInput('PAN Allotment Letter', 'company_pan_allotment_letter_img', true)}
+          </div>
+        );
+
+      case 'Trust Foundations':
+        return (
+          <div>
+            <h5>Supporting Documents - Trust/Foundation</h5>
+            {renderFileInput('Certificate of Registration', 'trust_certificate_of_registration_img', true)}
+            {renderFileInput('Power of Attorney', 'trust_power_of_attorney_img', true)}
+            {renderFileInput('Officially Valid Document', 'trust_officially_valid_document_img', true)}
+            {renderFileInput('Resolution of Managing Body', 'trust_resolution_of_managing_body_img', true)}
+            {renderFileInput('Telephone Bill', 'trust_telephone_bill_img', true)}
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  return {
+    getSupportingDocs,
+    fileSnackbar,
+    setFileSnackbar
+  };
+};
+
+export default useSupportingDocuments;

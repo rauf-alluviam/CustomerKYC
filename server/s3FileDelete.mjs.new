@@ -1,0 +1,60 @@
+import express from "express";
+import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config();
+
+const router = express.Router();
+
+// Debug: Log available environment variables
+console.log("Available env vars:");
+console.log("REACT_APP_ACCESS_KEY:", process.env.REACT_APP_ACCESS_KEY ? "SET" : "NOT SET");
+console.log("REACT_APP_SECRET_ACCESS_KEY:", process.env.REACT_APP_SECRET_ACCESS_KEY ? "SET" : "NOT SET");
+console.log("REACT_APP_AWS_REGION:", process.env.REACT_APP_AWS_REGION ? "SET" : "NOT SET");
+console.log("REACT_APP_S3_BUCKET:", process.env.REACT_APP_S3_BUCKET ? "SET" : "NOT SET");
+
+// Check for required environment variables first
+if (!process.env.REACT_APP_ACCESS_KEY || !process.env.REACT_APP_SECRET_ACCESS_KEY || !process.env.REACT_APP_AWS_REGION) {
+  console.warn("Missing AWS credentials or region in environment variables. Using mock functionality.");
+}
+
+// Create S3 client if credentials are available
+const s3 = process.env.REACT_APP_ACCESS_KEY ? new S3Client({
+  region: process.env.REACT_APP_AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.REACT_APP_ACCESS_KEY,
+    secretAccessKey: process.env.REACT_APP_SECRET_ACCESS_KEY,
+  },
+}) : null;
+
+router.post("/api/delete-s3-file", async (req, res) => {
+  const rawKey = req.body.key;
+  if (!rawKey) {
+    return res.status(400).json({ message: "Missing file key" });
+  }
+
+  const key = decodeURIComponent(rawKey);
+
+  // If no S3 client, return success without deleting (mock mode)
+  if (!s3) {
+    console.log("Mock delete operation for key:", key);
+    return res.status(200).json({ message: "File deleted successfully (mock mode)" });
+  }
+
+  const command = new DeleteObjectCommand({
+    Bucket: process.env.REACT_APP_S3_BUCKET,
+    Key: key,
+  });
+
+  try {
+    console.log("Deleting key from S3:", key);
+    await s3.send(command);
+    res.status(200).json({ message: "File deleted successfully" });
+  } catch (err) {
+    console.error("S3 deletion error:", err);
+    res.status(500).json({ message: "Error deleting file from S3" });
+  }
+});
+
+export default router;
