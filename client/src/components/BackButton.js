@@ -51,13 +51,13 @@ const BackButton = ({
 
   const defaultStyles = {
     color: color,
-    backgroundColor: canGoBack ? 'rgba(243, 163, 16, 0.1)' : 'rgba(160, 160, 160, 0.1)',
+    backgroundColor: canGoBack ? 'rgba(33, 113, 194, 0.1)' : 'rgba(107, 114, 128, 0.1)',
     '&:hover': {
-      backgroundColor: canGoBack ? 'rgba(243, 163, 16, 0.2)' : 'rgba(160, 160, 160, 0.2)',
-      transform: 'scale(1.05)',
+      backgroundColor: canGoBack ? 'rgba(33, 113, 194, 0.2)' : 'rgba(107, 114, 128, 0.2)',
+      transform: 'none',
     },
     transition: 'all 0.2s ease-in-out',
-    boxShadow: canGoBack ? '0 2px 8px rgba(243, 163, 16, 0.3)' : '0 2px 8px rgba(160, 160, 160, 0.2)',
+    boxShadow: canGoBack ? '0 1px 3px rgba(0, 0, 0, 0.05)' : '0 1px 3px rgba(0, 0, 0, 0.05)',
     opacity: canGoBack ? 1 : 0.7,
     ...sx
   };
@@ -72,7 +72,7 @@ const BackButton = ({
           gap: 1,
           cursor: 'pointer',
           padding: '8px 16px',
-          borderRadius: '12px',
+          borderRadius: '6px',
           ...defaultStyles,
           width: 'fit-content'
         }}
@@ -88,12 +88,12 @@ const BackButton = ({
               width: '8px',
               height: '8px',
               borderRadius: '50%',
-              backgroundColor: 'green',
+              backgroundColor: '#2171c2',
               position: 'absolute',
               top: '50%',
               left: '10px',
               transform: 'translateY(-50%)',
-              boxShadow: '0 0 4px rgba(0, 128, 0, 0.6)',
+              boxShadow: '0 0 4px rgba(33, 113, 194, 0.6)',
             }}
           />
         )}

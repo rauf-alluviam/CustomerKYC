@@ -7,7 +7,7 @@ function LoginPage() {
     <Box
       sx={{
         minHeight: "100vh",
-        background: 'linear-gradient(135deg, rgba(243, 163, 16, 0.1) 0%, rgba(160, 160, 160, 0.1) 100%)',
+        background: '#fffefe',
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -16,20 +16,20 @@ function LoginPage() {
     >
       <Container maxWidth="sm">
         <Paper
-          elevation={3}
+          elevation={1}
           sx={{
             padding: 4,
-            borderRadius: 3,
+            borderRadius: 2,
             textAlign: "center",
-            background: 'rgba(255, 255, 255, 0.95)',
-            backdropFilter: 'blur(10px)',
+            background: '#fffefe',
+            border: '1px solid #e5e7eb',
           }}
         >
           <Typography
             variant="h4"
             sx={{
-              fontWeight: 700,
-              color: '#2c3e50',
+              fontWeight: 600,
+              color: '#000000',
               marginBottom: 1,
             }}
           >
@@ -38,7 +38,7 @@ function LoginPage() {
           <Typography
             variant="body1"
             sx={{
-              color: '#6c757d',
+              color: '#6b7280',
               marginBottom: 4,
             }}
           >

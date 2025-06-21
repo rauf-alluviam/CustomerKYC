@@ -208,8 +208,8 @@ function RevisionList() {
   return (
     <Box sx={{
       padding: '24px',
-      background: 'linear-gradient(135deg, rgba(243, 163, 16, 0.05) 0%, rgba(160, 160, 160, 0.05) 100%)',
-      borderRadius: '16px',
+      background: '#fffefe',
+      borderRadius: '8px',
       minHeight: '400px'
     }}>
       {/* Header with Back Button */}
@@ -220,14 +220,10 @@ function RevisionList() {
         textAlign: 'center',
       }}>
         <h2 style={{
-          color: '#2c3e50',
-          fontWeight: 600,
+          color: '#000000',
+          fontWeight: 500,
           fontSize: '1.75rem',
           marginBottom: '8px',
-          background: 'linear-gradient(135deg, rgba(243, 163, 16, 0.94) 0%, rgb(160, 160, 160) 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text',
         }}>
           Applications Requiring Revision
         </h2>

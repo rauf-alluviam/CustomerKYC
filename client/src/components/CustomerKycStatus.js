@@ -98,30 +98,30 @@ function CustomerKycStatus() {
     const statusConfig = {
       'Approved': { 
         style: { 
-          backgroundColor: '#dbeafe', 
-          color: '#2563eb',
-          border: 'none'
+          backgroundColor: '#f0f9ff', 
+          color: '#2171c2',
+          border: '1px solid #2171c2'
         }
       },
       'Approved by HOD': { 
         style: { 
-          backgroundColor: '#dbeafe', 
-          color: '#2563eb',
-          border: 'none'
+          backgroundColor: '#f0f9ff', 
+          color: '#2171c2',
+          border: '1px solid #2171c2'
         }
       },
       'Pending': { 
         style: { 
-          backgroundColor: '#fef3c7', 
-          color: '#d97706',
-          border: 'none'
+          backgroundColor: '#fff9f6', 
+          color: '#e87538',
+          border: '1px solid #e87538'
         }
       },
       'Sent for revision': { 
         style: { 
-          backgroundColor: '#f3f4f6', 
-          color: '#374151',
-          border: 'none'
+          backgroundColor: '#f9fafb', 
+          color: '#6b7280',
+          border: '1px solid #6b7280'
         }
       }
     };
@@ -160,15 +160,15 @@ function CustomerKycStatus() {
 
   const StatCard = ({ title, value, icon, color, bgColor }) => (
     <Card sx={{ 
-      background: '#ffffff',
+      background: '#fffefe',
       border: '1px solid #e5e7eb',
       borderRadius: '8px',
       height: '100%',
       boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
       transition: 'all 0.2s ease',
       '&:hover': {
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.07)',
-        transform: 'translateY(-1px)',
+        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.08)',
+        transform: 'none',
       }
     }}>
       <CardContent sx={{ p: 3 }}>
@@ -176,7 +176,7 @@ function CustomerKycStatus() {
           <Box>
             <Typography variant="h3" sx={{ 
               fontWeight: 600, 
-              color: '#1f2937',
+              color: '#000000',
               marginBottom: '4px',
               fontSize: '2rem'
             }}>
@@ -363,30 +363,28 @@ function CustomerKycStatus() {
     },
   ];
 
-  const table = useTableConfig(filteredData, columns);
-
-  return (
-    <Box sx={{
-      padding: '24px',
-      background: '#ffffff',
-      borderRadius: '8px',
-      minHeight: '400px'
-    }}>
-      {/* Clean Header */}
+  const table = useTableConfig(filteredData, columns);    return (
       <Box sx={{
-        marginBottom: '32px',
-        textAlign: 'center',
+        padding: '24px',
+        background: '#fffefe',
+        borderRadius: '8px',
+        minHeight: '400px'
       }}>
-        <h2 style={{
-          color: '#1f2937',
-          fontWeight: 500,
-          fontSize: '1.75rem',
-          marginBottom: '8px',
-          margin: 0,
+        {/* Clean Header */}
+        <Box sx={{
+          marginBottom: '32px',
+          textAlign: 'center',
         }}>
-          Customer KYC Status
-        </h2>
-      </Box>
+          <h2 style={{
+            color: '#000000',
+            fontWeight: 500,
+            fontSize: '1.75rem',
+            marginBottom: '8px',
+            margin: 0,
+          }}>
+            Customer KYC Status
+          </h2>
+        </Box>
 
       {/* Statistics Cards */}
       <Grid container spacing={3} sx={{ marginBottom: '32px' }}>
@@ -433,7 +431,7 @@ function CustomerKycStatus() {
         p: 3, 
         mb: 3, 
         borderRadius: '8px',
-        background: '#ffffff',
+        background: '#fffefe',
         border: '1px solid #e5e7eb',
         boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
       }}>
@@ -459,9 +457,9 @@ function CustomerKycStatus() {
                     borderColor: '#9ca3af',
                   },
                   '&.Mui-focused': {
-                    backgroundColor: '#ffffff',
-                    borderColor: '#3b82f6',
-                    boxShadow: '0 0 0 3px rgba(59, 130, 246, 0.1)',
+                    backgroundColor: '#fffefe',
+                    borderColor: '#2171c2',
+                    boxShadow: '0 0 0 3px rgba(33, 113, 194, 0.1)',
                   }
                 }
               }}
@@ -483,8 +481,8 @@ function CustomerKycStatus() {
                     borderColor: '#9ca3af',
                   },
                   '&.Mui-focused': {
-                    backgroundColor: '#ffffff',
-                    borderColor: '#3b82f6',
+                    backgroundColor: '#fffefe',
+                    borderColor: '#2171c2',
                   }
                 }}
               >

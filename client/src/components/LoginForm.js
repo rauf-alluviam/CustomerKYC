@@ -51,7 +51,7 @@ function LoginForm() {
         size="small"
         fullWidth
         margin="dense"
-        variant="filled"
+        variant="outlined"
         id="username"
         name="username"
         label="Username"
@@ -66,7 +66,7 @@ function LoginForm() {
         size="small"
         fullWidth
         margin="dense"
-        variant="filled"
+        variant="outlined"
         id="password"
         name="password"
         label="Password"
@@ -82,16 +82,16 @@ function LoginForm() {
         variant="contained"
         size="large"
         sx={{
-          background: 'linear-gradient(135deg, rgba(243, 163, 16, 0.94) 0%, rgb(160, 160, 160) 100%)',
+          background: '#2171c2',
           color: '#ffffff',
-          fontWeight: 600,
-          fontSize: '1.1rem',
+          fontWeight: 500,
+          fontSize: '1rem',
           padding: '12px',
-          borderRadius: '8px',
+          borderRadius: '6px',
           '&:hover': {
-            background: 'linear-gradient(135deg, rgb(237, 108, 2) 0%, rgba(243, 163, 16, 0.94) 100%)',
-            transform: 'translateY(-2px)',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.12)',
+            background: '#1859a3',
+            transform: 'none',
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
           },
         }}
       >

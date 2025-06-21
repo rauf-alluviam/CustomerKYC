@@ -93,7 +93,7 @@ function CustomerKyc() {
           sx={{
             background: '#ffffff',
             borderRadius: '8px',
-            border: '1px solid #e5e7eb',
+            border: '2px solid #000000',
             overflow: 'hidden',
             boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
           }}
@@ -224,7 +224,8 @@ function CustomerKyc() {
           <Box sx={{ 
             padding: { xs: '16px', sm: '24px', md: '32px' },
             minHeight: '60vh',
-            background: 'rgba(255, 255, 255, 0.5)'
+            background: '#fffefe',
+            border: '1px solid rgb(6, 7, 7)',
           }}>
             <CustomTabPanel value={value} index={0}>
               <CustomerKycForm />
@@ -304,7 +305,7 @@ function CustomerKyc() {
               scrollButtons="auto"
               allowScrollButtonsMobile
               sx={{
-                background: '#ffffff',
+                background: '#fffefe',
                 minWidth: 'max-content',
                 '& .MuiTab-root': {
                   fontWeight: 500,
@@ -321,9 +322,9 @@ function CustomerKyc() {
                     color: '#374151',
                   },
                   '&.Mui-selected': {
-                    background: '#ffffff',
-                    color: '#1f2937',
-                    borderBottom: '2px solid #3b82f6',
+                    background: '#fffefe',
+                    color: '#000000',
+                    borderBottom: '2px solid #2171c2',
                     fontWeight: 600,
                   },
                 },
@@ -331,7 +332,7 @@ function CustomerKyc() {
                   display: 'none',
                 },
                 '& .MuiTabs-scrollButtons': {
-                  color: '#ed6c02',
+                  color: '#2171c2',
                   '&.Mui-disabled': {
                     opacity: 0.3,
                   },
@@ -362,7 +363,7 @@ function CustomerKyc() {
           <Box sx={{ 
             padding: { xs: '16px', sm: '24px', md: '32px' },
             minHeight: '60vh',
-            background: 'rgba(255, 255, 255, 0.5)'
+            background: '#fffefe'
           }}>
             <CustomTabPanel value={value} index={0}>
               <CustomerKycForm />

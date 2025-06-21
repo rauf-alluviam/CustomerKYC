@@ -29,15 +29,18 @@ const useTableConfig = (data, columns) => {
       sx: { 
         minWidth: '300px',
         '& .MuiOutlinedInput-root': {
-          borderRadius: '12px',
-          background: 'rgba(255, 255, 255, 0.8)',
+          borderRadius: '6px',
+          background: '#fffefe',
+          border: '1px solid #d1d5db',
           '&:hover': {
-            background: '#ffffff',
-            boxShadow: '0 2px 12px rgba(0, 0, 0, 0.08)',
+            background: '#fffefe',
+            borderColor: '#9ca3af',
+            boxShadow: 'none',
           },
           '&.Mui-focused': {
-            background: '#ffffff',
-            boxShadow: '0 0 0 3px rgba(237, 108, 2, 0.1)',
+            background: '#fffefe',
+            borderColor: '#2171c2',
+            boxShadow: '0 0 0 3px rgba(33, 113, 194, 0.1)',
           }
         }
       },
@@ -47,27 +50,27 @@ const useTableConfig = (data, columns) => {
       sx: { 
         maxHeight: '70vh', 
         overflowY: 'auto',
-        borderRadius: '16px',
-        border: '1px solid rgba(243, 163, 16, 0.1)',
-        background: '#ffffff',
+        borderRadius: '8px',
+        border: '1px solid #e5e7eb',
+        background: '#fffefe',
         '& .MuiTableCell-root': {
-          borderBottom: '1px solid rgba(243, 163, 16, 0.1)',
+          borderBottom: '1px solid #e5e7eb',
           fontSize: '0.875rem',
         }
       },
     },
     muiTableHeadCellProps: {
       sx: {
-        background: 'linear-gradient(135deg, rgba(243, 163, 16, 0.1) 0%, rgba(160, 160, 160, 0.1) 100%)',
-        fontWeight: 600,
-        color: '#2c3e50',
-        borderBottom: '2px solid rgba(237, 108, 2, 0.2)',
-        fontSize: '0.9rem',
-        textTransform: 'uppercase',
-        letterSpacing: '0.5px',
+        background: '#f9fafb',
+        fontWeight: 500,
+        color: '#000000',
+        borderBottom: '1px solid #e5e7eb',
+        fontSize: '0.875rem',
+        textTransform: 'none',
+        letterSpacing: 'normal',
         padding: '16px',
         '&:hover': {
-          background: 'linear-gradient(135deg, rgba(243, 163, 16, 0.15) 0%, rgba(160, 160, 160, 0.15) 100%)',
+          background: '#f3f4f6',
         }
       }
     },
@@ -75,20 +78,20 @@ const useTableConfig = (data, columns) => {
       sx: {
         padding: '12px 16px',
         '&:hover': {
-          background: 'rgba(243, 163, 16, 0.05)',
+          background: '#f9fafb',
         }
       }
     },
     muiTableBodyRowProps: ({ row }) => ({
       sx: {
-        transition: 'all 0.2s ease-in-out',
+        transition: 'background-color 0.15s ease',
         '&:hover': {
-          backgroundColor: 'rgba(243, 163, 16, 0.05)',
-          transform: 'scale(1.001)',
-          boxShadow: '0 2px 12px rgba(0, 0, 0, 0.08)',
+          backgroundColor: '#f9fafb',
+          transform: 'none',
+          boxShadow: 'none',
         },
         '&:nth-of-type(even)': {
-          backgroundColor: 'rgba(248, 249, 250, 0.5)',
+          backgroundColor: '#fffefe',
         }
       },
     }),
@@ -97,33 +100,33 @@ const useTableConfig = (data, columns) => {
       showFirstButton: true,
       showLastButton: true,
       sx: {
-        background: 'rgba(243, 163, 16, 0.05)',
-        borderTop: '1px solid rgba(243, 163, 16, 0.1)',
+        background: '#fffefe',
+        borderTop: '1px solid #e5e7eb',
         '& .MuiTablePagination-toolbar': {
           padding: '16px',
         },
         '& .MuiIconButton-root': {
-          borderRadius: '8px',
+          borderRadius: '6px',
           '&:hover': {
-            background: 'rgba(237, 108, 2, 0.1)',
+            background: '#f3f4f6',
           }
         }
       }
     },
     muiTopToolbarProps: {
       sx: {
-        background: 'linear-gradient(135deg, rgba(243, 163, 16, 0.08) 0%, rgba(160, 160, 160, 0.08) 100%)',
-        borderTopLeftRadius: '16px',
-        borderTopRightRadius: '16px',
-        borderBottom: '1px solid rgba(243, 163, 16, 0.1)',
+        background: '#f9fafb',
+        borderTopLeftRadius: '8px',
+        borderTopRightRadius: '8px',
+        borderBottom: '1px solid #e5e7eb',
         padding: '16px',
       }
     },
     muiBottomToolbarProps: {
       sx: {
-        background: 'rgba(243, 163, 16, 0.03)',
-        borderBottomLeftRadius: '16px',
-        borderBottomRightRadius: '16px',
+        background: '#fffefe',
+        borderBottomLeftRadius: '8px',
+        borderBottomRightRadius: '8px',
       }
     },
   });
