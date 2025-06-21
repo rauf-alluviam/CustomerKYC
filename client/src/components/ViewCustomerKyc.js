@@ -264,7 +264,7 @@ function ViewCustomerKyc() {
       className="kyc-form-container"
       style={{
         width: "90%",
-        maxWidth: "1200px",
+        maxWidth: "2400px",
         margin: "2rem auto",
         background: "var(--white)",
         boxShadow: "var(--shadow-soft)",
@@ -288,7 +288,7 @@ function ViewCustomerKyc() {
           textAlign: 'center',
           flex: 1
         }}>
-          🔍 View Customer KYC Details
+           View Customer KYC Details
         </h2>
       </div>
       {data && (

@@ -199,11 +199,28 @@ function CustomerKycStatus() {
       enableSorting: true,
       size: 250,
       Cell: ({ cell }) => (
-        <Box sx={{ 
-          fontWeight: 600, 
-          color: '#2c3e50',
-          fontSize: '0.9rem'
-        }}>
+        <Box 
+          sx={{ 
+            fontWeight: 600, 
+            color: '#1976d2',
+            fontSize: '0.9rem',
+            cursor: 'pointer',
+            '&:hover': {
+              color: '#0d47a1',
+              textDecoration: 'underline',
+            }
+          }}
+          onClick={() => {
+            const status = cell.row.original.approval;
+            if (status === "Pending") {
+              navigateWithRef(`/view-customer-kyc/${cell.row.original._id}`);
+            } else if (status === "Approved" || status === "Approved by HOD") {
+              navigateWithRef(`/view-completed-kyc/${cell.row.original._id}`);
+            } else if (status === "Sent for revision") {
+              navigateWithRef(`/revise-customer-kyc/${cell.row.original._id}`);
+            }
+          }}
+        >
           {cell.getValue() || 'N/A'}
         </Box>
       ),
@@ -363,15 +380,9 @@ function CustomerKycStatus() {
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
         }}>
-          📊 Customer KYC Status Overview
+          Customer KYC Status 
         </h2>
-        <p style={{
-          color: '#6c757d',
-          fontSize: '1rem',
-          margin: 0
-        }}>
-          Comprehensive overview of all customer KYC applications and their current status
-        </p>
+        
       </Box>
 
       {/* Statistics Cards */}

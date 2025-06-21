@@ -83,7 +83,18 @@ function CompletedKyc() {
       enableSorting: true,
       size: 250,
       Cell: ({ cell }) => (
-        <Box sx={{ fontWeight: 500, color: '#2c3e50' }}>
+        <Box 
+          sx={{ 
+            fontWeight: 500, 
+            color: '#1976d2',
+            cursor: 'pointer',
+            '&:hover': {
+              color: '#0d47a1',
+              textDecoration: 'underline',
+            }
+          }}
+          onClick={() => navigateWithRef(`/view-completed-kyc/${cell.row.original._id}`)}
+        >
           {cell.getValue()}
         </Box>
       ),
@@ -238,23 +249,7 @@ function CompletedKyc() {
       minHeight: '400px'
     }}>
       {/* Header with Back Button */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        marginBottom: '20px',
-        padding: '10px 0',
-        borderBottom: '2px solid #e0e0e0'
-      }}>
-
-        <h2 style={{ 
-          color: 'var(--primary-orange)', 
-          margin: '0 auto',
-          textAlign: 'center',
-          flex: 1
-        }}>
-          ✅ Completed KYC
-        </h2>
-      </div>
+      
       
       <Box sx={{
         marginBottom: '24px',
@@ -270,15 +265,9 @@ function CompletedKyc() {
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
         }}>
-          ✅ Completed KYC Records
+           Completed KYC 
         </h2>
-        <p style={{
-          color: '#6c757d',
-          fontSize: '1rem',
-          margin: 0
-        }}>
-          Manage and review all completed customer KYC applications
-        </p>
+      
       </Box>
       <MaterialReactTable table={table} />
     </Box>

@@ -52,13 +52,21 @@ function ViewDrafts() {
       enableSorting: true,
       size: 280,
       Cell: ({ cell }) => (
-        <Box sx={{ 
-          fontWeight: 500, 
-          color: '#2c3e50',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 1
-        }}>
+        <Box 
+          sx={{ 
+            fontWeight: 500, 
+            color: '#1976d2',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            cursor: 'pointer',
+            '&:hover': {
+              color: '#0d47a1',
+              textDecoration: 'underline',
+            }
+          }}
+          onClick={() => navigateWithRef(`/view-draft-details/${cell.row.original._id}`)}
+        >
           <DraftsOutlined sx={{ fontSize: 16, color: '#ff9800' }} />
           {cell.getValue()}
         </Box>
@@ -143,23 +151,7 @@ function ViewDrafts() {
       minHeight: '400px'
     }}>
       {/* Header with Back Button */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        marginBottom: '20px',
-        padding: '10px 0',
-        borderBottom: '2px solid #e0e0e0'
-      }}>
-    
-        <h2 style={{ 
-          color: 'var(--primary-orange)', 
-          margin: '0 auto',
-          textAlign: 'center',
-          flex: 1
-        }}>
-          📄 View Drafts
-        </h2>
-      </div>
+   
       
       <Box sx={{
         marginBottom: '24px',
@@ -175,15 +167,9 @@ function ViewDrafts() {
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
         }}>
-          📝 Draft Applications
+          Draft Applications
         </h2>
-        <p style={{
-          color: '#6c757d',
-          fontSize: '1rem',
-          margin: 0
-        }}>
-          Review and manage incomplete KYC applications
-        </p>
+       
       </Box>
       <MaterialReactTable table={table} />
     </Box>

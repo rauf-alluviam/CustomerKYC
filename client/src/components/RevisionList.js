@@ -54,13 +54,21 @@ function RevisionList() {
       enableSorting: true,
       size: 280,
       Cell: ({ cell }) => (
-        <Box sx={{ 
-          fontWeight: 500, 
-          color: '#2c3e50',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 1
-        }}>
+        <Box 
+          sx={{ 
+            fontWeight: 500, 
+            color: '#1976d2',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            cursor: 'pointer',
+            '&:hover': {
+              color: '#0d47a1',
+              textDecoration: 'underline',
+            }
+          }}
+          onClick={() => navigateWithRef(`/revise-customer-kyc/${cell.row.original._id}`)}
+        >
           <PersonOutline sx={{ fontSize: 16, color: '#f57c00' }} />
           {cell.getValue()}
         </Box>
@@ -205,23 +213,7 @@ function RevisionList() {
       minHeight: '400px'
     }}>
       {/* Header with Back Button */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        marginBottom: '20px',
-        padding: '10px 0',
-        borderBottom: '2px solid #e0e0e0'
-      }}>
-
-        <h2 style={{ 
-          color: 'var(--primary-orange)', 
-          margin: '0 auto',
-          textAlign: 'center',
-          flex: 1
-        }}>
-          🔄 Revision List
-        </h2>
-      </div>
+      
       
       <Box sx={{
         marginBottom: '24px',
@@ -239,13 +231,7 @@ function RevisionList() {
         }}>
           🔄 Applications Requiring Revision
         </h2>
-        <p style={{
-          color: '#6c757d',
-          fontSize: '1rem',
-          margin: 0
-        }}>
-          Customer KYC applications that need corrections and resubmission
-        </p>
+       
       </Box>
       
       {data.length > 0 && (

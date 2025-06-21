@@ -45,8 +45,15 @@ app.use(helmet());
 app.use(limiter);
 // HTTP request logging disabled for cleaner console output
 app.use(cors({
-  origin: true, // Allow all origins
-  credentials: true
+  origin: [
+    'http://eximcustomerkyc.s3-website.ap-south-1.amazonaws.com',
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'https://eximcustomerkyc.s3-website.ap-south-1.amazonaws.com'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));

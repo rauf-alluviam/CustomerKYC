@@ -15,13 +15,31 @@ const BackButton = ({
   sx = {}
 }) => {
   const navigate = useNavigate();
-  const { navigateBack, canGoBack, getPreviousLocation } = useNavigation();
+  
+  // Always call the hook, but handle errors in the implementation
+  const navigationContext = useNavigation();
+  
+  // Provide fallback values if navigation context is not working properly
+  const navigateBack = navigationContext?.navigateBack || (() => false);
+  const canGoBack = navigationContext?.canGoBack || false;
+  const getPreviousLocation = navigationContext?.getPreviousLocation || (() => null);
 
   const handleBackClick = () => {
-    const didNavigateBack = navigateBack(fallbackRoute);
-    if (!didNavigateBack) {
-      // Fallback to browser history if navigation context failed
-      navigate(-1);
+    console.log('BackButton clicked', { canGoBack, fallbackRoute });
+    console.log('Navigation stack:', getPreviousLocation());
+    
+    try {
+      const didNavigateBack = navigateBack(fallbackRoute);
+      console.log('Navigate back result:', didNavigateBack);
+      if (!didNavigateBack) {
+        console.log('Using fallback navigation to:', fallbackRoute);
+        // Fallback to browser history if navigation context failed
+        navigate(-1);
+      }
+    } catch (error) {
+      console.error('Error in BackButton navigation:', error);
+      // Ultimate fallback
+      navigate(fallbackRoute);
     }
   };
 

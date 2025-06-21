@@ -6,7 +6,20 @@ const NavigationContext = createContext();
 export const useNavigation = () => {
   const context = useContext(NavigationContext);
   if (!context) {
-    throw new Error('useNavigation must be used within a NavigationProvider');
+    // Instead of throwing an error, return default values
+    console.warn('useNavigation must be used within a NavigationProvider. Using fallback navigation.');
+    return {
+      navigateWithRef: (to) => { window.location.href = to; },
+      navigateBack: () => { window.history.back(); return true; },
+      clearNavigationStack: () => {},
+      canGoBack: window.history.length > 1,
+      getPreviousLocation: () => null,
+      saveTabState: () => {},
+      getTabState: () => 0,
+      saveScrollPosition: () => {},
+      getScrollPosition: () => 0,
+      navigationStack: []
+    };
   }
   return context;
 };
