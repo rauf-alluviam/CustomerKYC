@@ -299,7 +299,7 @@ function EditCompletedKyc() {
           textAlign: 'center',
           flex: 1
         }}>
-          ✏️ Edit Completed KYC
+          Edit Completed KYC
         </h2>
       </div>
       
@@ -416,7 +416,7 @@ function EditCompletedKyc() {
         </div>
 
         <div className="form-section">
-          <h4>📍 Permanent Address</h4>
+          <h4>Permanent Address</h4>
         <TextField
           fullWidth
           size="small"

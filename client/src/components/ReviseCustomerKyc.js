@@ -318,7 +318,7 @@ function ReviseCustomerKyc() {
           textAlign: 'center',
           flex: 1
         }}>
-          📝 Revise Customer KYC
+          Revise Customer KYC
         </h2>
       </div>
       

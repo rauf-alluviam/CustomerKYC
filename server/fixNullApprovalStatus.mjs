@@ -79,12 +79,10 @@ async function fixNullApprovalStatus() {
                 }
             );
 
-            console.log(`\n✅ Update completed:`);
-            console.log(`   Records matched: ${updateResult.matchedCount}`);
-            console.log(`   Records modified: ${updateResult.modifiedCount}`);
+      
 
             // Verify the fix
-            console.log('\n🔍 Verifying the fix...');
+    
             const verificationCounts = await CustomerKyc.aggregate([
                 { $match: { status: { $ne: 'draft' } } },
                 {
@@ -105,8 +103,6 @@ async function fixNullApprovalStatus() {
                 }
             });
 
-            console.log(`\n🎯 Total pending approvals now: ${totalPending}`);
-            console.log('✅ This should match the count in both HOD Approval Pending and Customer KYC Status!');
 
         } else {
             console.log('✅ No records found with null approval status. Data is already clean!');

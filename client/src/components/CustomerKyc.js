@@ -196,7 +196,7 @@ function CustomerKyc() {
   }}
 >
               <Tab 
-                icon={getTabIcon(0)}
+                // icon={getTabIcon(0)}
                 iconPosition="start"
                 label="New Application" 
                 {...a11yProps(0)} 

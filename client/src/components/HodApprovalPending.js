@@ -50,7 +50,7 @@ function HodApprovalPending() {
   const columns = [
     {
       accessorKey: "name_of_individual",
-      header: "👤 Customer Name",
+      header: "Customer Name",
       enableSorting: true,
       size: 280,
       Cell: ({ cell }) => (
@@ -76,14 +76,14 @@ function HodApprovalPending() {
     },
     {
       accessorKey: "category",
-      header: "🏢 Category",
+      header: "Category",
       enableSorting: true,
       size: 250,
       Cell: ({ cell }) => getCategoryChip(cell.getValue()),
     },
     {
       accessorKey: "status",
-      header: "📊 Business Type",
+      header: "Business Type",
       enableSorting: true,
       size: 250,
       Cell: ({ cell }) => (
@@ -102,7 +102,7 @@ function HodApprovalPending() {
     },
     { 
       accessorKey: "iec_no", 
-      header: "🆔 IEC Number", 
+      header: "IEC Number", 
       enableSorting: true, 
       size: 250,
       Cell: ({ cell }) => (
@@ -120,7 +120,7 @@ function HodApprovalPending() {
     },
     {
       accessorKey: "remarks",
-      header: "💬 Remarks",
+      header: "Remarks",
       enableSorting: false,
       size: 220,
       Cell: ({ cell }) => (
@@ -140,7 +140,7 @@ function HodApprovalPending() {
     },
     {
       accessorKey: "view",
-      header: "👁️ Actions",
+      header: "Actions",
       enableSorting: false,
       size: 250,
       Cell: ({ cell }) =>

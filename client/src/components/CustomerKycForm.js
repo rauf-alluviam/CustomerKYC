@@ -423,7 +423,7 @@ function CustomerKycForm() {
         ) : null}
       </div>
       <div className="form-section">
-        <h4>📍 Permanent Address</h4>
+        <h4>Permanent Address</h4>
         <TextField
           fullWidth
           size="small"
@@ -575,7 +575,7 @@ function CustomerKycForm() {
       </div>
 
       <div className="form-section">
-        <h4>🏢 Principal Business Address</h4>
+        <h4>Principal Business Address</h4>
         <FormControlLabel
           control={
             <Checkbox
@@ -768,7 +768,7 @@ function CustomerKycForm() {
       </div>
 
       <div className="form-section">
-        <h4>🏭 Factory Address</h4>
+        <h4>Factory Address</h4>
         {formik.values.factory_addresses?.map((address, index) => (
           <div 
             key={index}
@@ -880,7 +880,7 @@ function CustomerKycForm() {
                 color: 'var(--primary-orange)',
               }}
             >
-              📄 GST Registration
+              GST Registration
             </label>
             <FileUpload
               label="Upload GST Registration"
@@ -920,13 +920,13 @@ function CustomerKycForm() {
           aria-label="add-factory-address"
           onClick={handleAddField}
         >
-          ➕ Add Factory/ Branch Address
+          Add Factory/ Branch Address
         </button>
       </div>
       </div>
 
       <div className="form-section">
-        <h4>✍️ Authorised Signatory Information</h4>
+        <h4>Authorised Signatory Information</h4>
         <p style={{ 
           marginBottom: 'var(--spacing-lg)',
           color: 'var(--text-secondary)',
@@ -946,7 +946,7 @@ function CustomerKycForm() {
               color: 'var(--primary-orange)',
             }}
           >
-            📸 Authorised Signatory Photos
+            Authorised Signatory Photos
           </label>
           <FileUpload
             label="Upload Authorised Signatory Photos"
@@ -987,7 +987,7 @@ function CustomerKycForm() {
               color: 'var(--primary-orange)',
             }}
           >
-            📄 Authorisation Letter
+            Authorisation Letter
           </label>
           <FileUpload
             label="Upload Authorisation Letter"
@@ -1039,7 +1039,7 @@ function CustomerKycForm() {
               color: 'var(--primary-orange)',
             }}
           >
-            📄 IEC Copy
+            IEC Copy
           </label>
           <FileUpload
             label="Upload IEC Copy"
@@ -1092,7 +1092,7 @@ function CustomerKycForm() {
               color: 'var(--primary-orange)',
             }}
           >
-            📄 PAN Copy
+            PAN Copy
           </label>
           <FileUpload
             label="Upload PAN Copy"
@@ -1124,7 +1124,7 @@ function CustomerKycForm() {
             />
           )}
         </div>
-      <h4 style={{ marginTop: 'var(--spacing-xl)', marginBottom: 'var(--spacing-lg)' }}>🏦 Banking Information</h4>
+      <h4 style={{ marginTop: 'var(--spacing-xl)', marginBottom: 'var(--spacing-lg)' }}>Banking Information</h4>
       {formik.values.banks?.map((bank, index) => (
         <div 
           key={index}
@@ -1253,7 +1253,7 @@ function CustomerKycForm() {
                 color: 'var(--primary-orange)',
               }}
             >
-              📄 AD Code File
+              AD Code File
             </label>
             <FileUpload
               label="Upload AD Code File"
@@ -1292,7 +1292,7 @@ function CustomerKycForm() {
           aria-label="add-bank"
           onClick={handleAddBanks}
         >
-          ➕ Add AD Code
+          Add AD Code
         </button>
       </div>
       {getSupportingDocs()}
@@ -1306,7 +1306,7 @@ function CustomerKycForm() {
             color: 'var(--primary-orange)',
           }}
         >
-          📁 Other Documents
+          Other Documents
         </label>
         <FileUpload
           label="Upload Other Documents"
@@ -1344,7 +1344,7 @@ function CustomerKycForm() {
             color: 'var(--primary-orange)',
           }}
         >
-          🏭 SPCB Registration Certificate
+          SPCB Registration Certificate
         </label>
         <FileUpload
           label="Upload SPCB Registration Certificate"
@@ -1386,7 +1386,7 @@ function CustomerKycForm() {
             color: 'var(--primary-orange)',
           }}
         >
-          📸 KYC Verification Images
+          KYC Verification Images
         </label>
         <FileUpload
           label="Upload KYC Verification Images"
@@ -1427,7 +1427,7 @@ function CustomerKycForm() {
             color: 'var(--primary-orange)',
           }}
         >
-          📊 GST Returns
+          GST Returns
         </label>
         <FileUpload
           label="Upload GST Returns"
@@ -1472,7 +1472,7 @@ function CustomerKycForm() {
           aria-label="preview-btn"
           onClick={handleOpen}
         >
-          👁️ Preview
+          Preview
         </button>
         <button
           type="submit"
@@ -1480,7 +1480,7 @@ function CustomerKycForm() {
           aria-label="save-draft-btn"
           onClick={() => setSubmitType("save_draft")}
         >
-          💾 Save Draft
+          Save Draft
         </button>
         <button
           type="submit"
@@ -1488,7 +1488,7 @@ function CustomerKycForm() {
           aria-label="submit-btn"
           onClick={() => setSubmitType("save")}
         >
-          ✅ Submit
+          Submit
         </button>
       </div>
       <Snackbar

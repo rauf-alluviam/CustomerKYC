@@ -195,7 +195,7 @@ function CustomerKycStatus() {
   const columns = [
     {
       accessorKey: "name_of_individual",
-      header: "👤 Customer Name",
+      header: "Customer Name",
       enableSorting: true,
       size: 250,
       Cell: ({ cell }) => (
@@ -234,7 +234,7 @@ function CustomerKycStatus() {
     },
     { 
       accessorKey: "iec_no", 
-      header: "🆔 IEC Code", 
+      header: " IEC Code", 
       enableSorting: true, 
       size: 250,
       Cell: ({ cell }) => (
@@ -253,7 +253,7 @@ function CustomerKycStatus() {
     },
     { 
       accessorKey: "pan_no", 
-      header: "📄 PAN Number", 
+      header: " PAN Number", 
       enableSorting: true, 
       size: 250,
       Cell: ({ cell }) => (
@@ -272,7 +272,7 @@ function CustomerKycStatus() {
     },
     { 
       accessorKey: "permanent_address_telephone", 
-      header: "📞 Mobile", 
+      header: " Mobile", 
       enableSorting: true, 
       size: 250,
       Cell: ({ cell }) => (
@@ -287,7 +287,7 @@ function CustomerKycStatus() {
     },
     { 
       accessorKey: "permanent_address_email", 
-      header: "📧 Email", 
+      header: " Email", 
       enableSorting: true, 
       size: 200,
       Cell: ({ cell }) => (
@@ -302,14 +302,14 @@ function CustomerKycStatus() {
     },
     {
       accessorKey: "approval",
-      header: "📊 KYC Status",
+      header: " KYC Status",
       enableSorting: true,
       size: 250,
       Cell: ({ cell }) => getStatusChip(cell.getValue()),
     },
     {
       accessorKey: "approved_by",
-      header: "👨‍💼 Processed By",
+      header: " Processed By",
       enableSorting: true,
       size: 250,
       Cell: ({ cell }) => (
@@ -324,7 +324,7 @@ function CustomerKycStatus() {
     },
     {
       accessorKey: "actions",
-      header: "👁️ Actions",
+      header: " Actions",
       enableSorting: false,
       size: 250,
       Cell: ({ cell }) => (

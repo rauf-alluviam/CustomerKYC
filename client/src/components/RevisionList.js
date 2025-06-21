@@ -50,7 +50,7 @@ function RevisionList() {
   const columns = [
     {
       accessorKey: "name_of_individual",
-      header: "👤 Customer Name",
+      header: "Customer Name",
       enableSorting: true,
       size: 280,
       Cell: ({ cell }) => (
@@ -76,14 +76,14 @@ function RevisionList() {
     },
     {
       accessorKey: "category",
-      header: "🏢 Category",
+      header: " Category",
       enableSorting: true,
       size: 250,
       Cell: ({ cell }) => getCategoryChip(cell.getValue()),
     },
     {
       accessorKey: "status",
-      header: "📊 Business Type",
+      header: "Business Type",
       enableSorting: true,
       size: 250,
       Cell: ({ cell }) => (
@@ -102,7 +102,7 @@ function RevisionList() {
     },
     { 
       accessorKey: "iec_no", 
-      header: "🆔 IEC Number", 
+      header: "IEC Number", 
       enableSorting: true, 
       size: 250,
       Cell: ({ cell }) => (
@@ -120,7 +120,7 @@ function RevisionList() {
     },
     {
       accessorKey: "approval",
-      header: "⚠️ Status",
+      header: "Status",
       enableSorting: true,
       size: 250,
       Cell: ({ cell }) => (
@@ -142,7 +142,7 @@ function RevisionList() {
     },
     {
       accessorKey: "approved_by",
-      header: "👨‍💼 Reviewed By",
+      header: "Reviewed By",
       enableSorting: true,
       size: 250,
       Cell: ({ cell }) => (
@@ -156,7 +156,7 @@ function RevisionList() {
     },
     {
       accessorKey: "remarks",
-      header: "💬 Revision Notes",
+      header: " Revision Notes",
       enableSorting: false,
       size: 220,
       Cell: ({ cell }) => (
@@ -177,7 +177,7 @@ function RevisionList() {
     },
     {
       accessorKey: "revise",
-      header: "✏️ Actions",
+      header: "Actions",
       enableSorting: false,
       size: 250,
       Cell: ({ cell }) =>
@@ -229,7 +229,7 @@ function RevisionList() {
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
         }}>
-          🔄 Applications Requiring Revision
+          Applications Requiring Revision
         </h2>
        
       </Box>
