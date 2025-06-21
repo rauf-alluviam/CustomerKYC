@@ -198,7 +198,13 @@ function HodApprovalPending() {
         </h2>
       
       </Box>
-      <MaterialReactTable table={table} />
+      
+      {/* Data Table */}
+      <div className="clean-table-wrapper">
+        <div className="clean-table">
+          <MaterialReactTable table={table} />
+        </div>
+      </div>
     </Box>
   );
 }

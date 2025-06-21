@@ -83,7 +83,7 @@ function CustomerKyc() {
     <Box 
       sx={{ 
         width: "100%",
-        // bgcolor:"red",
+        //  bgcolor:"red",
         padding: { xs: 1, sm: 2, md: 3 },
       }}
     >
@@ -91,99 +91,86 @@ function CustomerKyc() {
         <Paper
           elevation={0}
           sx={{
-            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 249, 250, 0.9) 100%)',
-            borderRadius: '20px',
-            border: '1px solid rgba(243, 163, 16, 0.1)',
+            background: '#ffffff',
+            borderRadius: '8px',
+            border: '1px solid #e5e7eb',
             overflow: 'hidden',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08)',
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
           }}
         >
-          {/* Header Section */}
+          {/* Clean Header Section */}
           <Box sx={{
-            background: 'linear-gradient(135deg, rgba(243, 163, 16, 0.1) 0%, rgba(160, 160, 160, 0.1) 100%)',
+            background: '#ffffff',
             padding: '24px',
-            borderBottom: '1px solid rgba(243, 163, 16, 0.1)',
+            borderBottom: '1px solid #e5e7eb',
             display: 'flex',
             alignItems: 'center',
             gap: 2
           }}>
-
-            <AdminPanelSettings sx={{ fontSize: 32, color: '#ed6c02' }} />
             <Box sx={{ flex: 1 }}>
               <Typography variant="h4" sx={{ 
-                fontWeight: 700, 
-                color: '#2c3e50',
+                fontWeight: 500, 
+                color: '#1f2937',
                 marginBottom: '4px',
                 wordWrap: 'break-word',
                 whiteSpace: 'normal',
-                lineHeight: 1.2
+                lineHeight: 1.2,
+                fontSize: '1.75rem'
               }}>
                 KYC Management Dashboard
               </Typography>
               <Typography variant="body1" sx={{ 
-                color: '#6c757d',
-                fontSize: '1.1rem',
+                color: '#6b7280',
+                fontSize: '1rem',
                 wordWrap: 'break-word',
                 whiteSpace: 'normal',
                 lineHeight: 1.4
               }}>
-                Comprehensive customer verification and compliance management
+                Customer verification and compliance management
               </Typography>
             </Box>
           </Box>
 
           <Box sx={{ 
             borderBottom: 1, 
-            borderColor: "rgba(243, 163, 16, 0.1)",
+            borderColor: "#e5e7eb",
             overflowX: 'auto',
-            '&::-webkit-scrollbar': {
-              height: '8px',
-            },
-            '&::-webkit-scrollbar-track': {
-              backgroundColor: 'rgba(243, 163, 16, 0.1)',
-              borderRadius: '4px',
-            },
-            '&::-webkit-scrollbar-thumb': {
-              backgroundColor: 'rgba(243, 163, 16, 0.5)',
-              borderRadius: '4px',
-              '&:hover': {
-                backgroundColor: 'rgba(243, 163, 16, 0.7)',
-              },
-            },
           }}>
           <Tabs
-  value={value}
-  onChange={handleChange}
-  aria-label="KYC Management tabs"
-  // variant="scrollable"
-  scrollButtons="auto"
-  allowScrollButtonsMobile
-  sx={{
-    background: 'rgba(255, 255, 255, 0.8)',
-    minWidth: 'max-content',
-    '& .MuiTabs-flexContainer': {
-      justifyContent: 'center',
-      gap: 7,
-    },
-    '& .MuiTab-root': {
-      fontWeight: 500,
-      textTransform: 'none',
-      padding: '16px 24px',
-      minHeight: '64px',
-      minWidth: '200px',
-      transition: 'all 0.3s ease-in-out',
-      borderRadius: '0',
-      whiteSpace: 'nowrap',
-      '&:hover': {
-        background: 'rgba(243, 163, 16, 0.08)',
-        transform: 'translateY(-2px)',
-      },
-      '&.Mui-selected': {
-        background: 'linear-gradient(135deg, rgba(243, 163, 16, 0.94) 0%, rgb(160, 160, 160) 100%)',
-        color: '#ffffff',
-        fontWeight: 600,
-      },
-    },
+            value={value}
+            onChange={handleChange}
+            aria-label="KYC Management tabs"
+            scrollButtons="auto"
+            allowScrollButtonsMobile
+            sx={{
+              background: '#ffffff',
+              minWidth: 'max-content',
+              '& .MuiTabs-flexContainer': {
+                justifyContent: 'center',
+                gap: 0,
+              },
+              '& .MuiTab-root': {
+                fontWeight: 500,
+                textTransform: 'none',
+                padding: '16px 24px',
+                minHeight: '64px',
+                minWidth: '200px',
+                transition: 'all 0.2s ease',
+                borderRadius: '0',
+                whiteSpace: 'nowrap',
+                color: '#6b7280',
+                borderBottom: '2px solid transparent',
+                '&:hover': {
+                  background: '#f9fafb',
+                  color: '#374151',
+                },
+                '&.Mui-selected': {
+                  background: '#ffffff',
+                  color: '#1f2937',
+                  borderBottom: '2px solid #3b82f6',
+                  fontWeight: 600,
+                },
+              },
     '& .MuiTabs-indicator': {
       display: 'none',
     },
@@ -263,65 +250,51 @@ function CustomerKyc() {
         <Paper
           elevation={0}
           sx={{
-            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 249, 250, 0.9) 100%)',
-            borderRadius: '20px',
-            border: '1px solid rgba(243, 163, 16, 0.1)',
+            background: '#ffffff',
+            borderRadius: '8px',
+            border: '1px solid #e5e7eb',
             overflow: 'hidden',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08)',
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
           }}
         >
-          {/* Header Section for Non-Admin */}
+          {/* Clean Header Section for Non-Admin */}
           <Box sx={{
-            background: 'linear-gradient(135deg, rgba(243, 163, 16, 0.1) 0%, rgba(160, 160, 160, 0.1) 100%)',
+            background: '#ffffff',
             padding: '24px',
-            borderBottom: '1px solid rgba(243, 163, 16, 0.1)',
+            borderBottom: '1px solid #e5e7eb',
             display: 'flex',
             alignItems: 'center',
             gap: 2
           }}>
             <BackButton />
-            <PersonAdd sx={{ fontSize: 32, color: '#ed6c02' }} />
             <Box sx={{ flex: 1 }}>
               <Typography variant="h4" sx={{ 
-                fontWeight: 700, 
-                color: '#2c3e50',
+                fontWeight: 500, 
+                color: '#1f2937',
                 marginBottom: '4px',
                 wordWrap: 'break-word',
                 whiteSpace: 'normal',
-                lineHeight: 1.2
+                lineHeight: 1.2,
+                fontSize: '1.75rem'
               }}>
                 Customer KYC Portal
               </Typography>
               <Typography variant="body1" sx={{ 
-                color: '#6c757d',
-                fontSize: '1.1rem',
+                color: '#6b7280',
+                fontSize: '1rem',
                 wordWrap: 'break-word',
                 whiteSpace: 'normal',
                 lineHeight: 1.4
               }}>
-                Submit and manage your Know Your Customer applications
+                Submit and manage your KYC applications
               </Typography>
             </Box>
           </Box>
 
           <Box sx={{ 
             borderBottom: 1, 
-            borderColor: "rgba(243, 163, 16, 0.1)",
+            borderColor: "#e5e7eb",
             overflowX: 'auto',
-            '&::-webkit-scrollbar': {
-              height: '8px',
-            },
-            '&::-webkit-scrollbar-track': {
-              backgroundColor: 'rgba(243, 163, 16, 0.1)',
-              borderRadius: '4px',
-            },
-            '&::-webkit-scrollbar-thumb': {
-              backgroundColor: 'rgba(243, 163, 16, 0.5)',
-              borderRadius: '4px',
-              '&:hover': {
-                backgroundColor: 'rgba(243, 163, 16, 0.7)',
-              },
-            },
           }}>
             <Tabs
               value={value}
@@ -331,7 +304,7 @@ function CustomerKyc() {
               scrollButtons="auto"
               allowScrollButtonsMobile
               sx={{
-                background: 'rgba(255, 255, 255, 0.8)',
+                background: '#ffffff',
                 minWidth: 'max-content',
                 '& .MuiTab-root': {
                   fontWeight: 500,
@@ -339,14 +312,18 @@ function CustomerKyc() {
                   padding: '16px 24px',
                   minHeight: '64px',
                   minWidth: '180px',
-                  transition: 'all 0.3s ease-in-out',
+                  transition: 'all 0.2s ease',
                   whiteSpace: 'nowrap',
+                  color: '#6b7280',
+                  borderBottom: '2px solid transparent',
                   '&:hover': {
-                    background: 'rgba(243, 163, 16, 0.08)',
+                    background: '#f9fafb',
+                    color: '#374151',
                   },
                   '&.Mui-selected': {
-                    background: 'linear-gradient(135deg, rgba(243, 163, 16, 0.94) 0%, rgb(160, 160, 160) 100%)',
-                    color: '#ffffff',
+                    background: '#ffffff',
+                    color: '#1f2937',
+                    borderBottom: '2px solid #3b82f6',
                     fontWeight: 600,
                   },
                 },

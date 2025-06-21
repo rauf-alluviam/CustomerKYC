@@ -77,18 +77,24 @@ code {
 
 /* Modern Card Styles */
 .feedback-form, .kyc-form-container {
-  background: var(--white);
-  padding: var(--spacing-xl);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-soft);
-  margin: var(--spacing-md);
-  border: 1px solid rgba(243, 163, 16, 0.1);
-  transition: all var(--transition-medium);
+  background: #f8f9fa;
+  padding: 32px;
+  border-radius: 12px;
+  margin: 16px;
+  border: none;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-shadow: none;
+}
+
+.kyc-form-container {
+ max-width: 150rem;  /* Even wider form */
+  width: 100%;
 }
 
 .feedback-form:hover, .kyc-form-container:hover {
-  box-shadow: var(--shadow-medium);
-  transform: translateY(-2px);
+  box-shadow: none;
+  transform: none;
 }
 
 /* Modern Form Inputs */
@@ -430,4 +436,254 @@ code {
   padding: 0.75rem;
   border-radius: 0.25rem;
   margin-bottom: 1rem;
+}
+
+/* Clean Form Grid Layout */
+.form-grid-section {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 32px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+  color: #1f2937;
+  font-weight: 600;
+  margin: 0 0 24px 0;
+  font-size: 1.1rem;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 8px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.form-grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.form-grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 768px) {
+  .form-grid-2,
+  .form-grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Clean Input Styling */
+.clean-input .MuiOutlinedInput-root {
+  background: #f9fafb;
+  border-radius: 6px !important;
+  border: 1px solid #d1d5db;
+  transition: all 0.2s ease;
+}
+
+.clean-input .MuiOutlinedInput-root:hover {
+  background: #ffffff;
+  border-color: #9ca3af;
+}
+
+.clean-input .MuiOutlinedInput-root.Mui-focused {
+  background: #ffffff;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.clean-input .MuiInputLabel-root {
+  color: #6b7280;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.clean-input .MuiInputLabel-root.Mui-focused {
+  color: #3b82f6;
+}
+
+/* Clean Status Tags */
+.status-tag {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-pending {
+  background: #fffefe;
+  color: #edba54;
+  border: 1px solid #edba54;
+}
+
+.status-approved {
+  background: #d6e6ff;
+  color: #67aff7;
+  border: 1px solid #67aff7;
+}
+
+.status-revision {
+  background: #bdddfa;
+  color: #000000;
+  border: 1px solid #67aff7;
+}
+
+/* Clean Table Styling */
+.clean-table .MuiTableContainer-root {
+  border-radius: 8px !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+.clean-table .MuiTableHead-root {
+  background: #f9fafb !important;
+}
+
+.clean-table .MuiTableCell-head {
+  font-weight: 500 !important;
+  color: #374151 !important;
+  font-size: 0.875rem !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+.clean-table .MuiTableRow-root:hover {
+  background-color: #f9fafb !important;
+  transform: none !important;
+}
+
+.clean-table .MuiTableRow-root:nth-of-type(even) {
+  background-color: transparent !important;
+}
+
+/* Clean Card Styling */
+.clean-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.clean-card:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  transform: translateY(-1px);
+}
+
+/* Enhanced Clean Table UI Components */
+
+/* Clean Table Density Toggle */
+.clean-table .MuiToggleButtonGroup-root {
+  border-radius: 8px !important;
+  border: 1px solid #d1d5db !important;
+}
+
+.clean-table .MuiToggleButton-root {
+  border: none !important;
+  color: #6b7280 !important;
+  font-size: 0.875rem !important;
+}
+
+.clean-table .MuiToggleButton-root.Mui-selected {
+  background: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+.clean-table .MuiToggleButton-root:hover {
+  background: #f3f4f6 !important;
+}
+
+/* Clean Table Column Actions */
+.clean-table .MuiIconButton-root {
+  color: #6b7280 !important;
+  border-radius: 6px !important;
+  transition: all 0.2s ease !important;
+}
+
+.clean-table .MuiIconButton-root:hover {
+  background: #f3f4f6 !important;
+  color: #374151 !important;
+  transform: scale(1.05) !important;
+}
+
+/* Clean Table Menu */
+.clean-table .MuiMenu-paper {
+  border-radius: 8px !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07) !important;
+}
+
+.clean-table .MuiMenuItem-root {
+  font-size: 0.875rem !important;
+  color: #374151 !important;
+  padding: 8px 16px !important;
+}
+
+.clean-table .MuiMenuItem-root:hover {
+  background: #f9fafb !important;
+}
+
+/* Clean Table Checkbox */
+.clean-table .MuiCheckbox-root {
+  color: #6b7280 !important;
+}
+
+.clean-table .MuiCheckbox-root.Mui-checked {
+  color: #3b82f6 !important;
+}
+
+/* Clean Table Sort Icons */
+.clean-table .MuiTableSortLabel-root {
+  color: #6b7280 !important;
+}
+
+.clean-table .MuiTableSortLabel-root:hover {
+  color: #374151 !important;
+}
+
+.clean-table .MuiTableSortLabel-root.Mui-active {
+  color: #3b82f6 !important;
+}
+
+.clean-table .MuiTableSortLabel-icon {
+  color: #3b82f6 !important;
+}
+
+/* Clean Table Filter Chips */
+.clean-table .MuiChip-root {
+  border-radius: 6px !important;
+  font-size: 0.8rem !important;
+  height: 28px !important;
+}
+
+.clean-table .MuiChip-outlined {
+  border-color: #d1d5db !important;
+  color: #374151 !important;
+}
+
+/* Clean Table Loading Indicator */
+.clean-table .MuiLinearProgress-root {
+  border-radius: 4px !important;
+  height: 4px !important;
+}
+
+.clean-table .MuiLinearProgress-bar {
+  background: #3b82f6 !important;
+}
+
+/* Clean Table Empty State */
+.clean-table .MuiTableBody-root .MuiTableRow-root:only-child .MuiTableCell-root {
+  text-align: center !important;
+  color: #6b7280 !important;
+  font-style: italic !important;
+  padding: 40px !important;
 }

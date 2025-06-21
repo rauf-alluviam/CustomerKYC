@@ -96,96 +96,110 @@ function CustomerKycStatus() {
 
   const getStatusChip = (status) => {
     const statusConfig = {
-      'Approved': { color: 'success', icon: <CheckCircle sx={{ fontSize: 16 }} /> },
-      'Approved by HOD': { color: 'success', icon: <CheckCircle sx={{ fontSize: 16 }} /> },
-      'Pending': { color: 'warning', icon: <PendingOutlined sx={{ fontSize: 16 }} /> },
-      'Sent for revision': { color: 'info', icon: <Edit sx={{ fontSize: 16 }} /> }
+      'Approved': { 
+        style: { 
+          backgroundColor: '#dbeafe', 
+          color: '#2563eb',
+          border: 'none'
+        }
+      },
+      'Approved by HOD': { 
+        style: { 
+          backgroundColor: '#dbeafe', 
+          color: '#2563eb',
+          border: 'none'
+        }
+      },
+      'Pending': { 
+        style: { 
+          backgroundColor: '#fef3c7', 
+          color: '#d97706',
+          border: 'none'
+        }
+      },
+      'Sent for revision': { 
+        style: { 
+          backgroundColor: '#f3f4f6', 
+          color: '#374151',
+          border: 'none'
+        }
+      }
     };
     
-    const config = statusConfig[status] || { color: 'default', icon: null };
+    const config = statusConfig[status] || { style: { backgroundColor: '#f3f4f6', color: '#6b7280', border: 'none' } };
     
     return (
-      <Chip
-        label={status}
-        color={config.color}
-        icon={config.icon}
-        size="small"
-        sx={{
-          fontWeight: 500,
+      <span
+        style={{
+          ...config.style,
+          padding: '4px 10px',
+          borderRadius: '4px',
           fontSize: '0.75rem',
-          height: '24px',
-          '& .MuiChip-icon': {
-            fontSize: '16px'
-          }
+          fontWeight: 500,
+          textTransform: 'uppercase',
+          letterSpacing: '0.5px',
+          display: 'inline-block'
         }}
-      />
+      >
+        {status}
+      </span>
     );
   };
 
   const getCategoryChip = (category) => {
-    const categoryColors = {
-      'Individual/ Proprietary Firm': 'primary',
-      'Partnership Firm': 'secondary',
-      'Company': 'success',
-      'Trust Foundations': 'info'
-    };
-    
     return (
-      <Chip
-        label={category}
-        color={categoryColors[category] || 'default'}
-        variant="outlined"
-        size="small"
-        sx={{
-          fontWeight: 500,
-          fontSize: '0.75rem',
-          height: '24px'
-        }}
-      />
+      <span style={{
+        fontSize: '0.875rem',
+        color: '#4b5563',
+        fontWeight: 400
+      }}>
+        {category}
+      </span>
     );
   };
 
   const StatCard = ({ title, value, icon, color, bgColor }) => (
     <Card sx={{ 
-      background: `linear-gradient(135deg, ${bgColor}15 0%, ${bgColor}05 100%)`,
-      border: `1px solid ${bgColor}30`,
-      borderRadius: '16px',
+      background: '#ffffff',
+      border: '1px solid #e5e7eb',
+      borderRadius: '8px',
       height: '100%',
-      transition: 'all 0.3s ease-in-out',
+      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+      transition: 'all 0.2s ease',
       '&:hover': {
-        transform: 'translateY(-2px)',
-        boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)'
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.07)',
+        transform: 'translateY(-1px)',
       }
     }}>
       <CardContent sx={{ p: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Box>
             <Typography variant="h3" sx={{ 
-              fontWeight: 700, 
-              color: color,
+              fontWeight: 600, 
+              color: '#1f2937',
               marginBottom: '4px',
-              fontSize: '2.5rem'
+              fontSize: '2rem'
             }}>
               {value}
             </Typography>
             <Typography variant="body2" sx={{ 
-              color: '#6c757d',
-              fontWeight: 500,
-              fontSize: '0.9rem'
+              color: '#6b7280',
+              fontWeight: 400,
+              fontSize: '0.875rem'
             }}>
               {title}
             </Typography>
           </Box>
           <Box sx={{ 
-            color: color,
-            backgroundColor: `${color}15`,
-            borderRadius: '50%',
+            color: '#9ca3af',
+            backgroundColor: '#f9fafb',
+            borderRadius: '8px',
             p: 2,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center'
           }}>
-            {React.cloneElement(icon, { sx: { fontSize: 32 } })}
+            {React.cloneElement(icon, { sx: { fontSize: 24 } })}
           </Box>
         </Box>
       </CardContent>
@@ -227,25 +241,22 @@ function CustomerKycStatus() {
     },
     {
       accessorKey: "category",
-      header: "🏢 Category",
+      header: "Category",
       enableSorting: true,
-      size: 200,
+      size: 180,
       Cell: ({ cell }) => getCategoryChip(cell.getValue()),
     },
     { 
       accessorKey: "iec_no", 
-      header: " IEC Code", 
+      header: "IEC Code", 
       enableSorting: true, 
-      size: 250,
+      size: 200,
       Cell: ({ cell }) => (
         <Box sx={{ 
           fontFamily: 'monospace', 
           fontSize: '0.85rem',
-          backgroundColor: '#f5f5f5',
-          padding: '4px 8px',
-          borderRadius: '6px',
-          display: 'inline-block',
-          fontWeight: 600
+          color: '#374151',
+          fontWeight: 500
         }}>
           {cell.getValue() || 'N/A'}
         </Box>
@@ -253,18 +264,15 @@ function CustomerKycStatus() {
     },
     { 
       accessorKey: "pan_no", 
-      header: " PAN Number", 
+      header: "PAN Number", 
       enableSorting: true, 
-      size: 250,
+      size: 200,
       Cell: ({ cell }) => (
         <Box sx={{ 
           fontFamily: 'monospace', 
           fontSize: '0.85rem',
-          backgroundColor: '#f0f8ff',
-          padding: '4px 8px',
-          borderRadius: '6px',
-          display: 'inline-block',
-          fontWeight: 600
+          color: '#374151',
+          fontWeight: 500
         }}>
           {cell.getValue() || 'N/A'}
         </Box>
@@ -272,14 +280,13 @@ function CustomerKycStatus() {
     },
     { 
       accessorKey: "permanent_address_telephone", 
-      header: " Mobile", 
+      header: "Mobile", 
       enableSorting: true, 
-      size: 250,
+      size: 180,
       Cell: ({ cell }) => (
         <Box sx={{ 
-          fontFamily: 'monospace', 
-          fontSize: '0.85rem',
-          color: '#2c3e50'
+          fontSize: '0.875rem',
+          color: '#374151'
         }}>
           {cell.getValue() || 'N/A'}
         </Box>
@@ -287,13 +294,13 @@ function CustomerKycStatus() {
     },
     { 
       accessorKey: "permanent_address_email", 
-      header: " Email", 
+      header: "Email", 
       enableSorting: true, 
-      size: 200,
+      size: 220,
       Cell: ({ cell }) => (
         <Box sx={{ 
-          fontSize: '0.85rem',
-          color: '#2c3e50',
+          fontSize: '0.875rem',
+          color: '#374151',
           wordBreak: 'break-word'
         }}>
           {cell.getValue() || 'N/A'}
@@ -302,20 +309,20 @@ function CustomerKycStatus() {
     },
     {
       accessorKey: "approval",
-      header: " KYC Status",
+      header: "Status",
       enableSorting: true,
-      size: 250,
+      size: 150,
       Cell: ({ cell }) => getStatusChip(cell.getValue()),
     },
     {
       accessorKey: "approved_by",
-      header: " Processed By",
+      header: "Processed By",
       enableSorting: true,
-      size: 250,
+      size: 180,
       Cell: ({ cell }) => (
         <Box sx={{ 
-          fontSize: '0.85rem',
-          color: '#6c757d',
+          fontSize: '0.875rem',
+          color: '#6b7280',
           fontStyle: cell.getValue() ? 'normal' : 'italic'
         }}>
           {cell.getValue() || 'Pending Review'}
@@ -324,9 +331,9 @@ function CustomerKycStatus() {
     },
     {
       accessorKey: "actions",
-      header: " Actions",
+      header: "Actions",
       enableSorting: false,
-      size: 250,
+      size: 100,
       Cell: ({ cell }) => (
         <Tooltip title="View Details" arrow>
           <IconButton
@@ -342,10 +349,10 @@ function CustomerKycStatus() {
             }}
             size="small"
             sx={{
-              color: '#1976d2',
+              color: '#6b7280',
               '&:hover': {
-                backgroundColor: 'rgba(25, 118, 210, 0.1)',
-                transform: 'scale(1.1)',
+                backgroundColor: '#f3f4f6',
+                color: '#374151',
               }
             }}
           >
@@ -361,28 +368,24 @@ function CustomerKycStatus() {
   return (
     <Box sx={{
       padding: '24px',
-      background: 'linear-gradient(135deg, rgba(243, 163, 16, 0.05) 0%, rgba(160, 160, 160, 0.05) 100%)',
-      borderRadius: '16px',
+      background: '#ffffff',
+      borderRadius: '8px',
       minHeight: '400px'
     }}>
-      {/* Header */}
+      {/* Clean Header */}
       <Box sx={{
         marginBottom: '32px',
         textAlign: 'center',
       }}>
         <h2 style={{
-          color: '#2c3e50',
-          fontWeight: 600,
-          fontSize: '2rem',
+          color: '#1f2937',
+          fontWeight: 500,
+          fontSize: '1.75rem',
           marginBottom: '8px',
-          background: 'linear-gradient(135deg, rgba(243, 163, 16, 0.94) 0%, rgb(160, 160, 160) 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text',
+          margin: 0,
         }}>
-          Customer KYC Status 
+          Customer KYC Status
         </h2>
-        
       </Box>
 
       {/* Statistics Cards */}
@@ -425,14 +428,14 @@ function CustomerKycStatus() {
         </Grid>
       </Grid>
 
-      {/* Filters */}
+      {/* Clean Filters */}
       <Paper sx={{ 
         p: 3, 
         mb: 3, 
-        borderRadius: '12px',
-        background: 'rgba(255, 255, 255, 0.8)',
-        backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(243, 163, 16, 0.1)'
+        borderRadius: '8px',
+        background: '#ffffff',
+        border: '1px solid #e5e7eb',
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
       }}>
         <Grid container spacing={3} alignItems="center">
           <Grid item xs={12} md={6}>
@@ -444,12 +447,22 @@ function CustomerKycStatus() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               InputProps={{
-                startAdornment: <Search sx={{ color: '#6c757d', mr: 1 }} />,
+                startAdornment: <Search sx={{ color: '#6b7280', mr: 1 }} />,
               }}
               sx={{
                 '& .MuiOutlinedInput-root': {
-                  borderRadius: '12px',
-                  backgroundColor: '#ffffff',
+                  borderRadius: '6px',
+                  backgroundColor: '#f9fafb',
+                  border: '1px solid #d1d5db',
+                  '&:hover': {
+                    backgroundColor: '#ffffff',
+                    borderColor: '#9ca3af',
+                  },
+                  '&.Mui-focused': {
+                    backgroundColor: '#ffffff',
+                    borderColor: '#3b82f6',
+                    boxShadow: '0 0 0 3px rgba(59, 130, 246, 0.1)',
+                  }
                 }
               }}
             />
@@ -462,8 +475,17 @@ function CustomerKycStatus() {
                 label="Filter by Status"
                 onChange={(e) => setStatusFilter(e.target.value)}
                 sx={{
-                  borderRadius: '12px',
-                  backgroundColor: '#ffffff',
+                  borderRadius: '6px',
+                  backgroundColor: '#f9fafb',
+                  border: '1px solid #d1d5db',
+                  '&:hover': {
+                    backgroundColor: '#ffffff',
+                    borderColor: '#9ca3af',
+                  },
+                  '&.Mui-focused': {
+                    backgroundColor: '#ffffff',
+                    borderColor: '#3b82f6',
+                  }
                 }}
               >
                 <MenuItem value="All">All Statuses</MenuItem>
@@ -487,7 +509,9 @@ function CustomerKycStatus() {
       </Box>
 
       {/* Data Table */}
-      <MaterialReactTable table={table} />
+      <div className="clean-table">
+        <MaterialReactTable table={table} />
+      </div>
     </Box>
   );
 }

@@ -249,7 +249,12 @@ function RevisionList() {
         </Alert>
       )}
       
-      <MaterialReactTable table={table} />
+      {/* Data Table */}
+      <div className="clean-table-wrapper">
+        <div className="clean-table">
+          <MaterialReactTable table={table} />
+        </div>
+      </div>
     </Box>
   );
 }

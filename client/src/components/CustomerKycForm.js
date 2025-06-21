@@ -296,47 +296,54 @@ function CustomerKycForm() {
 
   return (
     <form onSubmit={formik.handleSubmit} className="kyc-form-container">
-      {/* Header with Back Button */}
+      {/* Clean Header */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        marginBottom: '20px',
-        padding: '10px 0',
-        borderBottom: '2px solid #e0e0e0'
+        marginBottom: '32px',
+        padding: '16px 0',
+        borderBottom: '1px solid #e5e7eb'
       }}>
- 
         <h2 style={{ 
-          color: 'var(--primary-orange)', 
+          color: '#1f2937', 
           margin: '0 auto',
           textAlign: 'center',
-          flex: 1
+          flex: 1,
+          fontWeight: 500,
+          fontSize: '1.75rem'
         }}>
           Customer KYC Form
         </h2>
       </div>
       
-      <div className="form-section">
-        <FormControl sx={{ marginBottom: "var(--spacing-lg)" }}>
+      {/* Category Section */}
+      <div className="form-grid-section">
+        <FormControl sx={{ marginBottom: "24px" }}>
           <FormLabel 
-            id="demo-radio-buttons-group-label"
+            id="category-label"
             sx={{ 
-              fontWeight: 'var(--font-weight-semibold)',
-              color: 'var(--text-primary)',
-              marginBottom: 'var(--spacing-sm)',
+              fontWeight: 500,
+              color: '#374151',
+              marginBottom: '12px',
+              fontSize: '0.95rem',
             }}
           >
             Category
           </FormLabel>
           <RadioGroup
             row
-            aria-labelledby="demo-radio-buttons-group-label"
+            aria-labelledby="category-label"
             name="category"
             value={formik.values.category}
             onChange={formik.handleChange}
             sx={{
+              gap: '24px',
               '& .MuiFormControlLabel-root': {
-                marginRight: 'var(--spacing-lg)',
-                marginBottom: 'var(--spacing-sm)',
+                margin: 0,
+                '& .MuiFormControlLabel-label': {
+                  fontSize: '0.9rem',
+                  color: '#4b5563'
+                },
               },
             }}
           >
@@ -366,47 +373,59 @@ function CustomerKycForm() {
           <div className="error-message">{formik.errors.category}</div>
         ) : null}
       </div>
-      <div className="form-section">
-        <TextField
-          fullWidth
-          size="small"
-          margin="dense"
-          variant="filled"
-          id="name_of_individual"
-          name="name_of_individual"
-          label="Name of Individual including alias/ Proprietary Firm/ Partnership Firm/ Company/ Trusts/ Foundations/ (name of all partners)"
-          value={formik.values.name_of_individual}
-          onChange={formik.handleChange}
-          error={
-            formik.touched.name_of_individual &&
-            Boolean(formik.errors.name_of_individual)
-          }
-          helperText={
-            formik.touched.name_of_individual && formik.errors.name_of_individual
-          }
-          className="login-input"
-        />
 
-        <FormControl sx={{ marginTop: "var(--spacing-lg)" }}>
+      {/* Individual Information Section */}
+      <div className="form-grid-section">
+        <h4 className="section-title">Individual Information</h4>
+        <div className="form-grid">
+          <TextField
+            fullWidth
+            size="small"
+            margin="none"
+            variant="outlined"
+            id="name_of_individual"
+            name="name_of_individual"
+            label="Name of Individual/Firm/Company"
+            value={formik.values.name_of_individual}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.name_of_individual &&
+              Boolean(formik.errors.name_of_individual)
+            }
+            helperText={
+              formik.touched.name_of_individual && formik.errors.name_of_individual
+            }
+            className="clean-input"
+          />
+        </div>
+
+        {/* Status Section */}
+        <FormControl sx={{ marginTop: "24px" }}>
           <FormLabel 
-            id="demo-radio-buttons-group-label"
+            id="status-label"
             sx={{ 
-              fontWeight: 'var(--font-weight-semibold)',
-              color: 'var(--text-primary)',
-              marginBottom: 'var(--spacing-sm)',
+              fontWeight: 500,
+              color: '#374151',
+              marginBottom: '12px',
+              fontSize: '0.95rem',
             }}
           >
-            Status of Exporter/ Importer
+            Status of Exporter/Importer
           </FormLabel>
           <RadioGroup
             row
-            aria-labelledby="demo-radio-buttons-group-label"
+            aria-labelledby="status-label"
             name="status"
             value={formik.values.status}
             onChange={formik.handleChange}
             sx={{
+              gap: '24px',
               '& .MuiFormControlLabel-root': {
-                marginRight: 'var(--spacing-lg)',
+                margin: 0,
+                '& .MuiFormControlLabel-label': {
+                  fontSize: '0.9rem',
+                  color: '#4b5563'
+                },
               },
             }}
           >
@@ -415,62 +434,70 @@ function CustomerKycForm() {
               control={<Radio />}
               label="Manufacturer"
             />
-            <FormControlLabel value="Trader" control={<Radio />} label="Trader" />
+            <FormControlLabel 
+              value="Trader" 
+              control={<Radio />} 
+              label="Trader" 
+            />
           </RadioGroup>
         </FormControl>
         {formik.touched.status && formik.errors.status ? (
           <div className="error-message">{formik.errors.status}</div>
         ) : null}
       </div>
-      <div className="form-section">
-        <h4>Permanent Address</h4>
-        <TextField
-          fullWidth
-          size="small"
-          margin="dense"
-          variant="filled"
-          id="permanent_address_line_1"
-          name="permanent_address_line_1"
-          label="Permanent or Registered Office Address Line 1"
-          value={formik.values.permanent_address_line_1}
-          onChange={formik.handleChange}
-          error={
-            formik.touched.permanent_address_line_1 &&
-            Boolean(formik.errors.permanent_address_line_1)
-          }
-          helperText={
-            formik.touched.permanent_address_line_1 &&
-            formik.errors.permanent_address_line_1
-          }
-          className="login-input"
-        />
-      <TextField
-        fullWidth
-        size="small"
-        margin="dense"
-        variant="filled"
-        id="permanent_address_line_2"
-        name="permanent_address_line_2"
-        label="Permanent or Registered Office Address Line 2"
-        value={formik.values.permanent_address_line_2}
-        onChange={formik.handleChange}
-        error={
-          formik.touched.permanent_address_line_2 &&
-          Boolean(formik.errors.permanent_address_line_2)
-        }
-        helperText={
-          formik.touched.permanent_address_line_2 &&
-          formik.errors.permanent_address_line_2
-        }
-        className="login-input"
-      />
-      <Row>
-        <Col>
+
+      {/* Permanent Address Section */}
+      <div className="form-grid-section">
+        <h4 className="section-title">Permanent Address</h4>
+        <div className="form-grid">
           <TextField
             fullWidth
             size="small"
-            margin="dense"
-            variant="filled"
+            margin="none"
+            variant="outlined"
+            id="permanent_address_line_1"
+            name="permanent_address_line_1"
+            label="Address Line 1"
+            value={formik.values.permanent_address_line_1}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.permanent_address_line_1 &&
+              Boolean(formik.errors.permanent_address_line_1)
+            }
+            helperText={
+              formik.touched.permanent_address_line_1 &&
+              formik.errors.permanent_address_line_1
+            }
+            className="clean-input"
+          />
+          <TextField
+            fullWidth
+            size="small"
+            margin="none"
+            variant="outlined"
+            id="permanent_address_line_2"
+            name="permanent_address_line_2"
+            label="Address Line 2"
+            value={formik.values.permanent_address_line_2}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.permanent_address_line_2 &&
+              Boolean(formik.errors.permanent_address_line_2)
+            }
+            helperText={
+              formik.touched.permanent_address_line_2 &&
+              formik.errors.permanent_address_line_2
+            }
+            className="clean-input"
+          />
+        </div>
+
+        <div className="form-grid form-grid-3">
+          <TextField
+            fullWidth
+            size="small"
+            margin="none"
+            variant="outlined"
             id="permanent_address_pin_code"
             name="permanent_address_pin_code"
             label="PIN Code"
@@ -484,15 +511,13 @@ function CustomerKycForm() {
               formik.touched.permanent_address_pin_code &&
               formik.errors.permanent_address_pin_code
             }
-            className="login-input"
+            className="clean-input"
           />
-        </Col>
-        <Col>
           <TextField
             fullWidth
             size="small"
-            margin="dense"
-            variant="filled"
+            margin="none"
+            variant="outlined"
             id="permanent_address_city"
             name="permanent_address_city"
             label="City"
@@ -506,15 +531,13 @@ function CustomerKycForm() {
               formik.touched.permanent_address_city &&
               formik.errors.permanent_address_city
             }
-            className="login-input"
+            className="clean-input"
           />
-        </Col>
-        <Col>
           <TextField
             fullWidth
             size="small"
-            margin="dense"
-            variant="filled"
+            margin="none"
+            variant="outlined"
             id="permanent_address_state"
             name="permanent_address_state"
             label="State"
@@ -528,122 +551,129 @@ function CustomerKycForm() {
               formik.touched.permanent_address_state &&
               formik.errors.permanent_address_state
             }
-            className="login-input"
+            className="clean-input"
           />
-        </Col>
-      </Row>
-      <TextField
-        fullWidth
-        size="small"
-        margin="dense"
-        variant="filled"
-        id="permanent_address_telephone"
-        name="permanent_address_telephone"
-        label="Mobile"
-        value={formik.values.permanent_address_telephone}
-        onChange={formik.handleChange}
-        error={
-          formik.touched.permanent_address_telephone &&
-          Boolean(formik.errors.permanent_address_telephone)
-        }
-        helperText={
-          formik.touched.permanent_address_telephone &&
-          formik.errors.permanent_address_telephone
-        }
-        className="login-input"
-      />
-      <TextField
-        fullWidth
-        size="small"
-        margin="dense"
-        variant="filled"
-        id="permanent_address_email"
-        name="permanent_address_email"
-        label="Email"
-        value={formik.values.permanent_address_email}
-        onChange={formik.handleChange}
-        error={
-          formik.touched.permanent_address_email &&
-          Boolean(formik.errors.permanent_address_email)
-        }
-        helperText={
-          formik.touched.permanent_address_email &&
-          formik.errors.permanent_address_email
-        }
-        className="login-input"
-      />
+        </div>
+
+        <div className="form-grid form-grid-2">
+          <TextField
+            fullWidth
+            size="small"
+            margin="none"
+            variant="outlined"
+            id="permanent_address_telephone"
+            name="permanent_address_telephone"
+            label="Mobile"
+            value={formik.values.permanent_address_telephone}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.permanent_address_telephone &&
+              Boolean(formik.errors.permanent_address_telephone)
+            }
+            helperText={
+              formik.touched.permanent_address_telephone &&
+              formik.errors.permanent_address_telephone
+            }
+            className="clean-input"
+          />
+          <TextField
+            fullWidth
+            size="small"
+            margin="none"
+            variant="outlined"
+            id="permanent_address_email"
+            name="permanent_address_email"
+            label="Email"
+            value={formik.values.permanent_address_email}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.permanent_address_email &&
+              Boolean(formik.errors.permanent_address_email)
+            }
+            helperText={
+              formik.touched.permanent_address_email &&
+              formik.errors.permanent_address_email
+            }
+            className="clean-input"
+          />
+        </div>
       </div>
 
-      <div className="form-section">
-        <h4>Principal Business Address</h4>
+      {/* Principal Business Address Section */}
+      <div className="form-grid-section">
+        <h4 className="section-title">Principal Business Address</h4>
         <FormControlLabel
           control={
             <Checkbox
               checked={formik.values.sameAsPermanentAddress}
               onChange={handleSameAsPermanentAddress}
               sx={{
-                color: 'var(--primary-orange)',
+                color: '#6b7280',
                 '&.Mui-checked': {
-                  color: 'var(--primary-orange)',
+                  color: '#3b82f6',
                 },
               }}
             />
           }
           label="Same as Permanent Address"
           sx={{ 
-            marginBottom: 'var(--spacing-md)',
+            marginBottom: '16px',
             '& .MuiFormControlLabel-label': {
-              fontWeight: 'var(--font-weight-medium)',
+              fontSize: '0.9rem',
+              color: '#4b5563'
             },
           }}
         />
-      <TextField
-        fullWidth
-        size="small"
-        margin="dense"
-        variant="filled"
-        id="principle_business_address_line_1"
-        name="principle_business_address_line_1"
-        label="Principal Business Address/es from which business is transacted Line 1"
-        value={formik.values.principle_business_address_line_1}
-        onChange={formik.handleChange}
-        error={
-          formik.touched.principle_business_address_line_1 &&
-          Boolean(formik.errors.principle_business_address_line_1)
-        }
-        helperText={
-          formik.touched.principle_business_address_line_1 &&
-          formik.errors.principle_business_address_line_1
-        }
-        className="login-input"
-      />
-      <TextField
-        fullWidth
-        size="small"
-        margin="dense"
-        variant="filled"
-        id="principle_business_address_line_2"
-        name="principle_business_address_line_2"
-        label="Principal Business Address/es from which business is transacted Line 2"
-        value={formik.values.principle_business_address_line_2}
-        onChange={formik.handleChange}
-        error={
-          formik.touched.principle_business_address_line_2 &&
-          Boolean(formik.errors.principle_business_address_line_2)
-        }
-        helperText={
-          formik.touched.principle_business_address_line_2 &&
-          formik.errors.principle_business_address_line_2
-        }
-        className="login-input"
-      />
-      <Row>
-        <Col>
+
+        <div className="form-grid">
           <TextField
             fullWidth
             size="small"
-            margin="dense"
-            variant="filled"
+            margin="none"
+            variant="outlined"
+            id="principle_business_address_line_1"
+            name="principle_business_address_line_1"
+            label="Address Line 1"
+            value={formik.values.principle_business_address_line_1}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.principle_business_address_line_1 &&
+              Boolean(formik.errors.principle_business_address_line_1)
+            }
+            helperText={
+              formik.touched.principle_business_address_line_1 &&
+              formik.errors.principle_business_address_line_1
+            }
+            className="clean-input"
+          />
+          <TextField
+            fullWidth
+            size="small"
+            margin="none"
+            variant="outlined"
+            id="principle_business_address_line_2"
+            name="principle_business_address_line_2"
+            label="Address Line 2"
+            value={formik.values.principle_business_address_line_2}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.principle_business_address_line_2 &&
+              Boolean(formik.errors.principle_business_address_line_2)
+            }
+            helperText={
+              formik.touched.principle_business_address_line_2 &&
+              formik.errors.principle_business_address_line_2
+            }
+            className="clean-input"
+          />
+        </div>
+
+        <div className="form-grid form-grid-3">
+          <TextField
+            fullWidth
+            size="small"
+            margin="none"
+            variant="outlined"
             id="principle_business_address_pin_code"
             name="principle_business_address_pin_code"
             label="PIN Code"
@@ -657,15 +687,13 @@ function CustomerKycForm() {
               formik.touched.principle_business_address_pin_code &&
               formik.errors.principle_business_address_pin_code
             }
-            className="login-input"
+            className="clean-input"
           />
-        </Col>
-        <Col>
           <TextField
             fullWidth
             size="small"
-            margin="dense"
-            variant="filled"
+            margin="none"
+            variant="outlined"
             id="principle_business_address_city"
             name="principle_business_address_city"
             label="City"
@@ -679,15 +707,13 @@ function CustomerKycForm() {
               formik.touched.principle_business_address_city &&
               formik.errors.principle_business_address_city
             }
-            className="login-input"
+            className="clean-input"
           />
-        </Col>
-        <Col>
           <TextField
             fullWidth
             size="small"
-            margin="dense"
-            variant="filled"
+            margin="none"
+            variant="outlined"
             id="principle_business_address_state"
             name="principle_business_address_state"
             label="State"
@@ -701,177 +727,345 @@ function CustomerKycForm() {
               formik.touched.principle_business_address_state &&
               formik.errors.principle_business_address_state
             }
-            className="login-input"
+            className="clean-input"
           />
-        </Col>
-      </Row>
-      <TextField
-        fullWidth
-        size="small"
-        margin="dense"
-        variant="filled"
-        id="principle_business_telephone"
-        name="principle_business_telephone"
-        label="Mobile"
-        value={formik.values.principle_business_telephone}
-        onChange={formik.handleChange}
-        error={
-          formik.touched.principle_business_telephone &&
-          Boolean(formik.errors.principle_business_telephone)
-        }
-        helperText={
-          formik.touched.principle_business_telephone &&
-          formik.errors.principle_business_telephone
-        }
-        className="login-input"
-      />
-      <TextField
-        fullWidth
-        size="small"
-        margin="dense"
-        variant="filled"
-        id="principle_address_email"
-        name="principle_address_email"
-        label="Email"
-        value={formik.values.principle_address_email}
-        onChange={formik.handleChange}
-        error={
-          formik.touched.principle_address_email &&
-          Boolean(formik.errors.principle_address_email)
-        }
-        helperText={
-          formik.touched.principle_address_email &&
-          formik.errors.principle_address_email
-        }
-        className="login-input"
-      />
-      <TextField
-        fullWidth
-        size="small"
-        margin="dense"
-        variant="filled"
-        id="principle_business_website"
-        name="principle_business_website"
-        label="Website"
-        value={formik.values.principle_business_website}
-        onChange={formik.handleChange}
-        error={
-          formik.touched.principle_business_website &&
-          Boolean(formik.errors.principle_business_website)
-        }
-        helperText={
-          formik.touched.principle_business_website &&
-          formik.errors.principle_business_website
-        }
-        className="login-input"
-      />
-      </div>
+        </div>
 
-      <div className="form-section">
-        <h4>Factory Address</h4>
+        <div className="form-grid form-grid-3">
+          <TextField
+            fullWidth
+            size="small"
+            margin="none"
+            variant="outlined"
+            id="principle_business_telephone"
+            name="principle_business_telephone"
+            label="Mobile"
+            value={formik.values.principle_business_telephone}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.principle_business_telephone &&
+              Boolean(formik.errors.principle_business_telephone)
+            }
+            helperText={
+              formik.touched.principle_business_telephone &&
+              formik.errors.principle_business_telephone
+            }
+            className="clean-input"
+          />
+          <TextField
+            fullWidth
+            size="small"
+            margin="none"
+            variant="outlined"
+            id="principle_address_email"
+            name="principle_address_email"
+            label="Email"
+            value={formik.values.principle_address_email}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.principle_address_email &&
+              Boolean(formik.errors.principle_address_email)
+            }
+            helperText={
+              formik.touched.principle_address_email &&
+              formik.errors.principle_address_email
+            }
+            className="clean-input"
+          />
+          <TextField
+            fullWidth
+            size="small"
+            margin="none"
+            variant="outlined"
+            id="principle_business_website"
+            name="principle_business_website"
+            label="Website"
+            value={formik.values.principle_business_website}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.principle_business_website &&
+              Boolean(formik.errors.principle_business_website)
+            }
+            helperText={
+              formik.touched.principle_business_website &&
+              formik.errors.principle_business_website
+            }
+            className="clean-input"
+          />
+        </div>
+      </div>      
+      {/* Factory Address Section */}
+      <div className="form-grid-section">
+        <h4 className="section-title">Factory Address</h4>
         {formik.values.factory_addresses?.map((address, index) => (
           <div 
             key={index}
-            style={{
-              background: 'var(--light-gray)',
-              padding: 'var(--spacing-lg)',
-              borderRadius: 'var(--radius-md)',
-              marginBottom: 'var(--spacing-md)',
-              border: '1px solid rgba(243, 163, 16, 0.2)',
-            }}
+            // className="card"
+             style={{ marginBottom: '24px'  }}
+             
           >
-          <Row>
-            <Col>
+            <div className="form-grid">
               <TextField
                 fullWidth
                 size="small"
-                margin="dense"
-                variant="filled"
+                margin="none"
+                variant="outlined"
                 id={`factory_addresses[${index}].factory_address_line_1`}
                 name={`factory_addresses[${index}].factory_address_line_1`}
                 label={`Factory Address Line 1`}
                 value={address.factory_address_line_1}
                 onChange={formik.handleChange}
-                className="login-input"
+                className="clean-input"
               />
-            </Col>
-            <Col>
               <TextField
                 fullWidth
                 size="small"
-                margin="dense"
-                variant="filled"
+                margin="none"
+                variant="outlined"
                 id={`factory_addresses[${index}].factory_address_line_2`}
                 name={`factory_addresses[${index}].factory_address_line_2`}
                 label={`Factory Address Line 2`}
                 value={address.factory_address_line_2}
                 onChange={formik.handleChange}
-                className="login-input"
+                className="clean-input"
               />
-            </Col>
-          </Row>
+            </div>
 
-          <Row>
-            <Col>
+            <div className="form-grid form-grid-3">
               <TextField
                 fullWidth
                 size="small"
-                margin="dense"
-                variant="filled"
-                id={`factory_addresses[${index}].factory_address_city`}
-                name={`factory_addresses[${index}].factory_address_city`}
-                label={`City`}
-                value={address.factory_address_city}
-                onChange={formik.handleChange}
-                className="login-input"
-              />
-            </Col>
-            <Col>
-              <TextField
-                fullWidth
-                size="small"
-                margin="dense"
-                variant="filled"
-                id={`factory_addresses[${index}].factory_address_state`}
-                name={`factory_addresses[${index}].factory_address_state`}
-                label={`State`}
-                value={address.factory_address_state}
-                onChange={formik.handleChange}
-                className="login-input"
-              />
-            </Col>
-            <Col>
-              <TextField
-                fullWidth
-                size="small"
-                margin="dense"
-                variant="filled"
+                margin="none"
+                variant="outlined"
                 id={`factory_addresses[${index}].factory_address_pin_code`}
                 name={`factory_addresses[${index}].factory_address_pin_code`}
                 label="PIN Code"
                 value={address.factory_address_pin_code}
                 onChange={formik.handleChange}
-                className="login-input"
+                className="clean-input"
               />
-            </Col>
-          </Row>
-          <Row>
-            <Col>
               <TextField
                 fullWidth
                 size="small"
-                margin="dense"
-                variant="filled"
+                margin="none"
+                variant="outlined"
+                id={`factory_addresses[${index}].factory_address_city`}
+                name={`factory_addresses[${index}].factory_address_city`}
+                label={`City`}
+                value={address.factory_address_city}
+                onChange={formik.handleChange}
+                className="clean-input"
+              />
+              <TextField
+                fullWidth
+                size="small"
+                margin="none"
+                variant="outlined"
+                id={`factory_addresses[${index}].factory_address_state`}
+                name={`factory_addresses[${index}].factory_address_state`}
+                label={`State`}
+                value={address.factory_address_state}
+                onChange={formik.handleChange}
+                className="clean-input"
+              />
+            </div>
+
+            <div className="form-grid">
+              <TextField
+                fullWidth
+                size="small"
+                margin="none"
+                variant="outlined"
                 id={`factory_addresses[${index}].gst`}
                 name={`factory_addresses[${index}].gst`}
                 label={`GST`}
                 value={address.gst}
                 onChange={formik.handleChange}
-                className="login-input"
+                className="clean-input"
               />
-            </Col>
-          </Row>
-          <div style={{ marginTop: 'var(--spacing-md)' }}>
+            </div>
+
+            <div style={{ marginTop: '24px' }}>
+              <label 
+                style={{ 
+                  display: 'block',
+                  fontWeight: 500,
+                  marginBottom: '12px',
+                  color: '#374151',
+                  fontSize: '0.95rem',
+                }}
+              >
+                GST Registration
+              </label>
+              <FileUpload
+                label="Upload GST Registration"
+                onFilesUploaded={(uploadedUrls, appendFiles = true) => {
+                  const currentFiles = address.gst_reg || [];
+                  const newFiles = appendFiles ? [...currentFiles, ...uploadedUrls] : uploadedUrls;
+                  formik.setFieldValue(`factory_addresses[${index}].gst_reg`, newFiles);
+                  setFileSnackbar(true);
+                }}
+                bucketPath={`gst-registration-${index}`}
+                multiple={true}
+                customerName={formik.values.name_of_individual}
+                acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png']}
+              />
+              {address.gst_reg?.length > 0 && (
+                <ImagePreview
+                  images={address.gst_reg}
+                  onDeleteImage={(deleteIndex) => {
+                    const updatedImages = address.gst_reg.filter((_, i) => i !== deleteIndex);
+                    formik.setFieldValue(`factory_addresses[${index}].gst_reg`, updatedImages);
+                  }}
+                />
+              )}
+            </div>
+          </div>
+        ))}
+
+        <div style={{ 
+          textAlign: 'center', 
+          marginTop: '24px',
+          marginBottom: '16px' 
+        }}>
+          <button 
+  style={{
+    background: '#f3f4f6',
+    color: '#374151',
+    border: '1px solid #d1d5db',
+    padding: '8px 16px',
+    borderRadius: '6px',
+    fontSize: '0.9rem',
+    fontWeight: 500,
+    display: 'block',
+    marginLeft: '0',
+    marginTop: '12px',
+    textAlign: 'left'
+  }}
+>
+  Add Factory/Branch Address
+</button>
+        </div>
+      </div>
+
+      {/* Authorised Signatory Section - Compact Layout */}
+      <div className="form-grid-section" style={{ marginBottom: 'var(--spacing-md)' }}>
+        <h4 className="section-title" style={{ marginBottom: 'var(--spacing-sm)' }}>
+          Authorised Signatory Information
+        </h4>
+        
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: '1fr 1fr',
+          gap: 'var(--spacing-md)',
+          marginTop: 'var(--spacing-sm)'
+        }}>
+          {/* Signatory Photos */}
+          <div>
+            <label style={{ 
+              display: 'block',
+              fontWeight: 'var(--font-weight-medium)',
+              marginBottom: 'var(--spacing-xs)',
+              color: 'var(--primary-orange)',
+              fontSize: '0.9rem'
+            }}>
+              Signatory Photos <span style={{ color: 'var(--text-secondary)', fontSize: '0.8rem' }}>(passport size, self-attested)</span>
+            </label>
+            <FileUpload
+              label="Upload Photos"
+              onFilesUploaded={(uploadedUrls, appendFiles = true) => {
+                const currentFiles = formik.values.authorised_signatories || [];
+                const newFiles = appendFiles ? [...currentFiles, ...uploadedUrls] : uploadedUrls;
+                formik.setFieldValue("authorised_signatories", newFiles);
+                setFileSnackbar(true);
+              }}
+              bucketPath="authorised-signatories"
+              multiple={true}
+              customerName={formik.values.name_of_individual}
+              acceptedFileTypes={['.jpg', '.jpeg', '.png', '.pdf']}
+            />
+            {formik.touched.authorised_signatories && formik.errors.authorised_signatories && (
+              <div className="error-message" style={{ fontSize: '0.8rem', marginTop: '4px' }}>
+                {formik.errors.authorised_signatories}
+              </div>
+            )}
+            {formik.values.authorised_signatories && (
+              <ImagePreview
+                images={formik.values.authorised_signatories}
+                onDeleteImage={(index) => {
+                  const updatedImages = formik.values.authorised_signatories.filter((_, i) => i !== index);
+                  formik.setFieldValue("authorised_signatories", updatedImages);
+                }}
+              />
+            )}
+          </div>
+
+          {/* Authorisation Letter */}
+          <div>
+            <label style={{ 
+              display: 'block',
+              fontWeight: 'var(--font-weight-medium)',
+              marginBottom: 'var(--spacing-xs)',
+              color: 'var(--primary-orange)',
+              fontSize: '0.9rem'
+            }}>
+              Authorisation Letter
+            </label>
+            <FileUpload
+              label="Upload Letter"
+              onFilesUploaded={(uploadedUrls, appendFiles = true) => {
+                const currentFiles = formik.values.authorisation_letter || [];
+                const newFiles = appendFiles ? [...currentFiles, ...uploadedUrls] : uploadedUrls;
+                formik.setFieldValue("authorisation_letter", newFiles);
+                setFileSnackbar(true);
+              }}
+              bucketPath="authorisation_letter"
+              multiple={true}
+              customerName={formik.values.name_of_individual}
+              acceptedFileTypes={['.jpg', '.jpeg', '.png', '.pdf']}
+            />
+            {formik.touched.authorisation_letter && formik.errors.authorisation_letter && (
+              <div className="error-message" style={{ fontSize: '0.8rem', marginTop: '4px' }}>
+                {formik.errors.authorisation_letter}
+              </div>
+            )}
+            {formik.values.authorisation_letter && (
+              <ImagePreview
+                images={formik.values.authorisation_letter}
+                onDeleteImage={(index) => {
+                  const updatedImages = formik.values.authorisation_letter.filter((_, i) => i !== index);
+                  formik.setFieldValue("authorisation_letter", updatedImages);
+                }}
+              />
+            )}
+          </div>
+        </div>
+      </div>        
+      {/* IEC and PAN Section - Side by Side */}
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: '1fr 1fr', 
+        gap: '24px',
+        marginBottom: 'var(--spacing-xl)' 
+      }}>
+        {/* IEC Section */}
+        <div>
+          <TextField
+            fullWidth
+            size="small"
+            margin="dense"
+            variant="filled"
+            id="iec_no"
+            name="iec_no"
+            label="IEC No"
+            value={formik.values.iec_no}
+            onChange={formik.handleChange}
+            error={formik.touched.iec_no && Boolean(formik.errors.iec_no)}
+            helperText={formik.touched.iec_no && formik.errors.iec_no}
+            className="login-input"
+          />
+
+          <div style={{ marginBottom: 'var(--spacing-md)' }}>
             <label 
               style={{ 
                 display: 'block',
@@ -880,309 +1074,155 @@ function CustomerKycForm() {
                 color: 'var(--primary-orange)',
               }}
             >
-              GST Registration
+              IEC Copy
             </label>
             <FileUpload
-              label="Upload GST Registration"
+              label="Upload IEC Copy"
               onFilesUploaded={(uploadedUrls, appendFiles = true) => {
-                const currentFiles = address.gst_reg || [];
+                const currentFiles = formik.values.iec_copy || [];
                 const newFiles = appendFiles ? [...currentFiles, ...uploadedUrls] : uploadedUrls;
-                formik.setFieldValue(`factory_addresses[${index}].gst_reg`, newFiles);
+                formik.setFieldValue("iec_copy", newFiles);
                 setFileSnackbar(true);
               }}
-              bucketPath={`gst-registration-${index}`}
+              bucketPath="iec_copy"
               multiple={true}
               customerName={formik.values.name_of_individual}
               acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png']}
             />
-            {address.gst_reg?.length > 0 && (
+            {formik.touched.iec_copy && formik.errors.iec_copy ? (
+              <div className="error-message">{formik.errors.iec_copy}</div>
+            ) : null}
+            {formik.values.iec_copy && (
               <ImagePreview
-                images={address.gst_reg}
-                onDeleteImage={(deleteIndex) => {
-                  const updatedImages = address.gst_reg.filter((_, i) => i !== deleteIndex);
-                  formik.setFieldValue(`factory_addresses[${index}].gst_reg`, updatedImages);
+                images={formik.values.iec_copy}
+                onDeleteImage={(index) => {
+                  const updatedImages = formik.values.iec_copy.filter((_, i) => i !== index);
+                  formik.setFieldValue("iec_copy", updatedImages);
                 }}
               />
             )}
           </div>
         </div>
-      ))}
 
-
-      <div style={{ 
-        textAlign: 'center', 
-        marginTop: 'var(--spacing-lg)',
-        marginBottom: 'var(--spacing-md)' 
-      }}>
-        <button
-          type="button"
-          className="btn btn-secondary"
-          aria-label="add-factory-address"
-          onClick={handleAddField}
-        >
-          Add Factory/ Branch Address
-        </button>
-      </div>
-      </div>
-
-      <div className="form-section">
-        <h4>Authorised Signatory Information</h4>
-        <p style={{ 
-          marginBottom: 'var(--spacing-lg)',
-          color: 'var(--text-secondary)',
-          fontSize: 'var(--font-size-sm)',
-          lineHeight: '1.5',
-        }}>
-          Name of Authorised Signatory/ies for signing import/export documents on
-          behalf of the Firm/ Company. Please provide recent passport size self
-          attested photographs of each signatory
-        </p>        
-        <div style={{ marginBottom: 'var(--spacing-md)' }}>
-          <label 
-            style={{ 
-              display: 'block',
-              fontWeight: 'var(--font-weight-medium)',
-              marginBottom: 'var(--spacing-sm)',
-              color: 'var(--primary-orange)',
-            }}
-          >
-            Authorised Signatory Photos
-          </label>
-          <FileUpload
-            label="Upload Authorised Signatory Photos"
-            onFilesUploaded={(uploadedUrls, appendFiles = true) => {
-              const currentFiles = formik.values.authorised_signatories || [];
-              const newFiles = appendFiles ? [...currentFiles, ...uploadedUrls] : uploadedUrls;
-              formik.setFieldValue("authorised_signatories", newFiles);
-              setFileSnackbar(true);
-            }}
-            bucketPath="authorised-signatories"
-            multiple={true}
-            customerName={formik.values.name_of_individual}
-            acceptedFileTypes={['.jpg', '.jpeg', '.png', '.pdf']}
-          />
-          {formik.touched.authorised_signatories &&
-          formik.errors.authorised_signatories ? (
-            <div className="error-message">
-              {formik.errors.authorised_signatories}
-            </div>
-          ) : null}
-          {formik.values.authorised_signatories && (
-            <ImagePreview
-              images={formik.values.authorised_signatories}
-              onDeleteImage={(index) => {
-                const updatedImages = formik.values.authorised_signatories.filter((_, i) => i !== index);
-                formik.setFieldValue("authorised_signatories", updatedImages);
-              }}
-            />
-          )}
-        </div>
-
-        <div style={{ marginBottom: 'var(--spacing-md)' }}>
-          <label 
-            style={{ 
-              display: 'block',
-              fontWeight: 'var(--font-weight-medium)',
-              marginBottom: 'var(--spacing-sm)',
-              color: 'var(--primary-orange)',
-            }}
-          >
-            Authorisation Letter
-          </label>
-          <FileUpload
-            label="Upload Authorisation Letter"
-            onFilesUploaded={(uploadedUrls, appendFiles = true) => {
-               const currentFiles = formik.values.authorisation_letter || [];
-              const newFiles = appendFiles ? [...currentFiles, ...uploadedUrls] : uploadedUrls;
-              formik.setFieldValue("authorisation_letter", newFiles);
-              setFileSnackbar(true);
-            }}
-            bucketPath="authorisation_letter"
-            multiple={true}
-            customerName={formik.values.name_of_individual}
-            acceptedFileTypes={['.jpg', '.jpeg', '.png', '.pdf']}
-          />
-          {formik.touched.authorisation_letter &&
-          formik.errors.authorisation_letter ? (
-            <div className="error-message">{formik.errors.authorisation_letter}</div>
-          ) : null}
-          {formik.values.authorisation_letter && (
-            <ImagePreview
-              images={formik.values.authorisation_letter}
-              onDeleteImage={(index) => {
-                const updatedImages = formik.values.authorisation_letter.filter((_, i) => i !== index);
-                formik.setFieldValue("authorisation_letter", updatedImages);
-              }}
-            />
-          )}
-        </div>        <TextField
-          fullWidth
-          size="small"
-          margin="dense"
-          variant="filled"
-          id="iec_no"
-          name="iec_no"
-          label="IEC No"
-          value={formik.values.iec_no}
-          onChange={formik.handleChange}
-          error={formik.touched.iec_no && Boolean(formik.errors.iec_no)}
-          helperText={formik.touched.iec_no && formik.errors.iec_no}
-          className="login-input"
-        />
-
-        <div style={{ marginBottom: 'var(--spacing-md)' }}>
-          <label 
-            style={{ 
-              display: 'block',
-              fontWeight: 'var(--font-weight-medium)',
-              marginBottom: 'var(--spacing-sm)',
-              color: 'var(--primary-orange)',
-            }}
-          >
-            IEC Copy
-          </label>
-          <FileUpload
-            label="Upload IEC Copy"
-            onFilesUploaded={(uploadedUrls, appendFiles = true) => {
-              const currentFiles = formik.values.iec_copy || [];
-              const newFiles = appendFiles ? [...currentFiles, ...uploadedUrls] : uploadedUrls;
-              formik.setFieldValue("iec_copy", newFiles);
-              setFileSnackbar(true);
-            }}
-            bucketPath="iec_copy"
-            multiple={true}
-            customerName={formik.values.name_of_individual}
-            acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png']}
-          />
-          {formik.touched.iec_copy && formik.errors.iec_copy ? (
-            <div className="error-message">{formik.errors.iec_copy}</div>
-          ) : null}
-          {formik.values.iec_copy && (
-            <ImagePreview
-              images={formik.values.iec_copy}
-              onDeleteImage={(index) => {
-                const updatedImages = formik.values.iec_copy.filter((_, i) => i !== index);
-                formik.setFieldValue("iec_copy", updatedImages);
-              }}
-            />
-          )}
-        </div>
-
-        <TextField
-          fullWidth
-          size="small"
-          margin="dense"
-          variant="filled"
-          id="pan_no"
-          name="pan_no"
-          label="PAN No"
-          value={formik.values.pan_no}
-          onChange={formik.handleChange}
-          error={formik.touched.pan_no && Boolean(formik.errors.pan_no)}
-          helperText={formik.touched.pan_no && formik.errors.pan_no}
-          className="login-input"
-        />
-
-        <div style={{ marginBottom: 'var(--spacing-lg)' }}>
-          <label 
-            style={{ 
-              display: 'block',
-              fontWeight: 'var(--font-weight-medium)',
-              marginBottom: 'var(--spacing-sm)',
-              color: 'var(--primary-orange)',
-            }}
-          >
-            PAN Copy
-          </label>
-          <FileUpload
-            label="Upload PAN Copy"
-            onFilesUploaded={(uploadedUrls, appendFiles = true) => {
-              const currentFiles = formik.values.pan_copy || [];
-              const newFiles = appendFiles ? [...currentFiles, ...uploadedUrls] : uploadedUrls;
-              formik.setFieldValue("pan_copy", newFiles);
-              setFileSnackbar(true);
-            }}
-            bucketPath="pan-copy"
-            multiple={true}
-            customerName={formik.values.name_of_individual}
-            acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png']}
-          />
-          {formik.touched.pan_copy && formik.errors.pan_copy ? (
-            <div className="error-message">{formik.errors.pan_copy}</div>
-          ) : null}
-          {formik.values.pan_copy && (
-            <ImagePreview
-              images={Array.isArray(formik.values.pan_copy) ? formik.values.pan_copy : [formik.values.pan_copy]}
-              onDeleteImage={(index) => {
-                if (Array.isArray(formik.values.pan_copy)) {
-                  const updatedImages = formik.values.pan_copy.filter((_, i) => i !== index);
-                  formik.setFieldValue("pan_copy", updatedImages);
-                } else {
-                  formik.setFieldValue("pan_copy", []);
-                }
-              }}
-            />
-          )}
-        </div>
-      <h4 style={{ marginTop: 'var(--spacing-xl)', marginBottom: 'var(--spacing-lg)' }}>Banking Information</h4>
-      {formik.values.banks?.map((bank, index) => (
-        <div 
-          key={index}
-          style={{
-            background: 'var(--light-gray)',
-            padding: 'var(--spacing-lg)',
-            borderRadius: 'var(--radius-md)',
-            marginBottom: 'var(--spacing-md)',
-            border: '1px solid rgba(243, 163, 16, 0.2)',
-          }}
-        >
+        {/* PAN Section */}
+        <div>
           <TextField
             fullWidth
             size="small"
             margin="dense"
             variant="filled"
-            id={`banks[${index}].bankers_name`}
-            name={`banks[${index}].bankers_name`}
-            label={`Bankers Name`}
-            value={bank.bankers_name}
+            id="pan_no"
+            name="pan_no"
+            label="PAN No"
+            value={formik.values.pan_no}
             onChange={formik.handleChange}
-            error={
-              formik.touched[`banks[${index}].bankers_name`] &&
-              Boolean(formik.errors[`banks[${index}].bankers_name`])
-            }
-            helperText={
-              formik.touched[`banks[${index}].bankers_name`] &&
-              formik.errors[`banks[${index}].bankers_name`]
-            }
+            error={formik.touched.pan_no && Boolean(formik.errors.pan_no)}
+            helperText={formik.touched.pan_no && formik.errors.pan_no}
             className="login-input"
           />
-          <TextField
-            fullWidth
-            size="small"
-            margin="dense"
-            variant="filled"
-            id={`banks[${index}].branch_address`}
-            name={`banks[${index}].branch_address`}
-            label={`Branch Address`}
-            value={bank.branch_address}
-            onChange={formik.handleChange}
-            error={
-              formik.touched[`banks[${index}].branch_address`] &&
-              Boolean(formik.errors[`banks[${index}].branch_address`])
-            }
-            helperText={
-              formik.touched[`banks[${index}].branch_address`] &&
-              formik.errors[`banks[${index}].branch_address`]
-            }
-            className="login-input"
-          />
-          <Row>
-            <Col>
+
+          <div style={{ marginBottom: 'var(--spacing-lg)' }}>
+            <label 
+              style={{ 
+                display: 'block',
+                fontWeight: 'var(--font-weight-medium)',
+                marginBottom: 'var(--spacing-sm)',
+                color: 'var(--primary-orange)',
+              }}
+            >
+              PAN Copy
+            </label>
+            <FileUpload
+              label="Upload PAN Copy"
+              onFilesUploaded={(uploadedUrls, appendFiles = true) => {
+                const currentFiles = formik.values.pan_copy || [];
+                const newFiles = appendFiles ? [...currentFiles, ...uploadedUrls] : uploadedUrls;
+                formik.setFieldValue("pan_copy", newFiles);
+                setFileSnackbar(true);
+              }}
+              bucketPath="pan-copy"
+              multiple={true}
+              customerName={formik.values.name_of_individual}
+              acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png']}
+            />
+            {formik.touched.pan_copy && formik.errors.pan_copy ? (
+              <div className="error-message">{formik.errors.pan_copy}</div>
+            ) : null}
+            {formik.values.pan_copy && (
+              <ImagePreview
+                images={Array.isArray(formik.values.pan_copy) ? formik.values.pan_copy : [formik.values.pan_copy]}
+                onDeleteImage={(index) => {
+                  if (Array.isArray(formik.values.pan_copy)) {
+                    const updatedImages = formik.values.pan_copy.filter((_, i) => i !== index);
+                    formik.setFieldValue("pan_copy", updatedImages);
+                  } else {
+                    formik.setFieldValue("pan_copy", []);
+                  }
+                }}
+              />
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Banking Information Section */}
+      <div className="form-grid-section">
+        <h4 className="section-title">Banking Information</h4>
+        {formik.values.banks?.map((bank, index) => (
+          <div 
+            key={index}
+           
+            style={{ marginBottom: '24px' }}
+          >
+            <div className="form-grid">
               <TextField
                 fullWidth
                 size="small"
-                margin="dense"
-                variant="filled"
+                margin="none"
+                variant="outlined"
+                id={`banks[${index}].bankers_name`}
+                name={`banks[${index}].bankers_name`}
+                label={`Bankers Name`}
+                value={bank.bankers_name}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched[`banks[${index}].bankers_name`] &&
+                  Boolean(formik.errors[`banks[${index}].bankers_name`])
+                }
+                helperText={
+                  formik.touched[`banks[${index}].bankers_name`] &&
+                  formik.errors[`banks[${index}].bankers_name`]
+                }
+                className="clean-input"
+              />
+              <TextField
+                fullWidth
+                size="small"
+                margin="none"
+                variant="outlined"
+                id={`banks[${index}].branch_address`}
+                name={`banks[${index}].branch_address`}
+                label={`Branch Address`}
+                value={bank.branch_address}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched[`banks[${index}].branch_address`] &&
+                  Boolean(formik.errors[`banks[${index}].branch_address`])
+                }
+                helperText={
+                  formik.touched[`banks[${index}].branch_address`] &&
+                  formik.errors[`banks[${index}].branch_address`]
+                }
+                className="clean-input"
+              />
+            </div>
+
+            <div className="form-grid form-grid-3">
+              <TextField
+                fullWidth
+                size="small"
+                margin="none"
+                variant="outlined"
                 id={`banks[${index}].account_no`}
                 name={`banks[${index}].account_no`}
                 label={`Account No`}
@@ -1196,15 +1236,13 @@ function CustomerKycForm() {
                   formik.touched[`banks[${index}].account_no`] &&
                   formik.errors[`banks[${index}].account_no`]
                 }
-                className="login-input"
+                className="clean-input"
               />
-            </Col>
-            <Col>
               <TextField
                 fullWidth
                 size="small"
-                margin="dense"
-                variant="filled"
+                margin="none"
+                variant="outlined"
                 id={`banks[${index}].ifsc`}
                 name={`banks[${index}].ifsc`}
                 label={`IFSC`}
@@ -1218,15 +1256,13 @@ function CustomerKycForm() {
                   formik.touched[`banks[${index}].ifsc`] &&
                   formik.errors[`banks[${index}].ifsc`]
                 }
-                className="login-input"
+                className="clean-input"
               />
-            </Col>
-            <Col>
               <TextField
                 fullWidth
                 size="small"
-                margin="dense"
-                variant="filled"
+                margin="none"
+                variant="outlined"
                 id={`banks[${index}].adCode`}
                 name={`banks[${index}].adCode`}
                 label={`AD Code`}
@@ -1240,221 +1276,282 @@ function CustomerKycForm() {
                   formik.touched[`banks[${index}].adCode`] &&
                   formik.errors[`banks[${index}].adCode`]
                 }
-                className="login-input"
+                className="clean-input"
               />
-            </Col>
-          </Row>
-          <div style={{ marginTop: 'var(--spacing-md)' }}>
-            <label 
-              style={{ 
-                display: 'block',
-                fontWeight: 'var(--font-weight-medium)',
-                marginBottom: 'var(--spacing-sm)',
-                color: 'var(--primary-orange)',
-              }}
-            >
-              AD Code File
+            </div>
+
+            <div style={{ marginTop: '24px' }}>
+              <label 
+                style={{ 
+                  display: 'block',
+                  fontWeight: 500,
+                  marginBottom: '12px',
+                  color: '#374151',
+                  fontSize: '0.95rem',
+                }}
+              >
+                AD Code File
+              </label>
+              <FileUpload
+                label="Upload AD Code File"
+                onFilesUploaded={(uploadedUrls, appendFiles = true) => {
+                  const currentFiles = bank.adCode_file || [];
+                  const newFiles = appendFiles ? [...currentFiles, ...uploadedUrls] : uploadedUrls;
+                  formik.setFieldValue(`banks[${index}].adCode_file`, newFiles);
+                  setFileSnackbar(true);
+                }}
+                bucketPath={`ad-code-${index}`}
+                multiple={true}
+                customerName={formik.values.name_of_individual}
+                acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png']}
+              />
+              {bank.adCode_file?.length > 0 && (
+                <ImagePreview
+                  images={bank.adCode_file}
+                  onDeleteImage={(deleteIndex) => {
+                    const updatedImages = bank.adCode_file.filter((_, i) => i !== deleteIndex);
+                    formik.setFieldValue(`banks[${index}].adCode_file`, updatedImages);
+                  }}
+                />
+              )}
+            </div>
+          </div>
+        ))}
+        
+        <div style={{ 
+          textAlign: 'center', 
+          marginTop: '24px',
+          marginBottom: '32px' 
+        }}>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            aria-label="add-bank"
+            onClick={handleAddBanks}
+           style={{
+    background: '#f3f4f6',
+    color: '#374151',
+    border: '1px solid #d1d5db',
+    padding: '8px 16px',
+    borderRadius: '6px',
+    fontSize: '0.9rem',
+    fontWeight: 500,
+    display: 'block',
+    marginLeft: '0',
+    marginTop: '12px',
+    textAlign: 'left'
+  }}
+          >
+            Add AD Code
+          </button>
+        </div>
+      </div>
+      {getSupportingDocs()}
+
+      {/* Additional Documents Section - Structured Layout */}
+      <div style={{ marginBottom: 'var(--spacing-xl)' }}>
+        <h4 style={{ 
+          fontSize: '20px',
+          fontWeight: 'bold',
+          color: '#2c3e50',
+          marginBottom: '24px',
+          borderBottom: '2px solid #d6e6ff',
+          paddingBottom: '8px'
+        }}>
+          Additional Documents
+        </h4>
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+          gap: '24px',
+          marginTop: '16px'
+        }}>
+          {/* Other Documents Card */}
+          <div style={{ 
+            background: '#fffefe',
+            border: '1px solid #d6e6ff',
+            borderRadius: '8px',
+            padding: '16px'
+          }}>
+            <label style={{ 
+              display: 'block',
+              fontWeight: 'bold',
+              fontSize: '16px',
+              color: '#2c3e50',
+              marginBottom: '12px'
+            }}>
+              Other Documents
             </label>
             <FileUpload
-              label="Upload AD Code File"
+              label="Upload Other Documents"
               onFilesUploaded={(uploadedUrls, appendFiles = true) => {
-                const currentFiles = bank.adCode_file || [];
+                const currentFiles = formik.values.other_documents || [];
                 const newFiles = appendFiles ? [...currentFiles, ...uploadedUrls] : uploadedUrls;
-                formik.setFieldValue(`banks[${index}].adCode_file`, newFiles);
+                formik.setFieldValue("other_documents", newFiles);
                 setFileSnackbar(true);
               }}
-              bucketPath={`ad-code-${index}`}
+              bucketPath="other-documents"
+              multiple={true}
+              customerName={formik.values.name_of_individual}
+              acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png', '.doc', '.docx']}
+            />
+            {formik.touched.other_documents && formik.errors.other_documents && (
+              <div className="error-message" style={{ marginTop: '8px' }}>{formik.errors.other_documents}</div>
+            )}
+            {formik.values.other_documents?.length > 0 && (
+              <div style={{ marginTop: '12px' }}>
+                <ImagePreview
+                  images={formik.values.other_documents}
+                  onDeleteImage={(index) => {
+                    const updatedImages = formik.values.other_documents.filter((_, i) => i !== index);
+                    formik.setFieldValue("other_documents", updatedImages);
+                  }}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* SPCB Registration Certificate Card */}
+          <div style={{ 
+            background: '#fffefe',
+            border: '1px solid #d6e6ff',
+            borderRadius: '8px',
+            padding: '16px'
+          }}>
+            <label style={{ 
+              display: 'block',
+              fontWeight: 'bold',
+              fontSize: '16px',
+              color: '#2c3e50',
+              marginBottom: '12px'
+            }}>
+              SPCB Registration Certificate
+            </label>
+            <FileUpload
+              label="Upload SPCB Registration Certificate"
+              onFilesUploaded={(uploadedUrls, appendFiles = true) => {
+                const currentFiles = formik.values.spcb_reg || [];
+                const newFiles = appendFiles ? [...currentFiles, ...uploadedUrls] : uploadedUrls;
+                formik.setFieldValue("spcb_reg", newFiles);
+                setFileSnackbar(true);
+              }}
+              bucketPath="spcb-registration"
               multiple={true}
               customerName={formik.values.name_of_individual}
               acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png']}
             />
-            {bank.adCode_file?.length > 0 && (
-              <ImagePreview
-                images={bank.adCode_file}
-                onDeleteImage={(deleteIndex) => {
-                  const updatedImages = bank.adCode_file.filter((_, i) => i !== deleteIndex);
-                  formik.setFieldValue(`banks[${index}].adCode_file`, updatedImages);
-                }}
-              />
+            {formik.touched.spcb_reg && formik.errors.spcb_reg && (
+              <div className="error-message" style={{ marginTop: '8px' }}>{formik.errors.spcb_reg}</div>
+            )}
+            {formik.values.spcb_reg && (
+              <div style={{ marginTop: '12px' }}>
+                <ImagePreview
+                  images={Array.isArray(formik.values.spcb_reg) ? formik.values.spcb_reg : [formik.values.spcb_reg]}
+                  onDeleteImage={(index) => {
+                    if (Array.isArray(formik.values.spcb_reg)) {
+                      const updatedImages = formik.values.spcb_reg.filter((_, i) => i !== index);
+                      formik.setFieldValue("spcb_reg", updatedImages);
+                    } else {
+                      formik.setFieldValue("spcb_reg", []);
+                    }
+                  }}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* KYC Verification Images Card */}
+          <div style={{ 
+            background: '#fffefe',
+            border: '1px solid #d6e6ff',
+            borderRadius: '8px',
+            padding: '16px'
+          }}>
+            <label style={{ 
+              display: 'block',
+              fontWeight: 'bold',
+              fontSize: '16px',
+              color: '#2c3e50',
+              marginBottom: '12px'
+            }}>
+              KYC Verification Images
+            </label>
+            <FileUpload
+              label="Upload KYC Verification Images"
+              onFilesUploaded={(uploadedUrls, appendFiles = true) => {
+                const currentFiles = formik.values.kyc_verification_images || [];
+                const newFiles = appendFiles ? [...currentFiles, ...uploadedUrls] : uploadedUrls;
+                formik.setFieldValue("kyc_verification_images", newFiles);
+                setFileSnackbar(true);
+              }}
+              bucketPath="kyc-verification-images"
+              multiple={true}
+              customerName={formik.values.name_of_individual}
+              acceptedFileTypes={['.jpg', '.jpeg', '.png', '.pdf']}
+            />
+            {formik.touched.kyc_verification_images && formik.errors.kyc_verification_images && (
+              <div className="error-message" style={{ marginTop: '8px' }}>
+                {formik.errors.kyc_verification_images}
+              </div>
+            )}
+            {formik.values.kyc_verification_images?.length > 0 && (
+              <div style={{ marginTop: '12px' }}>
+                <ImagePreview
+                  images={formik.values.kyc_verification_images}
+                  onDeleteImage={(index) => {
+                    const updatedImages = formik.values.kyc_verification_images.filter((_, i) => i !== index);
+                    formik.setFieldValue("kyc_verification_images", updatedImages);
+                  }}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* GST Returns Card */}
+          <div style={{ 
+            background: '#fffefe',
+            border: '1px solid #d6e6ff',
+            borderRadius: '8px',
+            padding: '16px'
+          }}>
+            <label style={{ 
+              display: 'block',
+              fontWeight: 'bold',
+              fontSize: '16px',
+              color: '#2c3e50',
+              marginBottom: '12px'
+            }}>
+              GST Returns
+            </label>
+            <FileUpload
+              label="Upload GST Returns"
+              onFilesUploaded={(uploadedUrls, appendFiles = true) => {
+                const currentFiles = formik.values.gst_returns || [];
+                const newFiles = appendFiles ? [...currentFiles, ...uploadedUrls] : uploadedUrls;
+                formik.setFieldValue("gst_returns", newFiles);
+                setFileSnackbar(true);
+              }}
+              bucketPath="gst-returns"
+              multiple={true}
+              customerName={formik.values.name_of_individual}
+              acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png', '.xls', '.xlsx']}
+            />
+            {formik.touched.gst_returns && formik.errors.gst_returns && (
+              <div className="error-message" style={{ marginTop: '8px' }}>{formik.errors.gst_returns}</div>
+            )}
+            {formik.values.gst_returns?.length > 0 && (
+              <div style={{ marginTop: '12px' }}>
+                <ImagePreview
+                  images={formik.values.gst_returns}
+                  onDeleteImage={(index) => {
+                    const updatedImages = formik.values.gst_returns.filter((_, i) => i !== index);
+                    formik.setFieldValue("gst_returns", updatedImages);
+                  }}
+                />
+              </div>
             )}
           </div>
         </div>
-      ))}
-      
-      <div style={{ 
-        textAlign: 'center', 
-        marginTop: 'var(--spacing-lg)',
-        marginBottom: 'var(--spacing-xl)' 
-      }}>
-        <button
-          type="button"
-          className="btn btn-secondary"
-          aria-label="add-bank"
-          onClick={handleAddBanks}
-        >
-          Add AD Code
-        </button>
-      </div>
-      {getSupportingDocs()}
-
-      <div style={{ marginBottom: 'var(--spacing-lg)' }}>
-        <label 
-          style={{ 
-            display: 'block',
-            fontWeight: 'var(--font-weight-medium)',
-            marginBottom: 'var(--spacing-sm)',
-            color: 'var(--primary-orange)',
-          }}
-        >
-          Other Documents
-        </label>
-        <FileUpload
-          label="Upload Other Documents"
-          onFilesUploaded={(uploadedUrls, appendFiles = true) => {
-            const currentFiles = formik.values.other_documents || [];
-            const newFiles = appendFiles ? [...currentFiles, ...uploadedUrls] : uploadedUrls;
-            formik.setFieldValue("other_documents", newFiles);
-            setFileSnackbar(true);
-          }}
-          bucketPath="other-documents"
-          multiple={true}
-          customerName={formik.values.name_of_individual}
-          acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png', '.doc', '.docx']}
-        />
-        {formik.touched.other_documents && formik.errors.other_documents ? (
-          <div className="error-message">{formik.errors.other_documents}</div>
-        ) : null}
-        {formik.values.other_documents?.length > 0 && (
-          <ImagePreview
-            images={formik.values.other_documents}
-            onDeleteImage={(index) => {
-              const updatedImages = formik.values.other_documents.filter((_, i) => i !== index);
-              formik.setFieldValue("other_documents", updatedImages);
-            }}
-          />
-        )}
-      </div>
-
-      <div style={{ marginBottom: 'var(--spacing-lg)' }}>
-        <label 
-          style={{ 
-            display: 'block',
-            fontWeight: 'var(--font-weight-medium)',
-            marginBottom: 'var(--spacing-sm)',
-            color: 'var(--primary-orange)',
-          }}
-        >
-          SPCB Registration Certificate
-        </label>
-        <FileUpload
-          label="Upload SPCB Registration Certificate"
-          onFilesUploaded={(uploadedUrls, appendFiles = true) => {
-            const currentFiles = formik.values.spcb_reg || [];
-            const newFiles = appendFiles ? [...currentFiles, ...uploadedUrls] : uploadedUrls;
-            formik.setFieldValue("spcb_reg", newFiles);
-            setFileSnackbar(true);
-          }}
-          bucketPath="spcb-registration"
-          multiple={true}
-          customerName={formik.values.name_of_individual}
-          acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png']}
-        />
-        {formik.touched.spcb_reg && formik.errors.spcb_reg ? (
-          <div className="error-message">{formik.errors.spcb_reg}</div>
-        ) : null}
-        {formik.values.spcb_reg && (
-          <ImagePreview
-            images={Array.isArray(formik.values.spcb_reg) ? formik.values.spcb_reg : [formik.values.spcb_reg]}
-            onDeleteImage={(index) => {
-              if (Array.isArray(formik.values.spcb_reg)) {
-                const updatedImages = formik.values.spcb_reg.filter((_, i) => i !== index);
-                formik.setFieldValue("spcb_reg", updatedImages);
-              } else {
-                formik.setFieldValue("spcb_reg", []);
-              }
-            }}
-          />
-        )}
-      </div>
-
-      <div style={{ marginBottom: 'var(--spacing-lg)' }}>
-        <label 
-          style={{ 
-            display: 'block',
-            fontWeight: 'var(--font-weight-medium)',
-            marginBottom: 'var(--spacing-sm)',
-            color: 'var(--primary-orange)',
-          }}
-        >
-          KYC Verification Images
-        </label>
-        <FileUpload
-          label="Upload KYC Verification Images"
-          onFilesUploaded={(uploadedUrls, appendFiles = true) => {
-            const currentFiles = formik.values.kyc_verification_images || [];
-            const newFiles = appendFiles ? [...currentFiles, ...uploadedUrls] : uploadedUrls;
-            formik.setFieldValue("kyc_verification_images", newFiles);
-            setFileSnackbar(true);
-          }}
-          bucketPath="kyc-verification-images"
-          multiple={true}
-          customerName={formik.values.name_of_individual}
-          acceptedFileTypes={['.jpg', '.jpeg', '.png', '.pdf']}
-        />
-        {formik.touched.kyc_verification_images &&
-        formik.errors.kyc_verification_images ? (
-          <div className="error-message">
-            {formik.errors.kyc_verification_images}
-          </div>
-        ) : null}
-        {formik.values.kyc_verification_images?.length > 0 && (
-          <ImagePreview
-            images={formik.values.kyc_verification_images}
-            onDeleteImage={(index) => {
-              const updatedImages = formik.values.kyc_verification_images.filter((_, i) => i !== index);
-              formik.setFieldValue("kyc_verification_images", updatedImages);
-            }}
-          />
-        )}
-      </div>
-
-      <div style={{ marginBottom: 'var(--spacing-xl)' }}>
-        <label 
-          style={{ 
-            display: 'block',
-            fontWeight: 'var(--font-weight-medium)',
-            marginBottom: 'var(--spacing-sm)',
-            color: 'var(--primary-orange)',
-          }}
-        >
-          GST Returns
-        </label>
-        <FileUpload
-          label="Upload GST Returns"
-          onFilesUploaded={(uploadedUrls, appendFiles = true) => {
-            const currentFiles = formik.values.gst_returns || [];
-            const newFiles = appendFiles ? [...currentFiles, ...uploadedUrls] : uploadedUrls;
-            formik.setFieldValue("gst_returns", newFiles);
-            setFileSnackbar(true);
-          }}
-          bucketPath="gst-returns"
-          multiple={true}
-          customerName={formik.values.name_of_individual}
-          acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png', '.xls', '.xlsx']}
-        />
-        {formik.touched.gst_returns && formik.errors.gst_returns ? (
-          <div className="error-message">{formik.errors.gst_returns}</div>
-        ) : null}
-        {formik.values.gst_returns?.length > 0 && (
-          <ImagePreview
-            images={formik.values.gst_returns}
-            onDeleteImage={(index) => {
-              const updatedImages = formik.values.gst_returns.filter((_, i) => i !== index);
-              formik.setFieldValue("gst_returns", updatedImages);
-            }}
-          />
-        )}
-      </div>
       </div>
 
       <div style={{ 
