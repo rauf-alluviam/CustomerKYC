@@ -20,6 +20,7 @@ import Checkbox from "@mui/material/Checkbox";
 import Preview from "./Preview";
 import { getCityAndStateByPinCode } from "../utils/getCityAndStateByPinCode";
 import BackButton from "./BackButton";
+import { useSnackbar } from "../contexts/SnackbarContext";
 
 function ReviseCustomerKyc() {
   const { _id } = useParams();
@@ -28,6 +29,7 @@ function ReviseCustomerKyc() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const { showSuccess, showError } = useSnackbar();
 
   useEffect(() => {
     async function getData() {
@@ -144,16 +146,16 @@ function ReviseCustomerKyc() {
           values
         );
         console.log("Response:", res.data);
-        alert(res.data.message);
+        showSuccess(res.data.message);
         resetForm();
         // Navigate back to the customer KYC dashboard
         navigate("/customer-kyc");
       } catch (error) {
         console.error("Error updating customer KYC:", error);
         if (error.response?.data?.message) {
-          alert(`Error: ${error.response.data.message}`);
+          showError(`Error: ${error.response.data.message}`);
         } else {
-          alert("An error occurred while updating the KYC details. Please try again.");
+          showError("An error occurred while updating the KYC details. Please try again.");
         }
       }
     },
@@ -1178,7 +1180,8 @@ function ReviseCustomerKyc() {
               "other_documents",
               "other_documents",
               formik,
-              setFileSnackbar
+              setFileSnackbar,
+              (error) => showError(error)
             )
           }
         />
@@ -1225,7 +1228,8 @@ function ReviseCustomerKyc() {
               "kyc_verification_images",
               "kyc_verification_images",
               formik,
-              setFileSnackbar
+              setFileSnackbar,
+              (error) => showError(error)
             )
           }
         />
@@ -1252,7 +1256,8 @@ function ReviseCustomerKyc() {
               "gst_returns",
               "gst_returns",
               formik,
-              setFileSnackbar
+              setFileSnackbar,
+              (error) => showError(error)
             )
           }
         />

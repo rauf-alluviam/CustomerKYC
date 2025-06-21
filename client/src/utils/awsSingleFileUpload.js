@@ -1,5 +1,5 @@
 // Mock function to handle single file upload
-export const handleSingleFileUpload = (event, fieldName, displayName, formik, setFileSnackbar) => {
+export const handleSingleFileUpload = (event, fieldName, displayName, formik, setFileSnackbar, onError = null) => {
   const file = event.target.files[0];
   
   if (!file) return;
@@ -49,7 +49,9 @@ export const handleSingleFileUpload = async (event, fieldName, displayName, form
     }
   } catch (error) {
     console.error('File upload error:', error);
-    alert('File upload failed. Please try again.');
+    if (onError && typeof onError === 'function') {
+      onError('File upload failed. Please try again.');
+    }
   }
 };
 */

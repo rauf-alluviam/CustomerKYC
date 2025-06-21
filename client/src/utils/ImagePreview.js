@@ -15,12 +15,14 @@ import {
   Button
 } from "@mui/material";
 import { UserContext } from "../contexts/UserContext";
+import { useSnackbar } from "../contexts/SnackbarContext";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 const ImagePreview = ({ images, onDeleteImage, readOnly = false }) => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [deleteIndex, setDeleteIndex] = useState(null);
   const { user } = useContext(UserContext);
+  const { showError, showSuccess } = useSnackbar();
 
   // Ensure `images` is always an array and handle both string URLs and object URLs
   const imageArray = Array.isArray(images) 
@@ -46,7 +48,7 @@ const ImagePreview = ({ images, onDeleteImage, readOnly = false }) => {
       setDeleteIndex(index);
       setOpenDeleteDialog(true);
     } else {
-      alert("You do not have permission to delete images.");
+      showError("You do not have permission to delete images.");
     }
   };
 
@@ -80,15 +82,16 @@ const ImagePreview = ({ images, onDeleteImage, readOnly = false }) => {
   
       if (response.ok) {
         onDeleteImage(deleteIndex);
+        showSuccess('Image deleted successfully');
         console.log('Image deleted successfully from S3');
       } else {
         const errorData = await response.json();
         console.error('Failed to delete image from S3:', errorData);
-        alert("Failed to delete image from S3.");
+        showError("Failed to delete image from S3.");
       }
     } catch (error) {
       console.error("Error deleting image:", error);
-      alert("Error deleting image.");
+      showError("Error deleting image.");
     }
   
     setOpenDeleteDialog(false);

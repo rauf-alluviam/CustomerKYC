@@ -5,6 +5,7 @@ import { Row, Col } from "react-bootstrap";
 import { TextField } from "@mui/material";
 import { UserContext } from "../contexts/UserContext";
 import BackButton from "./BackButton";
+import { useSnackbar } from "../contexts/SnackbarContext";
 
 function ViewCustomerKyc() {
   const { _id } = useParams();
@@ -12,6 +13,7 @@ function ViewCustomerKyc() {
   const [remarks, setRemarks] = useState("");
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
+  const { showWarning, showSuccess } = useSnackbar();
 
   useEffect(() => {
     async function getData() {
@@ -248,13 +250,14 @@ function ViewCustomerKyc() {
   const handleKycApproval = async (approval) => {
     const approved_by = `${user.first_name} ${user.last_name}`;
     if (approval === "Sent for revision" && remarks === "") {
-      alert("Please enter remarks");
+      showWarning("Please enter remarks");
     } else {
-      await axios.post(
+      const res = await axios.post(
         `${process.env.REACT_APP_API_STRING}/customer-kyc-approval/${_id}`,
         { approval, remarks, approved_by }
       );
-
+      
+      showSuccess("KYC status updated successfully");
       navigate("/customer-kyc");
     }
   };

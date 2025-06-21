@@ -20,6 +20,7 @@ import Checkbox from "@mui/material/Checkbox";
 import Preview from "./Preview";
 import { getCityAndStateByPinCode } from "../utils/getCityAndStateByPinCode";
 import BackButton from "./BackButton";
+import { useSnackbar } from "../contexts/SnackbarContext";
 
 function EditCompletedKyc() {
   const { _id } = useParams();
@@ -27,6 +28,7 @@ function EditCompletedKyc() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const { showSuccess, showError } = useSnackbar();
 
   useEffect(() => {
     async function getData() {
@@ -136,7 +138,7 @@ function EditCompletedKyc() {
         `${process.env.REACT_APP_API_STRING}/add-customer-kyc`,
         { ...values, approval: "Approved" }
       );
-      alert(res.data.message);
+      showSuccess(res.data.message);
       resetForm();
     },
   });
@@ -904,7 +906,8 @@ function EditCompletedKyc() {
               "authorised_signatories",
               "authorised_signatories",
               formik,
-              setFileSnackbar
+              setFileSnackbar,
+              (error) => showError(error)
             )
           }
         />
@@ -1176,7 +1179,8 @@ function EditCompletedKyc() {
               "other_documents",
               "other_documents",
               formik,
-              setFileSnackbar
+              setFileSnackbar,
+              (error) => showError(error)
             )
           }
         />
@@ -1223,7 +1227,8 @@ function EditCompletedKyc() {
               "kyc_verification_images",
               "kyc_verification_images",
               formik,
-              setFileSnackbar
+              setFileSnackbar,
+              (error) => showError(error)
             )
           }
         />
@@ -1250,7 +1255,8 @@ function EditCompletedKyc() {
               "gst_returns",
               "gst_returns",
               formik,
-              setFileSnackbar
+              setFileSnackbar,
+              (error) => showError(error)
             )
           }
         />

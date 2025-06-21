@@ -17,12 +17,14 @@ import Checkbox from "@mui/material/Checkbox";
 import Preview from "./Preview";
 import { getCityAndStateByPinCode } from "../utils/getCityAndStateByPinCode";
 import BackButton from "./BackButton";
+import { useSnackbar } from "../contexts/SnackbarContext";
 
 function CustomerKycForm() {
   const [submitType, setSubmitType] = useState("");
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const { showError, showSuccess, showWarning } = useSnackbar();
 
   const formik = useFormik({
     initialValues: {
@@ -124,14 +126,14 @@ function CustomerKycForm() {
         let res;
         if (submitType === "save_draft") {
           if (values.iec_no === "") {
-            alert("IEC number is required");
+            showWarning("IEC number is required");
             return;
           } else {
             res = await axios.post(
               `${process.env.REACT_APP_API_STRING}/customer-kyc-draft`,
               { ...values, draft: "true" }
             );
-            alert(res.data.message);
+            showSuccess(res.data.message);
             resetForm();
           }
         } else if (submitType === "save") {
@@ -140,7 +142,7 @@ function CustomerKycForm() {
             { ...values, approval: "Pending" }
           );
 
-          alert(res.data.message);
+          showSuccess(res.data.message);
           resetForm();
         }
         localStorage.removeItem("kycFormValues");
@@ -281,7 +283,7 @@ function CustomerKycForm() {
     // });
 
     if (errors?.length > 0) {
-      alert(errors.join("\n"));
+      showError(errors.join("\n"));
     }
 
     return errors;
@@ -309,7 +311,7 @@ function CustomerKycForm() {
           textAlign: 'center',
           flex: 1
         }}>
-          📋 Customer KYC Form
+          Customer KYC Form
         </h2>
       </div>
       

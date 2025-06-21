@@ -6,6 +6,7 @@ import { Container, AppBar, Toolbar, Typography, Box, Button, IconButton } from 
 import { LogoutOutlined } from '@mui/icons-material';
 import { NavigationProvider } from './contexts/NavigationContext';
 import { UserContext } from './contexts/UserContext';
+import { SnackbarProvider } from './contexts/SnackbarContext';
 import CustomerKyc from './components/CustomerKyc';
 import ViewCustomerKyc from './components/ViewCustomerKyc';
 import ReviseCustomerKyc from './components/ReviseCustomerKyc';
@@ -277,7 +278,9 @@ function App() {
       <NavigationProvider>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <LoginPage />
+          <SnackbarProvider>
+            <LoginPage />
+          </SnackbarProvider>
         </ThemeProvider>
       </NavigationProvider>
     );
@@ -288,6 +291,7 @@ function App() {
     <NavigationProvider>
       <ThemeProvider theme={theme}>
         <CssBaseline />
+        <SnackbarProvider>
         <Box 
           sx={{ 
             flexGrow: 1,
@@ -360,6 +364,7 @@ function App() {
           </Routes>
         </Container>
       </Box>
+      </SnackbarProvider>
     </ThemeProvider>
     </NavigationProvider>
   );

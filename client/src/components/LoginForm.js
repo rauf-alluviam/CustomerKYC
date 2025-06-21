@@ -5,11 +5,13 @@ import { TextField, Button, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigation } from "../contexts/NavigationContext";
+import { useSnackbar } from "../contexts/SnackbarContext";
 
 function LoginForm() {
   const { setUser, login } = useContext(UserContext);
   const navigate = useNavigate();
   const { saveTabState } = useNavigation();
+  const { showError } = useSnackbar();
 
   const formik = useFormik({
     initialValues: {
@@ -35,9 +37,9 @@ function LoginForm() {
         }
       } catch (error) {
         if (error.response && error.response.status === 400) {
-          alert(error.response.data.message);
+          showError(error.response.data.message);
         } else {
-          alert("An unexpected error occurred. Please try again later.");
+          showError("An unexpected error occurred. Please try again later.");
         }
       }
     },

@@ -27,7 +27,7 @@ function CompletedKyc() {
   const getStatusChip = (status) => {
     const statusConfig = {
       'Approved': { color: 'success', icon: <CheckCircle sx={{ fontSize: 16 }} /> },
-      'Approved by HOD': { color: 'success', icon: <CheckCircle sx={{ fontSize: 16 }} /> },
+   
       'Rejected': { color: 'error', icon: <Cancel sx={{ fontSize: 16 }} /> },
       'Pending': { color: 'warning', icon: <PendingOutlined sx={{ fontSize: 16 }} /> },
       'Sent for revision': { color: 'info', icon: <Edit sx={{ fontSize: 16 }} /> }

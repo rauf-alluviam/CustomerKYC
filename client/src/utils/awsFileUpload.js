@@ -1,5 +1,5 @@
 // Mock function to handle multiple file upload
-export const handleFileUpload = (event, fieldName, displayName, formik, setFileSnackbar) => {
+export const handleFileUpload = (event, fieldName, displayName, formik, setFileSnackbar, onError = null) => {
   const files = Array.from(event.target.files);
   
   if (!files.length) return;
@@ -88,7 +88,9 @@ export const handleFileUpload = async (event, fieldName, displayName, formik, se
     }
   } catch (error) {
     console.error('File upload error:', error);
-    alert('File upload failed. Please try again.');
+    if (onError && typeof onError === 'function') {
+      onError('File upload failed. Please try again.');
+    }
   }
 };
 */

@@ -469,7 +469,7 @@ function CustomerKycStatus() {
                 <MenuItem value="All">All Statuses</MenuItem>
                 <MenuItem value="Pending">Pending</MenuItem>
                 <MenuItem value="Approved">Approved</MenuItem>
-                <MenuItem value="Approved by HOD">Approved by HOD</MenuItem>
+                {/* <MenuItem value="Approved by HOD">Approved by HOD</MenuItem> */}
                 <MenuItem value="Sent for revision">Sent for Revision</MenuItem>
               </Select>
             </FormControl>
