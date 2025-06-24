@@ -393,7 +393,7 @@ function ViewCustomerKyc() {
                       <>
                         {/* eslint-disable-next-line */}
                         <a
-                          href="#"
+                          href="javascript:void(0)"
                           onClick={(e) => {
                             e.preventDefault();
                             downloadBase64File(
@@ -496,7 +496,7 @@ function ViewCustomerKyc() {
                       <>
                         {/* eslint-disable-next-line */}
                         <a
-                          href="#"
+                          href="javascript:void(0)"
                           onClick={(e) => {
                             e.preventDefault();
                             downloadBase64File(

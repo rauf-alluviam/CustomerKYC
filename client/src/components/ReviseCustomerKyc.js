@@ -866,18 +866,23 @@ function ReviseCustomerKyc() {
               id=""
               onChange={(e) => handleGstRegUpload(e, index)}
             />
-            {/* eslint-disable-next-line */}
-            <a
-              href="#"
-              onClick={() =>
-                downloadBase64File(
-                  address.gst_reg,
-                  `GST_Registration_${index}.pdf`
-                )
-              }
-            >
-              View
-            </a>
+            {address.gst_reg && (
+              <>
+                {/* eslint-disable-next-line */}
+                <a
+                  href="javascript:void(0)"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    downloadBase64File(
+                      address.gst_reg,
+                      `GST_Registration_${index}.pdf`
+                    );
+                  }}
+                >
+                  View
+                </a>
+              </>
+            )}
             <br />
           </div>
         ))}
@@ -920,7 +925,9 @@ function ReviseCustomerKyc() {
           </div>
         ) : null}
         <br />
-        <a href={formik.values.authorised_signatories}>View</a>
+        {formik.values.authorised_signatories && (
+          <a href={formik.values.authorised_signatories}>View</a>
+        )}
         <br />
         <br />
         <p>Upload Authorisation Letter</p>
@@ -945,7 +952,9 @@ function ReviseCustomerKyc() {
           </div>
         ) : null}
         <br />
-        <a href={formik.values.authorisation_letter}>View</a>
+        {formik.values.authorisation_letter && (
+          <a href={formik.values.authorisation_letter}>View</a>
+        )}
         <TextField
           fullWidth
           size="small"
@@ -980,7 +989,9 @@ function ReviseCustomerKyc() {
           <div style={{ color: "red" }}>{formik.errors.iec_copy}</div>
         ) : null}
         <br />
-        <a href={formik.values.iec_copy}>View</a>
+        {formik.values.iec_copy && (
+          <a href={formik.values.iec_copy}>View</a>
+        )}
 
         <TextField
           fullWidth
@@ -1016,7 +1027,9 @@ function ReviseCustomerKyc() {
           <div style={{ color: "red" }}>{formik.errors.pan_copy}</div>
         ) : null}
         <br />
-        <a href={formik.values.pan_copy}>View</a>
+        {formik.values.pan_copy && (
+          <a href={formik.values.pan_copy}>View</a>
+        )}
         <br />
 
         {formik.values.banks?.map((bank, index) => (
@@ -1142,18 +1155,23 @@ function ReviseCustomerKyc() {
               onChange={(e) => handleAdCodeFileUpload(e, index)}
             />
             <br />
-            {/* eslint-disable-next-line */}
-            <a
-              href="#"
-              onClick={() =>
-                downloadBase64File(
-                  bank.adCode_file,
-                  `adCode_File_${index}.pdf`
-                )
-              }
-            >
-              View
-            </a>
+            {bank.adCode_file && (
+              <>
+                {/* eslint-disable-next-line */}
+                <a
+                  href="javascript:void(0)"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    downloadBase64File(
+                      bank.adCode_file,
+                      `adCode_File_${index}.pdf`
+                    );
+                  }}
+                >
+                  View
+                </a>
+              </>
+            )}
           </div>
         ))}
 
@@ -1190,8 +1208,8 @@ function ReviseCustomerKyc() {
           <div style={{ color: "red" }}>{formik.errors.other_documents}</div>
         ) : null}
 
-        {formik.values.other_documents?.map((doc, index) => (
-          <a href={doc}>View</a>
+        {formik.values.other_documents && formik.values.other_documents.length > 0 && formik.values.other_documents.map((doc, index) => (
+          <a key={index} href={doc}>View</a>
         ))}
         <br />
 
@@ -1215,7 +1233,9 @@ function ReviseCustomerKyc() {
           <div style={{ color: "red" }}>{formik.errors.spcb_reg}</div>
         ) : null}
 
-        <a href={formik.values.spcb_reg}>View</a>
+        {formik.values.spcb_reg && (
+          <a href={formik.values.spcb_reg}>View</a>
+        )}
         <br />
 
         <label style={{ marginRight: "10px" }}>KYC verification images:</label>
@@ -1241,8 +1261,8 @@ function ReviseCustomerKyc() {
           </div>
         ) : null}
 
-        {formik.values.kyc_verification_images?.map((doc, index) => (
-          <a href={doc}>View</a>
+        {formik.values.kyc_verification_images && formik.values.kyc_verification_images.length > 0 && formik.values.kyc_verification_images.map((doc, index) => (
+          <a key={index} href={doc}>View</a>
         ))}
         <br />
 
@@ -1266,7 +1286,7 @@ function ReviseCustomerKyc() {
           <div style={{ color: "red" }}>{formik.errors.gst_returns}</div>
         ) : null}
 
-        {formik.values.gst_returns?.map((doc, index) => (
+        {formik.values.gst_returns && formik.values.gst_returns.length > 0 && formik.values.gst_returns.map((doc, index) => (
           <a key={index} href={doc}>
             View
           </a>

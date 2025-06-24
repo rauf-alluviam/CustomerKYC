@@ -8,12 +8,13 @@ const FileUpload = ({
   onFilesUploaded,
   bucketPath,
   multiple = true,
-  acceptedFileTypes = [],
+  acceptedFileTypes = ['.zip', '.png', '.jpeg', '.jpg', '.pdf', '.doc', '.docx', '.xls', '.xlsx'], // Default allowed file types
   readOnly = false, // Default to false
   appendFiles = true, // New prop to control if files should be appended or replaced
   customerName = "", // New prop for customer name to create dynamic bucket path
 }) => {
   const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState("");
   const { user } = useContext(UserContext);
 
   // Function to sanitize folder names
@@ -33,10 +34,46 @@ const FileUpload = ({
     return originalBucketPath;
   };
 
+  // Function to validate file types
+  const validateFileType = (file) => {
+    const fileName = file.name.toLowerCase();
+    const fileExtension = fileName.substring(fileName.lastIndexOf('.'));
+    
+    // Normalize accepted file types to lowercase
+    const normalizedAcceptedTypes = acceptedFileTypes.map(type => type.toLowerCase());
+    
+    return normalizedAcceptedTypes.includes(fileExtension);
+  };
+
+  // Function to get file size in MB
+  const getFileSizeInMB = (file) => {
+    return (file.size / (1024 * 1024)).toFixed(2);
+  };
+
   const handleFileUpload = async (event) => {
     if (readOnly) return; // Prevent upload if readOnly is true
 
-    const files = event.target.files;
+    const files = Array.from(event.target.files);
+    setError(""); // Clear previous errors
+
+    // Validate file types
+    const invalidFiles = files.filter(file => !validateFileType(file));
+    if (invalidFiles.length > 0) {
+      const invalidFileNames = invalidFiles.map(file => file.name).join(', ');
+      setError(`Invalid file type(s): ${invalidFileNames}. Only ${acceptedFileTypes.join(', ')} files are allowed.`);
+      event.target.value = ''; // Clear the input
+      return;
+    }
+
+    // Validate file sizes (max 10MB per file)
+    const oversizedFiles = files.filter(file => file.size > 10 * 1024 * 1024);
+    if (oversizedFiles.length > 0) {
+      const oversizedFileNames = oversizedFiles.map(file => `${file.name} (${getFileSizeInMB(file)}MB)`).join(', ');
+      setError(`File(s) too large: ${oversizedFileNames}. Maximum file size is 10MB.`);
+      event.target.value = ''; // Clear the input
+      return;
+    }
+
     const uploadedFiles = [];
 
     // Create dynamic bucket path if needed
@@ -49,12 +86,18 @@ const FileUpload = ({
         uploadedFiles.push(result.Location);
       } catch (error) {
         console.error(`Failed to upload ${file.name}:`, error);
+        setError(`Failed to upload ${file.name}. Please try again.`);
       }
     }
     setUploading(false);
     
+    // Clear the input after successful upload
+    event.target.value = '';
+    
     // Pass the uploaded files to the callback along with the appendFiles flag
-    onFilesUploaded(uploadedFiles, appendFiles);
+    if (uploadedFiles.length > 0) {
+      onFilesUploaded(uploadedFiles, appendFiles);
+    }
   };
 
   return (
@@ -69,12 +112,12 @@ const FileUpload = ({
         }}
         disabled={readOnly || uploading} // Disable button when readOnly
       >
-        {label}
+        {uploading ? "Uploading..." : label}
         <input
           type="file"
           hidden
           multiple={multiple}
-          accept={acceptedFileTypes.length ? acceptedFileTypes.join(",") : ""}
+          accept={acceptedFileTypes.join(",")}
           onChange={handleFileUpload}
           disabled={readOnly || uploading} // Disable input when readOnly
         />
@@ -82,6 +125,26 @@ const FileUpload = ({
       {uploading && (
         <CircularProgress size={24} style={{ marginLeft: "10px" }} />
       )}
+      {error && (
+        <div style={{ 
+          color: "#d32f2f", 
+          fontSize: "12px", 
+          marginTop: "8px",
+          backgroundColor: "#ffebee",
+          padding: "8px",
+          borderRadius: "4px",
+          border: "1px solid #ffcdd2"
+        }}>
+          {error}
+        </div>
+      )}
+      <div style={{ 
+        fontSize: "11px", 
+        color: "#666", 
+        marginTop: "4px" 
+      }}>
+        Allowed files: {acceptedFileTypes.join(', ')} (Max 10MB each)
+      </div>
     </div>
   );
 };

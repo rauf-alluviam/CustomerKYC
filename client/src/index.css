@@ -689,6 +689,73 @@ code {
   background: #3b82f6 !important;
 }
 
+/* Enhanced Validation Error Styling */
+.validation-error-field {
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.validation-error-field .MuiOutlinedInput-root {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.3) !important;
+}
+
+.validation-error-field .MuiOutlinedInput-root:hover {
+  border-color: #dc2626 !important;
+}
+
+.validation-error-field .MuiOutlinedInput-root.Mui-focused {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+.validation-error-field .MuiInputLabel-root {
+  color: #ef4444 !important;
+}
+
+.validation-error-field .MuiInputLabel-root.Mui-focused {
+  color: #ef4444 !important;
+}
+
+/* Enhanced Error Message */
+.enhanced-error-message {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 4px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.enhanced-error-message::before {
+  content: "⚠";
+  font-size: 1rem;
+}
+
+/* Required Field Indicator */
+.required-field .MuiInputLabel-root::after {
+  content: " *";
+  color: #ef4444;
+  font-weight: bold;
+}
+
+/* Pulse animation for highlighted fields */
+.field-highlight {
+  animation: fieldPulse 2s ease-in-out infinite;
+}
+
+@keyframes fieldPulse {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+  50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0.1); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
 /* Clean Table Empty State */
 .clean-table .MuiTableBody-root .MuiTableRow-root:only-child .MuiTableCell-root {
   text-align: center !important;

@@ -93,7 +93,7 @@ function CustomerKyc() {
           sx={{
             background: '#ffffff',
             borderRadius: '8px',
-            border: '2px solid #000000',
+            border: '1px solid rgb(15, 16, 17)',
             overflow: 'hidden',
             boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
           }}
