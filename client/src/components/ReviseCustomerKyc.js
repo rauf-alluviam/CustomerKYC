@@ -137,11 +137,10 @@ function ReviseCustomerKyc() {
       trust_telephone_of_founder: "",
       trust_email_of_founder: "",
     },
-    // validationSchema, // Temporarily disabled for testing
-    onSubmit: async (values, { resetForm }) => {
-      console.log("Form submission started");
-      console.log("Form values:", values);
-      console.log("Form errors:", formik.errors);
+ onSubmit: async (values, { resetForm }) => {
+  console.log("=== FORM SUBMISSION DEBUG ===");
+  console.log("This should only appear when Submit button is clicked");
+  console.log("Call stack:", new Error().stack);
       
       try {
         const res = await axios.patch(
@@ -297,7 +296,8 @@ function ReviseCustomerKyc() {
   ]);
 
   return (
-    <div className="kyc-form-container">
+    <div className="kyc-form-container"
+    >
       {/* Header with Back Button */}
       <div style={{
         display: 'flex',
@@ -320,7 +320,7 @@ function ReviseCustomerKyc() {
       <div className="form-section">
       </div>
       
-      <form onSubmit={formik.handleSubmit}>
+      <form >
         <FormControl>
           <FormLabel id="demo-radio-buttons-group-label">
             <b>Category</b>
@@ -1292,15 +1292,12 @@ function ReviseCustomerKyc() {
         </button> */}
 
         <button
-          type="submit"
+          type="button"
           className="btn"
           aria-label="submit-btn"
           style={{ marginBottom: "20px", marginLeft: "20px" }}
           onClick={() => {
-            console.log("Submit button clicked");
-            console.log("Form is valid:", formik.isValid);
-            console.log("Form errors:", formik.errors);
-            console.log("Form touched:", formik.touched);
+            formik.handleSubmit();
           }}
         >
           Submit

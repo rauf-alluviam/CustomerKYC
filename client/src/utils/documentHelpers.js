@@ -40,10 +40,16 @@ export const ViewButton = ({ url, label = "View" }) => {
     return null; // Don't render anything if no valid URL
   }
 
+  const handleClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    openFileInNewTab(url);
+  };
+
   return (
     <button 
       type="button"
-      onClick={() => openFileInNewTab(url)}
+      onClick={handleClick}
       style={{
         background: 'none',
         border: 'none',
@@ -72,14 +78,31 @@ export const MultipleViewButtons = ({ urls, label = "View" }) => {
     return null;
   }
 
+  const handleClick = (url) => (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    openFileInNewTab(url);
+  };
+
   return (
     <div>
       {validUrls.map((url, index) => (
-        <ViewButton 
-          key={index} 
-          url={url} 
-          label={validUrls.length > 1 ? `${label} ${index + 1}` : label} 
-        />
+        <button
+          key={index}
+          type="button"
+          onClick={handleClick(url)}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: '#007bff',
+            textDecoration: 'underline',
+            cursor: 'pointer',
+            padding: 0,
+            marginRight: '8px'
+          }}
+        >
+          {validUrls.length > 1 ? `${label} ${index + 1}` : label}
+        </button>
       ))}
     </div>
   );
