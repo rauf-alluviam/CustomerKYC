@@ -42,6 +42,7 @@ export const ViewButton = ({ url, label = "View" }) => {
 
   return (
     <button 
+      type="button"
       onClick={() => openFileInNewTab(url)}
       style={{
         background: 'none',

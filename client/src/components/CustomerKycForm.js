@@ -12,6 +12,7 @@ import useSupportingDocuments from "../customHooks/useSupportingDocuments";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import FileUploadWithQueue from "../utils/FileUploadWithQueue";
+import FileUpload from "../utils/FileUpload";
 import UploadQueueStatus from "./UploadQueueStatus";
 import { useFileUploadQueue } from "../contexts/FileUploadQueueContext";
 import ImagePreview from "../utils/ImagePreview";
@@ -1230,7 +1231,7 @@ function CustomerKycForm() {
               >
                 GST Registration
               </label>
-              <FileUploadWithQueue
+              <FileUpload
                 label="Upload GST Registration"
                 onFilesQueued={(files, fieldName, bucketPath) => {
                   queueFiles(files, `factory_addresses[${index}].gst_reg`, bucketPath);
@@ -1307,7 +1308,7 @@ function CustomerKycForm() {
             }}>
               Signatory Photos <span style={{ color: 'var(--text-secondary)', fontSize: '0.8rem' }}>(passport size, self-attested)</span>
             </label>
-            <FileUploadWithQueue
+            <FileUpload
               label="Upload Photos"
               onFilesQueued={(files, fieldName, bucketPath) => {
                 queueFiles(files, fieldName, bucketPath);
@@ -1349,7 +1350,7 @@ function CustomerKycForm() {
             }}>
               Authorisation Letter
             </label>
-            <FileUploadWithQueue
+            <FileUpload
               label="Upload Letter"
               onFilesQueued={(files, fieldName, bucketPath) => {
                 queueFiles(files, fieldName, bucketPath);
@@ -1415,7 +1416,7 @@ function CustomerKycForm() {
             >
               IEC Copy
             </label>
-            <FileUploadWithQueue
+            <FileUpload
               label="Upload IEC Copy"
               onFilesQueued={(files, fieldName, bucketPath) => {
                 queueFiles(files, fieldName, bucketPath);
@@ -1472,7 +1473,7 @@ function CustomerKycForm() {
             >
               PAN Copy
             </label>
-            <FileUploadWithQueue
+            <FileUpload
               label="Upload PAN Copy"
               onFilesQueued={(files, fieldName, bucketPath) => {
                 queueFiles(files, fieldName, bucketPath);
@@ -1667,7 +1668,7 @@ function CustomerKycForm() {
               >
                 AD Code File
               </label>
-              <FileUploadWithQueue
+              <FileUpload
                 label="Upload AD Code File"
                 onFilesQueued={(files, fieldName, bucketPath) => {
                   queueFiles(files, `banks[${index}].adCode_file`, bucketPath);
@@ -1758,7 +1759,7 @@ function CustomerKycForm() {
             }}>
               Other Documents
             </label>
-            <FileUploadWithQueue
+            <FileUpload
               label="Upload Other Documents"
               onFilesQueued={(files, fieldName, bucketPath) => {
                 queueFiles(files, fieldName, bucketPath);
@@ -1804,7 +1805,7 @@ function CustomerKycForm() {
             }}>
               SPCB Registration Certificate
             </label>
-            <FileUploadWithQueue
+            <FileUpload
               label="Upload SPCB Registration Certificate"
               onFilesQueued={(files, fieldName, bucketPath) => {
                 queueFiles(files, fieldName, bucketPath);
@@ -1854,7 +1855,7 @@ function CustomerKycForm() {
             }}>
               KYC Verification Images
             </label>
-            <FileUploadWithQueue
+            <FileUpload
               label="Upload KYC Verification Images"
               onFilesQueued={(files, fieldName, bucketPath) => {
                 queueFiles(files, fieldName, bucketPath);
@@ -1902,7 +1903,7 @@ function CustomerKycForm() {
             }}>
               GST Returns
             </label>
-            <FileUploadWithQueue
+            <FileUpload
               label="Upload GST Returns"
               onFilesQueued={(files, fieldName, bucketPath) => {
                 queueFiles(files, fieldName, bucketPath);
