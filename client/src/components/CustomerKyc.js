@@ -183,15 +183,15 @@ function CustomerKyc() {
   }}
 >
               <Tab 
-                // icon={getTabIcon(0)}
+                icon={getTabIcon(0)}
                 iconPosition="start"
-                label="New Application" 
+                label="Customer KYC Status" 
                 {...a11yProps(0)} 
               />
               <Tab 
                 icon={getTabIcon(1)}
                 iconPosition="start"
-                label="Customer KYC Status" 
+                label="New Application" 
                 {...a11yProps(1)} 
               />
               <Tab 
@@ -228,10 +228,10 @@ function CustomerKyc() {
             border: '1px solid rgb(6, 7, 7)',
           }}>
             <CustomTabPanel value={value} index={0}>
-              <CustomerKycForm />
+              <CustomerKycStatus />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
-              <CustomerKycStatus />
+              <CustomerKycForm />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={2}>
               <ViewDrafts />
