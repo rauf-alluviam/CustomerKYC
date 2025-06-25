@@ -4,6 +4,7 @@ import Modal from "@mui/material/Modal";
 import { Row, Col } from "react-bootstrap";
 import CloseIcon from "@mui/icons-material/Close";
 import { IconButton } from "@mui/material";
+import { ViewButton, MultipleViewButtons, isValidFileUrl, openFileInNewTab } from "../utils/documentHelpers";
 
 const style = {
   position: "absolute",
@@ -246,14 +247,8 @@ export default function Preview(props) {
     }
   };
 
-  const downloadBase64File = (base64Data, fileName) => {
-    const [prefix, base64String] = base64Data.split(",");
-    const linkSource = `${prefix},${base64String}`;
-    const downloadLink = document.createElement("a");
-    downloadLink.href = linkSource;
-    downloadLink.download = fileName;
-    downloadLink.click();
-  };
+  // Remove duplicate helper functions since we're importing from utils
+  // isValidFileUrl and openFileInNewTab are now imported from documentHelpers
 
   return (
     <div>
@@ -367,22 +362,20 @@ export default function Preview(props) {
                     <Row>
                       <Col>
                         <strong>GST Registration Certificate: </strong>
-                        {address.gst_reg && (
-                          <>
-                            {/* eslint-disable-next-line */}
-                            <a
-                              href="#"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                downloadBase64File(
-                                  address.gst_reg,
-                                  `GST_Registration_Certificate_${id}.pdf`
-                                );
-                              }}
-                            >
-                              View
-                            </a>
-                          </>
+                        {isValidFileUrl(address.gst_reg) && (
+                          <button 
+                            onClick={() => openFileInNewTab(address.gst_reg)}
+                            style={{
+                              background: 'none',
+                              border: 'none',
+                              color: '#007bff',
+                              textDecoration: 'underline',
+                              cursor: 'pointer',
+                              padding: 0
+                            }}
+                          >
+                            View
+                          </button>
                         )}
                       </Col>
                     </Row>
@@ -475,22 +468,20 @@ export default function Preview(props) {
                       </Col>
                       <Col>
                         <strong>AD Code File: </strong>
-                        {bank.adCode_file && (
-                          <>
-                            {/* eslint-disable-next-line */}
-                            <a
-                              href="#"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                downloadBase64File(
-                                  bank.adCode_file,
-                                  `adCode_File_${id}.pdf`
-                                );
-                              }}
-                            >
-                              View
-                            </a>
-                          </>
+                        {isValidFileUrl(bank.adCode_file) && (
+                          <button 
+                            onClick={() => openFileInNewTab(bank.adCode_file)}
+                            style={{
+                              background: 'none',
+                              border: 'none',
+                              color: '#007bff',
+                              textDecoration: 'underline',
+                              cursor: 'pointer',
+                              padding: 0
+                            }}
+                          >
+                            View
+                          </button>
                         )}
                       </Col>
                     </Row>
@@ -500,15 +491,7 @@ export default function Preview(props) {
 
               <br />
               <h4>Other Documents</h4>
-              {props.data.other_documents?.map((doc, id) => {
-                return (
-                  <Row key={id}>
-                    <Col>
-                      <a href={doc}>View</a>
-                    </Col>
-                  </Row>
-                );
-              })}
+              <MultipleViewButtons urls={props.data.other_documents} label="Document" />
               <br />
               <Row>
                 <Col>

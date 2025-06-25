@@ -25,9 +25,12 @@ const ImagePreview = ({ images, onDeleteImage, readOnly = false }) => {
   const { showError, showSuccess } = useSnackbar();
 
   // Ensure `images` is always an array and handle both string URLs and object URLs
+  // Filter out empty/invalid URLs
   const imageArray = Array.isArray(images) 
-    ? images.map(img => typeof img === 'object' && img !== null ? img.url : img)
-    : images 
+    ? images
+        .map(img => typeof img === 'object' && img !== null ? img.url : img)
+        .filter(url => url && typeof url === 'string' && url.trim() !== '')
+    : images && typeof images === 'string' && images.trim() !== ''
       ? [typeof images === 'object' && images !== null ? images.url : images] 
       : [];
 
@@ -104,7 +107,8 @@ const ImagePreview = ({ images, onDeleteImage, readOnly = false }) => {
         <Table size="small" stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell>Image Name</TableCell>
+              <TableCell>Document Name</TableCell>
+              <TableCell>View</TableCell>
               {!readOnly && <TableCell>Action</TableCell>}
             </TableRow>
           </TableHead>
@@ -112,18 +116,22 @@ const ImagePreview = ({ images, onDeleteImage, readOnly = false }) => {
             {imageArray.map((link, index) => (
               <TableRow key={index}>
                 <TableCell>
-                  {link ? (
-                    <a
-                      href={link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ textDecoration: "none", color: "blue" }}
-                    >
-                      {extractFileName(link)}
-                    </a>
-                  ) : (
-                    "Invalid image link"
-                  )}
+                  {extractFileName(link)}
+                </TableCell>
+                <TableCell>
+                  <button
+                    onClick={() => window.open(link, '_blank', 'noopener,noreferrer')}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#007bff',
+                      textDecoration: 'underline',
+                      cursor: 'pointer',
+                      padding: 0
+                    }}
+                  >
+                    View
+                  </button>
                 </TableCell>
                 {!readOnly && (
                   <TableCell>
@@ -140,7 +148,7 @@ const ImagePreview = ({ images, onDeleteImage, readOnly = false }) => {
           </TableBody>
         </Table>
       ) : (
-        <p>No asset uploaded yet.</p>
+        <p>No documents uploaded yet.</p>
       )}
       {!readOnly && (
         <Dialog

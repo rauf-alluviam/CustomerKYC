@@ -6,6 +6,7 @@ import { TextField } from "@mui/material";
 import { UserContext } from "../contexts/UserContext";
 import BackButton from "./BackButton";
 import { useSnackbar } from "../contexts/SnackbarContext";
+import { ViewButton, MultipleViewButtons } from "../utils/documentHelpers";
 
 function ViewCustomerKyc() {
   const { _id } = useParams();
@@ -35,41 +36,29 @@ function ViewCustomerKyc() {
             <Row>
               <Col>
                 <strong>Passport:&nbsp;</strong>
-                {data.individual_passport_img && (
-                  <a href={data.individual_passport_img}>View</a>
-                )}
+                <MultipleViewButtons urls={data.individual_passport_img} label="Passport" />
               </Col>
               <Col>
                 <strong>Voter Card:&nbsp;</strong>
-                {data.individual_voter_card_img && (
-                  <a href={data.individual_voter_card_img}>View</a>
-                )}
+                <MultipleViewButtons urls={data.individual_voter_card_img} label="Voter Card" />
               </Col>
               <Col>
                 <strong>Driving License:&nbsp;</strong>
-                {data.individual_driving_license_img && (
-                  <a href={data.individual_driving_license_img}>View</a>
-                )}
+                <MultipleViewButtons urls={data.individual_driving_license_img} label="License" />
               </Col>
             </Row>
             <Row>
               <Col>
                 <strong>Bank Statement:&nbsp;</strong>
-                {data.individual_bank_statement_img && (
-                  <a href={data.individual_bank_statement_img}>View</a>
-                )}
+                <MultipleViewButtons urls={data.individual_bank_statement_img} label="Statement" />
               </Col>
               <Col>
                 <strong>Ration Card:&nbsp;</strong>
-                {data.individual_ration_card_img && (
-                  <a href={data.individual_ration_card_img}>View</a>
-                )}
+                <MultipleViewButtons urls={data.individual_ration_card_img} label="Ration Card" />
               </Col>
               <Col>
                 <strong>Aadhar Card:&nbsp;</strong>
-                {data.individual_aadhar_card && (
-                  <a href={data.individual_aadhar_card}>View</a>
-                )}
+                <MultipleViewButtons urls={data.individual_aadhar_card} label="Aadhar" />
               </Col>
             </Row>
           </>
@@ -80,51 +69,35 @@ function ViewCustomerKyc() {
             <Row>
               <Col>
                 <strong>Registration Certificate:&nbsp;</strong>
-                {data.partnership_registration_certificate_img && (
-                  <a href={data.partnership_registration_certificate_img}>
-                    View
-                  </a>
-                )}
+                <MultipleViewButtons urls={data.partnership_registration_certificate_img} label="Certificate" />
               </Col>
               <Col>
                 <strong>Partnership Deed:&nbsp;</strong>
-                {data.partnership_deed_img && (
-                  <a href={data.partnership_deed_img}>View</a>
-                )}
+                <MultipleViewButtons urls={data.partnership_deed_img} label="Deed" />
               </Col>
               <Col>
                 <strong>Power of Attorney:&nbsp;</strong>
-                {data.partnership_power_of_attorney_img && (
-                  <a href={data.partnership_power_of_attorney_img}>View</a>
-                )}
+                <MultipleViewButtons urls={data.partnership_power_of_attorney_img} label="Power of Attorney" />
               </Col>
             </Row>
             <Row>
               <Col>
                 <strong>Valid Document:&nbsp;</strong>
-                {data.partnership_valid_document && (
-                  <a href={data.partnership_valid_document}>View</a>
-                )}
+                <MultipleViewButtons urls={data.partnership_valid_document} label="Document" />
               </Col>
               <Col>
                 <strong>Aadhar Card Front:&nbsp;</strong>
-                {data.partnership_aadhar_card_front_photo && (
-                  <a href={data.partnership_aadhar_card_front_photo}>View</a>
-                )}
+                <MultipleViewButtons urls={data.partnership_aadhar_card_front_photo} label="Aadhar Front" />
               </Col>
               <Col>
                 <strong>Aadhar Card Back:&nbsp;</strong>
-                {data.partnership_aadhar_card_back_photo && (
-                  <a href={data.partnership_aadhar_card_back_photo}>View</a>
-                )}
+                <MultipleViewButtons urls={data.partnership_aadhar_card_back_photo} label="Aadhar Back" />
               </Col>
             </Row>
             <Row>
               <Col>
                 <strong>Telephone Bill:&nbsp;</strong>
-                {data.partnership_telephone_bill && (
-                  <a href={data.partnership_telephone_bill}>View</a>
-                )}
+                <MultipleViewButtons urls={data.partnership_telephone_bill} label="Telephone Bill" />
               </Col>
               <Col></Col>
               <Col></Col>
@@ -137,43 +110,29 @@ function ViewCustomerKyc() {
             <Row>
               <Col>
                 <strong>Certificate of Incorporation:&nbsp;</strong>
-                {data.company_certificate_of_incorporation_img && (
-                  <a href={data.company_certificate_of_incorporation_img}>
-                    View
-                  </a>
-                )}
+                <MultipleViewButtons urls={data.company_certificate_of_incorporation_img} label="Certificate" />
               </Col>
               <Col>
                 <strong>Memorandum of Association:&nbsp;</strong>
-                {data.company_memorandum_of_association_img && (
-                  <a href={data.company_memorandum_of_association_img}>View</a>
-                )}
+                <MultipleViewButtons urls={data.company_memorandum_of_association_img} label="Memorandum" />
               </Col>
               <Col>
                 <strong>Articles of Association:&nbsp;</strong>
-                {data.company_articles_of_association_img && (
-                  <a href={data.company_articles_of_association_img}>View</a>
-                )}
+                <MultipleViewButtons urls={data.company_articles_of_association_img} label="Articles" />
               </Col>
             </Row>
             <Row>
               <Col>
                 <strong>Power of Attorney:&nbsp;</strong>
-                {data.company_power_of_attorney_img && (
-                  <a href={data.company_power_of_attorney_img}>View</a>
-                )}
+                <MultipleViewButtons urls={data.company_power_of_attorney_img} label="Power of Attorney" />
               </Col>
               <Col>
                 <strong>Telephone Bill:&nbsp;</strong>
-                {data.company_telephone_bill_img && (
-                  <a href={data.company_telephone_bill_img}>View</a>
-                )}
+                <MultipleViewButtons urls={data.company_telephone_bill_img} label="Telephone Bill" />
               </Col>
               <Col>
                 <strong>PAN Allotment Letter:&nbsp;</strong>
-                {data.company_pan_allotment_letter_img && (
-                  <a href={data.company_pan_allotment_letter_img}>View</a>
-                )}
+                <MultipleViewButtons urls={data.company_pan_allotment_letter_img} label="PAN Letter" />
               </Col>
             </Row>
           </>
@@ -184,29 +143,21 @@ function ViewCustomerKyc() {
             <Row>
               <Col>
                 <strong>Certificate of Registration:&nbsp;</strong>
-                {data.trust_certificate_of_registration_img && (
-                  <a href={data.trust_certificate_of_registration_img}>View</a>
-                )}
+                <MultipleViewButtons urls={data.trust_certificate_of_registration_img} label="Certificate" />
               </Col>
               <Col>
                 <strong>Power of Attorney:&nbsp;</strong>
-                {data.trust_power_of_attorney_img && (
-                  <a href={data.trust_power_of_attorney_img}>View</a>
-                )}
+                <MultipleViewButtons urls={data.trust_power_of_attorney_img} label="Power of Attorney" />
               </Col>
               <Col>
                 <strong>Offically Valid Document:&nbsp;</strong>
-                {data.trust_officially_valid_document_img && (
-                  <a href={data.trust_officially_valid_document_img}>View</a>
-                )}
+                <MultipleViewButtons urls={data.trust_officially_valid_document_img} label="Valid Document" />
               </Col>
             </Row>
             <Row>
               <Col>
                 <strong>Resoultion of Managing Body:&nbsp;</strong>
-                {data.trust_resolution_of_managing_body_img && (
-                  <a href={data.trust_resolution_of_managing_body_img}>View</a>
-                )}
+                <MultipleViewButtons urls={data.trust_resolution_of_managing_body_img} label="Resolution" />
               </Col>
               <Col>
                 <strong>Name of Trustees:&nbsp;</strong>
@@ -238,14 +189,8 @@ function ViewCustomerKyc() {
     }
   };
 
-  const downloadBase64File = (base64Data, fileName) => {
-    const [prefix, base64String] = base64Data.split(",");
-    const linkSource = `${prefix},${base64String}`;
-    const downloadLink = document.createElement("a");
-    downloadLink.href = linkSource;
-    downloadLink.download = fileName;
-    downloadLink.click();
-  };
+  // Remove duplicate helper functions since we're importing from utils
+  // isValidFileUrl and openFileInNewTab are now imported from documentHelpers
 
   const handleKycApproval = async (approval) => {
     const approved_by = `${user.first_name} ${user.last_name}`;
@@ -389,23 +334,7 @@ function ViewCustomerKyc() {
                 <Row>
                   <Col>
                     <strong>GST Registration Certificate: </strong>
-                    {address.gst_reg && (
-                      <>
-                        {/* eslint-disable-next-line */}
-                        <a
-                          href="javascript:void(0)"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            downloadBase64File(
-                              address.gst_reg,
-                              `GST_Registration_Certificate_${id}.pdf`
-                            );
-                          }}
-                        >
-                          View
-                        </a>
-                      </>
-                    )}
+                    <MultipleViewButtons urls={address.gst_reg} label="Certificate" />
                   </Col>
                 </Row>
               </div>
@@ -422,9 +351,7 @@ function ViewCustomerKyc() {
           </h6>
           <Row>
             <Col>
-              {data.authorised_signatories && (
-                <a href={data.authorised_signatories}>View</a>
-              )}
+              <MultipleViewButtons urls={data.authorised_signatories} label="Photo" />
             </Col>
           </Row>
           <br />
@@ -433,9 +360,7 @@ function ViewCustomerKyc() {
           </h6>
           <Row>
             <Col>
-              {data.authorisation_letter && (
-                <a href={data.authorisation_letter}>View</a>
-              )}
+              <MultipleViewButtons urls={data.authorisation_letter} label="Letter" />
             </Col>
           </Row>
           <br />
@@ -446,7 +371,7 @@ function ViewCustomerKyc() {
             </Col>
             <Col>
               <strong>IEC Copy:&nbsp;</strong>
-              {data.iec_copy && <a href={data.iec_copy}>View</a>}
+              <MultipleViewButtons urls={data.iec_copy} label="IEC Document" />
             </Col>
             <Col></Col>
           </Row>
@@ -458,7 +383,7 @@ function ViewCustomerKyc() {
             </Col>
             <Col>
               <strong>PAN Copy:&nbsp;</strong>
-              {data.pan_copy && <a href={data.pan_copy}>View</a>}
+              <MultipleViewButtons urls={data.pan_copy} label="PAN Document" />
             </Col>
             <Col></Col>
           </Row>
@@ -492,23 +417,7 @@ function ViewCustomerKyc() {
                   </Col>
                   <Col>
                     <strong>AD Code File: </strong>
-                    {bank.adCode_file && (
-                      <>
-                        {/* eslint-disable-next-line */}
-                        <a
-                          href="javascript:void(0)"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            downloadBase64File(
-                              bank.adCode_file,
-                              `adCode_File_${id}.pdf`
-                            );
-                          }}
-                        >
-                          View
-                        </a>
-                      </>
-                    )}
+                    <MultipleViewButtons urls={bank.adCode_file} label="AD Code Document" />
                   </Col>
                 </Row>
               </div>
@@ -517,32 +426,20 @@ function ViewCustomerKyc() {
 
           <br />
           <h4>Other Documents</h4>
-          {data.other_documents?.map((doc, id) => {
-            return (
-              <Row key={id}>
-                <Col>
-                  <a href={doc}>View</a>
-                </Col>
-              </Row>
-            );
-          })}
+          <MultipleViewButtons urls={data.other_documents} label="Document" />
           <br />
           <Row>
             <Col>
               <strong>SPCB Registration Certificate: </strong>
-              {data.spcb_reg && <a href={data.spcb_reg}>View</a>}
+              <MultipleViewButtons urls={data.spcb_reg} label="SPCB Certificate" />
             </Col>
             <Col>
               <strong>KYC Verification Images: </strong>
-              {data.kyc_verification_images &&
-                data.kyc_verification_images.map((data, id) => (
-                  <a href={data}>View</a>
-                ))}
+              <MultipleViewButtons urls={data.kyc_verification_images} label="Image" />
             </Col>
             <Col>
               <strong>GST Returns: </strong>
-              {data.gst_returns &&
-                data.gst_returns.map((data, id) => <a href={data}>View</a>)}
+              <MultipleViewButtons urls={data.gst_returns} label="Return" />
             </Col>
           </Row>
           <br />

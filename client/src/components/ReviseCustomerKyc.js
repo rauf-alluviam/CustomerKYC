@@ -21,6 +21,7 @@ import Preview from "./Preview";
 import { getCityAndStateByPinCode } from "../utils/getCityAndStateByPinCode";
 import BackButton from "./BackButton";
 import { useSnackbar } from "../contexts/SnackbarContext";
+import { ViewButton, MultipleViewButtons } from "../utils/documentHelpers";
 
 function ReviseCustomerKyc() {
   const { _id } = useParams();
@@ -263,14 +264,6 @@ function ReviseCustomerKyc() {
         principle_address_email: "",
       });
     }
-  };
-
-  const downloadBase64File = (base64String, fileName) => {
-    const linkSource = base64String;
-    const downloadLink = document.createElement("a");
-    downloadLink.href = linkSource;
-    downloadLink.download = fileName;
-    downloadLink.click();
   };
 
   useEffect(() => {
@@ -866,23 +859,7 @@ function ReviseCustomerKyc() {
               id=""
               onChange={(e) => handleGstRegUpload(e, index)}
             />
-            {address.gst_reg && (
-              <>
-                {/* eslint-disable-next-line */}
-                <a
-                  href="javascript:void(0)"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    downloadBase64File(
-                      address.gst_reg,
-                      `GST_Registration_${index}.pdf`
-                    );
-                  }}
-                >
-                  View
-                </a>
-              </>
-            )}
+            <MultipleViewButtons urls={address.gst_reg} label="GST Certificate" />
             <br />
           </div>
         ))}
@@ -925,9 +902,7 @@ function ReviseCustomerKyc() {
           </div>
         ) : null}
         <br />
-        {formik.values.authorised_signatories && (
-          <a href={formik.values.authorised_signatories}>View</a>
-        )}
+        <MultipleViewButtons urls={formik.values.authorised_signatories} label="Photo" />
         <br />
         <br />
         <p>Upload Authorisation Letter</p>
@@ -952,9 +927,7 @@ function ReviseCustomerKyc() {
           </div>
         ) : null}
         <br />
-        {formik.values.authorisation_letter && (
-          <a href={formik.values.authorisation_letter}>View</a>
-        )}
+        <MultipleViewButtons urls={formik.values.authorisation_letter} label="Letter" />
         <TextField
           fullWidth
           size="small"
@@ -989,9 +962,7 @@ function ReviseCustomerKyc() {
           <div style={{ color: "red" }}>{formik.errors.iec_copy}</div>
         ) : null}
         <br />
-        {formik.values.iec_copy && (
-          <a href={formik.values.iec_copy}>View</a>
-        )}
+        <MultipleViewButtons urls={formik.values.iec_copy} label="IEC Document" />
 
         <TextField
           fullWidth
@@ -1027,9 +998,7 @@ function ReviseCustomerKyc() {
           <div style={{ color: "red" }}>{formik.errors.pan_copy}</div>
         ) : null}
         <br />
-        {formik.values.pan_copy && (
-          <a href={formik.values.pan_copy}>View</a>
-        )}
+        <MultipleViewButtons urls={formik.values.pan_copy} label="PAN Document" />
         <br />
 
         {formik.values.banks?.map((bank, index) => (
@@ -1155,23 +1124,7 @@ function ReviseCustomerKyc() {
               onChange={(e) => handleAdCodeFileUpload(e, index)}
             />
             <br />
-            {bank.adCode_file && (
-              <>
-                {/* eslint-disable-next-line */}
-                <a
-                  href="javascript:void(0)"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    downloadBase64File(
-                      bank.adCode_file,
-                      `adCode_File_${index}.pdf`
-                    );
-                  }}
-                >
-                  View
-                </a>
-              </>
-            )}
+            <MultipleViewButtons urls={bank.adCode_file} label="AD Code Document" />
           </div>
         ))}
 
@@ -1208,9 +1161,7 @@ function ReviseCustomerKyc() {
           <div style={{ color: "red" }}>{formik.errors.other_documents}</div>
         ) : null}
 
-        {formik.values.other_documents && formik.values.other_documents.length > 0 && formik.values.other_documents.map((doc, index) => (
-          <a key={index} href={doc}>View</a>
-        ))}
+        <MultipleViewButtons urls={formik.values.other_documents} label="Document" />
         <br />
 
         <label style={{ marginRight: "10px" }}>
@@ -1233,9 +1184,7 @@ function ReviseCustomerKyc() {
           <div style={{ color: "red" }}>{formik.errors.spcb_reg}</div>
         ) : null}
 
-        {formik.values.spcb_reg && (
-          <a href={formik.values.spcb_reg}>View</a>
-        )}
+        <MultipleViewButtons urls={formik.values.spcb_reg} label="SPCB Certificate" />
         <br />
 
         <label style={{ marginRight: "10px" }}>KYC verification images:</label>
@@ -1261,9 +1210,7 @@ function ReviseCustomerKyc() {
           </div>
         ) : null}
 
-        {formik.values.kyc_verification_images && formik.values.kyc_verification_images.length > 0 && formik.values.kyc_verification_images.map((doc, index) => (
-          <a key={index} href={doc}>View</a>
-        ))}
+        <MultipleViewButtons urls={formik.values.kyc_verification_images} label="Image" />
         <br />
 
         <label style={{ marginRight: "10px" }}>GST Returns:</label>
@@ -1286,11 +1233,7 @@ function ReviseCustomerKyc() {
           <div style={{ color: "red" }}>{formik.errors.gst_returns}</div>
         ) : null}
 
-        {formik.values.gst_returns && formik.values.gst_returns.length > 0 && formik.values.gst_returns.map((doc, index) => (
-          <a key={index} href={doc}>
-            View
-          </a>
-        ))}
+        <MultipleViewButtons urls={formik.values.gst_returns} label="Return" />
         <br />
 
         <button

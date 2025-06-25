@@ -21,6 +21,7 @@ import viewRevisionList from './viewRevisionList.mjs';
 import viewAllCustomerKyc from './viewAllCustomerKyc.mjs';
 import login from './login.mjs';
 import s3FileDelete from './s3FileDelete.mjs';
+import s3FileUpload from './s3FileUpload.mjs';
 
 
 // Load environment variables
@@ -73,6 +74,7 @@ app.use('/', hodApprovalPending);
 app.use('/', viewCompletedKyc);
 app.use('/', viewCustomerKycDetails);
 app.use('/', s3FileDelete);
+app.use('/', s3FileUpload);
 app.use('/', viewCustomerKycDrafts);
 app.use('/', viewRevisionList);
 app.use('/', viewAllCustomerKyc);
