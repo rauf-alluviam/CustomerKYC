@@ -29,7 +29,7 @@ const FileUpload = ({
   const createBucketPath = (originalBucketPath, customerName) => {
     if (!originalBucketPath && customerName) {
       const sanitizedCustomerName = sanitizeFolderName(customerName);
-      return `customer-kyc/${sanitizedCustomerName}`;
+      return `${sanitizedCustomerName}`;
     }
     return originalBucketPath;
   };

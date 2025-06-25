@@ -21,6 +21,7 @@ import Preview from "./Preview";
 import { getCityAndStateByPinCode } from "../utils/getCityAndStateByPinCode";
 import BackButton from "./BackButton";
 import { useSnackbar } from "../contexts/SnackbarContext";
+import { ViewButton, MultipleViewButtons, isValidFileUrl, openFileInNewTab } from "../utils/documentHelpers";
 
 function EditCompletedKyc() {
   const { _id } = useParams();
@@ -246,13 +247,8 @@ function EditCompletedKyc() {
     }
   };
 
-  const downloadBase64File = (base64String, fileName) => {
-    const linkSource = base64String;
-    const downloadLink = document.createElement("a");
-    downloadLink.href = linkSource;
-    downloadLink.download = fileName;
-    downloadLink.click();
-  };
+  // Remove duplicate helper functions since we're importing from utils
+  // isValidFileUrl and openFileInNewTab are now imported from documentHelpers
 
   useEffect(() => {
     const fetchCityAndState = async () => {
@@ -864,22 +860,21 @@ function EditCompletedKyc() {
               id=""
               onChange={(e) => handleGstRegUpload(e, index)}
             />
-            {address.gst_reg && (
-              <>
-                {/* eslint-disable-next-line */}
-                <a
-                  href="javascript:void(0)"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    downloadBase64File(
-                      address.gst_reg,
-                      `GST_Registration_${index}.pdf`
-                    );
-                  }}
-                >
-                  View
-                </a>
-              </>
+            {isValidFileUrl(address.gst_reg) && (
+              <button 
+                onClick={() => openFileInNewTab(address.gst_reg)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#007bff',
+                  textDecoration: 'underline',
+                  cursor: 'pointer',
+                  padding: 0,
+                  marginLeft: '10px'
+                }}
+              >
+                View
+              </button>
             )}
             <br />
           </div>
@@ -1154,22 +1149,21 @@ function EditCompletedKyc() {
               onChange={(e) => handleAdCodeFileUpload(e, index)}
             />
             <br />
-            {bank.adCode_file && (
-              <>
-                {/* eslint-disable-next-line */}
-                <a
-                  href="javascript:void(0)"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    downloadBase64File(
-                      bank.adCode_file,
-                      `adCode_File_${index}.pdf`
-                    );
-                  }}
-                >
-                  View
-                </a>
-              </>
+            {isValidFileUrl(bank.adCode_file) && (
+              <button 
+                onClick={() => openFileInNewTab(bank.adCode_file)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#007bff',
+                  textDecoration: 'underline',
+                  cursor: 'pointer',
+                  padding: 0,
+                  marginLeft: '10px'
+                }}
+              >
+                View
+              </button>
             )}
           </div>
         ))}
