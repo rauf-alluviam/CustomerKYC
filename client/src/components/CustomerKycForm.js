@@ -1941,7 +1941,7 @@ function CustomerKycForm() {
         justifyContent: 'center',
         flexWrap: 'wrap',
         padding: 'var(--spacing-xl) 0',
-        borderTop: '1px solid rgba(243, 163, 16, 0.2)',
+        borderTop: '1px solid rgba(0, 0, 0, 0.1)',
         marginTop: 'var(--spacing-xl)',
       }}>
         <button

@@ -22,6 +22,7 @@ import { getCityAndStateByPinCode } from "../utils/getCityAndStateByPinCode";
 import BackButton from "./BackButton";
 import { useSnackbar } from "../contexts/SnackbarContext";
 import { ViewButton, MultipleViewButtons } from "../utils/documentHelpers";
+import { useFileUploadQueue } from "../contexts/FileUploadQueueContext";
 
 function ReviseCustomerKyc() {
   const { _id } = useParams();
@@ -31,6 +32,7 @@ function ReviseCustomerKyc() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const { showSuccess, showError } = useSnackbar();
+   const { queueFiles, processQueue, queuedFiles, isProcessing } = useFileUploadQueue();
 
   useEffect(() => {
     async function getData() {
@@ -853,13 +855,26 @@ function ReviseCustomerKyc() {
             <br />
             <label htmlFor="gst_reg">GST Registration</label>
             <br />
-            <input
-              type="file"
-              name="gst_reg"
-              id=""
-              onChange={(e) => handleGstRegUpload(e, index)}
+            <FileUpload
+              label="Upload GST Registration"
+              onFilesUploaded={(uploadedFiles) => {
+                formik.setFieldValue(`factory_addresses[${index}].gst_reg`, [...(address.gst_reg || []), ...uploadedFiles]);
+                setFileSnackbar(true);
+              }}
+              bucketPath={`gst-registration-${index}`}
+              multiple={true}
+              acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png']}
+              customerName={formik.values.name_of_individual}
             />
-            <MultipleViewButtons urls={address.gst_reg} label="GST Certificate" />
+            {address.gst_reg?.length > 0 && (
+              <ImagePreview
+                images={address.gst_reg}
+                onDeleteImage={(deleteIndex) => {
+                  const updatedImages = address.gst_reg.filter((_, i) => i !== deleteIndex);
+                  formik.setFieldValue(`factory_addresses[${index}].gst_reg`, updatedImages);
+                }}
+              />
+            )}
             <br />
           </div>
         ))}
@@ -881,53 +896,51 @@ function ReviseCustomerKyc() {
           on behalf of the Firm/ Company. Please provide recent passport size
           self attested photographs of each signatory
         </p>
-        <input
-          type="file"
-          multiple
-          onChange={(e) =>
-            handleSingleFileUpload(
-              e,
-              "authorised_signatories",
-              "authorised_signatories",
-              formik,
-              setFileSnackbar
-            )
-          }
+        <FileUpload
+          label="Upload Authorised Signatory Photo(s)"
+          onFilesUploaded={(uploadedFiles) => {
+            formik.setFieldValue("authorised_signatories", [...(formik.values.authorised_signatories || []), ...uploadedFiles]);
+            setFileSnackbar(true);
+          }}
+          bucketPath="authorised_signatories"
+          multiple={true}
+          acceptedFileTypes={['.jpg', '.jpeg', '.png', '.pdf']}
+          customerName={formik.values.name_of_individual}
         />
-        <br />
-        {formik.touched.authorised_signatories &&
-        formik.errors.authorised_signatories ? (
-          <div style={{ color: "red" }}>
-            {formik.errors.authorised_signatories}
-          </div>
-        ) : null}
-        <br />
-        <MultipleViewButtons urls={formik.values.authorised_signatories} label="Photo" />
+        {formik.values.authorised_signatories?.length > 0 && (
+          <ImagePreview
+            images={formik.values.authorised_signatories}
+            onDeleteImage={(index) => {
+              const updated = formik.values.authorised_signatories.filter((_, i) => i !== index);
+              formik.setFieldValue("authorised_signatories", updated);
+            }}
+          />
+        )}
+
         <br />
         <br />
         <p>Upload Authorisation Letter</p>
-        <input
-          type="file"
-          multiple
-          onChange={(e) =>
-            handleSingleFileUpload(
-              e,
-              "authorisation_letter",
-              "authorisation_letter",
-              formik,
-              setFileSnackbar
-            )
-          }
+        <FileUpload
+          label="Upload Authorisation Letter"
+          onFilesUploaded={(uploadedFiles) => {
+            formik.setFieldValue("authorisation_letter", [...(formik.values.authorisation_letter || []), ...uploadedFiles]);
+            setFileSnackbar(true);
+          }}
+          bucketPath="authorisation_letter"
+          multiple={true}
+          acceptedFileTypes={['.jpg', '.jpeg', '.png', '.pdf']}
+          customerName={formik.values.name_of_individual}
         />
-        <br />
-        {formik.touched.authorisation_letter &&
-        formik.errors.authorisation_letter ? (
-          <div style={{ color: "red" }}>
-            {formik.errors.authorisation_letter}
-          </div>
-        ) : null}
-        <br />
-        <MultipleViewButtons urls={formik.values.authorisation_letter} label="Letter" />
+        {formik.values.authorisation_letter?.length > 0 && (
+          <ImagePreview
+            images={formik.values.authorisation_letter}
+            onDeleteImage={(index) => {
+              const updated = formik.values.authorisation_letter.filter((_, i) => i !== index);
+              formik.setFieldValue("authorisation_letter", updated);
+            }}
+          />
+        )}
+
         <TextField
           fullWidth
           size="small"
@@ -945,24 +958,26 @@ function ReviseCustomerKyc() {
         <br />
         <br />
         <label style={{ marginRight: "10px" }}>IEC Copy:</label>
-        <input
-          type="file"
-          onChange={(e) =>
-            handleSingleFileUpload(
-              e,
-              "iec_copy",
-              "iec_copy",
-              formik,
-              setFileSnackbar
-            )
-          }
+        <FileUpload
+          label="Upload IEC Copy"
+          onFilesUploaded={(uploadedFiles) => {
+            formik.setFieldValue("iec_copy", [...(formik.values.iec_copy || []), ...uploadedFiles]);
+            setFileSnackbar(true);
+          }}
+          bucketPath="iec_copy"
+          multiple={true}
+          acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png']}
+          customerName={formik.values.name_of_individual}
         />
-        <br />
-        {formik.touched.iec_copy && formik.errors.iec_copy ? (
-          <div style={{ color: "red" }}>{formik.errors.iec_copy}</div>
-        ) : null}
-        <br />
-        <MultipleViewButtons urls={formik.values.iec_copy} label="IEC Document" />
+        {formik.values.iec_copy?.length > 0 && (
+          <ImagePreview
+            images={formik.values.iec_copy}
+            onDeleteImage={(index) => {
+              const updated = formik.values.iec_copy.filter((_, i) => i !== index);
+              formik.setFieldValue("iec_copy", updated);
+            }}
+          />
+        )}
 
         <TextField
           fullWidth
@@ -981,24 +996,26 @@ function ReviseCustomerKyc() {
         <br />
         <br />
         <label style={{ marginRight: "10px" }}>PAN Copy:</label>
-        <input
-          type="file"
-          onChange={(e) =>
-            handleSingleFileUpload(
-              e,
-              "pan_copy",
-              "pan_copy",
-              formik,
-              setFileSnackbar
-            )
-          }
+        <FileUpload
+          label="Upload PAN Copy"
+          onFilesUploaded={(uploadedFiles) => {
+            formik.setFieldValue("pan_copy", [...(formik.values.pan_copy || []), ...uploadedFiles]);
+            setFileSnackbar(true);
+          }}
+          bucketPath="pan_copy"
+          multiple={true}
+          acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png']}
+          customerName={formik.values.name_of_individual}
         />
-        <br />
-        {formik.touched.pan_copy && formik.errors.pan_copy ? (
-          <div style={{ color: "red" }}>{formik.errors.pan_copy}</div>
-        ) : null}
-        <br />
-        <MultipleViewButtons urls={formik.values.pan_copy} label="PAN Document" />
+        {formik.values.pan_copy?.length > 0 && (
+          <ImagePreview
+            images={formik.values.pan_copy}
+            onDeleteImage={(index) => {
+              const updated = formik.values.pan_copy.filter((_, i) => i !== index);
+              formik.setFieldValue("pan_copy", updated);
+            }}
+          />
+        )}
         <br />
 
         {formik.values.banks?.map((bank, index) => (
@@ -1116,15 +1133,31 @@ function ReviseCustomerKyc() {
             <label htmlFor={`adCode_file_${index}`}>
               Upload AD Code File:&nbsp;
             </label>
-            <input
-              type="file"
-              accept="application/pdf"
-              id={`banks[${index}].adCode_file`}
-              name={`banks[${index}].adCode_file`}
-              onChange={(e) => handleAdCodeFileUpload(e, index)}
+            <FileUpload
+              label="Upload AD Code File"
+              onFilesUploaded={(uploadedFiles) => {
+                const current = bank.adCode_file || [];
+                const updatedBanks = [...formik.values.banks];
+                updatedBanks[index].adCode_file = [...current, ...uploadedFiles];
+                formik.setFieldValue("banks", updatedBanks);
+                setFileSnackbar(true);
+              }}
+              bucketPath={`adCode_file_${index}`}
+              multiple={true}
+              acceptedFileTypes={['.pdf']}
+              customerName={formik.values.name_of_individual}
             />
-            <br />
-            <MultipleViewButtons urls={bank.adCode_file} label="AD Code Document" />
+            {bank.adCode_file?.length > 0 && (
+              <ImagePreview
+                images={bank.adCode_file}
+                onDeleteImage={(deleteIndex) => {
+                  const updated = bank.adCode_file.filter((_, i) => i !== deleteIndex);
+                  const updatedBanks = [...formik.values.banks];
+                  updatedBanks[index].adCode_file = updated;
+                  formik.setFieldValue("banks", updatedBanks);
+                }}
+              />
+            )}
           </div>
         ))}
 
@@ -1142,98 +1175,97 @@ function ReviseCustomerKyc() {
         <br />
 
         <label style={{ marginRight: "10px" }}>Other documents:</label>
-        <input
-          type="file"
-          multiple
-          onChange={(e) =>
-            handleFileUpload(
-              e,
-              "other_documents",
-              "other_documents",
-              formik,
-              setFileSnackbar,
-              (error) => showError(error)
-            )
-          }
+        <FileUpload
+          label="Upload Other Documents"
+          onFilesUploaded={(uploadedFiles) => {
+            formik.setFieldValue("other_documents", [...(formik.values.other_documents || []), ...uploadedFiles]);
+            setFileSnackbar(true);
+          }}
+          bucketPath="other_documents"
+          multiple={true}
+          acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png', '.doc', '.docx', '.zip', '.xls', '.xlsx']}
+          customerName={formik.values.name_of_individual}
         />
-        <br />
-        {formik.touched.other_documents && formik.errors.other_documents ? (
-          <div style={{ color: "red" }}>{formik.errors.other_documents}</div>
-        ) : null}
-
-        <MultipleViewButtons urls={formik.values.other_documents} label="Document" />
+        {formik.values.other_documents?.length > 0 && (
+          <ImagePreview
+            images={formik.values.other_documents}
+            onDeleteImage={(index) => {
+              const updated = formik.values.other_documents.filter((_, i) => i !== index);
+              formik.setFieldValue("other_documents", updated);
+            }}
+          />
+        )}
         <br />
 
         <label style={{ marginRight: "10px" }}>
           SPCB registration certificate
         </label>
-        <input
-          type="file"
-          onChange={(e) =>
-            handleSingleFileUpload(
-              e,
-              "spcb_reg",
-              "spcb_reg",
-              formik,
-              setFileSnackbar
-            )
-          }
+        <FileUpload
+          label="Upload SPCB Registration Certificate"
+          onFilesUploaded={(uploadedFiles) => {
+            formik.setFieldValue("spcb_reg", [...(formik.values.spcb_reg || []), ...uploadedFiles]);
+            setFileSnackbar(true);
+          }}
+          bucketPath="spcb_reg"
+          multiple={true}
+          acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png']}
+          customerName={formik.values.name_of_individual}
         />
-        <br />
-        {formik.touched.spcb_reg && formik.errors.spcb_reg ? (
-          <div style={{ color: "red" }}>{formik.errors.spcb_reg}</div>
-        ) : null}
-
-        <MultipleViewButtons urls={formik.values.spcb_reg} label="SPCB Certificate" />
+        {formik.values.spcb_reg?.length > 0 && (
+          <ImagePreview
+            images={formik.values.spcb_reg}
+            onDeleteImage={(index) => {
+              const updated = formik.values.spcb_reg.filter((_, i) => i !== index);
+              formik.setFieldValue("spcb_reg", updated);
+            }}
+          />
+        )}
         <br />
 
         <label style={{ marginRight: "10px" }}>KYC verification images:</label>
-        <input
-          type="file"
-          multiple
-          onChange={(e) =>
-            handleFileUpload(
-              e,
-              "kyc_verification_images",
-              "kyc_verification_images",
-              formik,
-              setFileSnackbar,
-              (error) => showError(error)
-            )
-          }
+        <FileUpload
+          label="Upload KYC Verification Images"
+          onFilesUploaded={(uploadedFiles) => {
+            formik.setFieldValue("kyc_verification_images", [...(formik.values.kyc_verification_images || []), ...uploadedFiles]);
+            setFileSnackbar(true);
+          }}
+          bucketPath="kyc_verification_images"
+          multiple={true}
+          acceptedFileTypes={['.jpg', '.jpeg', '.png', '.pdf']}
+          customerName={formik.values.name_of_individual}
         />
-        <br />
-        {formik.touched.kyc_verification_images &&
-        formik.errors.kyc_verification_images ? (
-          <div style={{ color: "red" }}>
-            {formik.errors.kyc_verification_images}
-          </div>
-        ) : null}
-
-        <MultipleViewButtons urls={formik.values.kyc_verification_images} label="Image" />
+        {formik.values.kyc_verification_images?.length > 0 && (
+          <ImagePreview
+            images={formik.values.kyc_verification_images}
+            onDeleteImage={(index) => {
+              const updated = formik.values.kyc_verification_images.filter((_, i) => i !== index);
+              formik.setFieldValue("kyc_verification_images", updated);
+            }}
+          />
+        )}
         <br />
 
         <label style={{ marginRight: "10px" }}>GST Returns:</label>
-        <input
-          type="file"
-          multiple
-          onChange={(e) =>
-            handleFileUpload(
-              e,
-              "gst_returns",
-              "gst_returns",
-              formik,
-              setFileSnackbar,
-              (error) => showError(error)
-            )
-          }
+        <FileUpload
+          label="Upload GST Returns"
+          onFilesUploaded={(uploadedFiles) => {
+            formik.setFieldValue("gst_returns", [...(formik.values.gst_returns || []), ...uploadedFiles]);
+            setFileSnackbar(true);
+          }}
+          bucketPath="gst_returns"
+          multiple={true}
+          acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png', '.xls', '.xlsx', '.zip', '.doc', '.docx']}
+          customerName={formik.values.name_of_individual}
         />
-        <br />
-        {formik.touched.gst_returns && formik.errors.gst_returns ? (
-          <div style={{ color: "red" }}>{formik.errors.gst_returns}</div>
-        ) : null}
-
-        <MultipleViewButtons urls={formik.values.gst_returns} label="Return" />
+        {formik.values.gst_returns?.length > 0 && (
+          <ImagePreview
+            images={formik.values.gst_returns}
+            onDeleteImage={(index) => {
+              const updated = formik.values.gst_returns.filter((_, i) => i !== index);
+              formik.setFieldValue("gst_returns", updated);
+            }}
+          />
+        )}
         <br />
 
         <button
