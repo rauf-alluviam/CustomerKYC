@@ -11,10 +11,7 @@ import { Row, Col } from "react-bootstrap";
 import useSupportingDocuments from "../customHooks/useSupportingDocuments";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import FileUploadWithQueue from "../utils/FileUploadWithQueue";
 import FileUpload from "../utils/FileUpload";
-import UploadQueueStatus from "./UploadQueueStatus";
-import { useFileUploadQueue } from "../contexts/FileUploadQueueContext";
 import ImagePreview from "../utils/ImagePreview";
 import { handleFileUpload } from "../utils/awsFileUpload";
 import Checkbox from "@mui/material/Checkbox";
@@ -36,10 +33,10 @@ function CustomerKycForm() {
     submitType: ""
   });
   
-  const { queueFiles, processQueue, queuedFiles, isProcessing } = useFileUploadQueue();
+  const { showError, showSuccess, showWarning } = useSnackbar();
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const { showError, showSuccess, showWarning } = useSnackbar();
 
   // Auto-dismiss validation snackbar after 6 seconds
   useEffect(() => {
@@ -221,18 +218,6 @@ function CustomerKycForm() {
         }
 
         validateBanks(values.banks);
-
-        // Process upload queue before form submission
-        if (queuedFiles.length > 0) {
-          showWarning("Processing file uploads, please wait...");
-          try {
-            await processQueue(values.name_of_individual);
-            showSuccess("Files uploaded successfully!");
-          } catch (error) {
-            showError("File upload failed. Please try again.");
-            return;
-          }
-        }
 
         let res;
         if (submitType === "save_draft") {
@@ -570,11 +555,6 @@ function CustomerKycForm() {
           Customer KYC Form
         </h2>
       </div>
-      
-      {/* Upload Queue Status */}
-      {(queuedFiles.length > 0 || isProcessing) && (
-        <UploadQueueStatus />
-      )}
       
       {/* Category Section */}
       <div className={`form-grid-section ${formik.touched.category && formik.errors.category ? 'validation-error-field' : ''}`}>
@@ -1230,20 +1210,16 @@ function CustomerKycForm() {
                 }}
               >
                 GST Registration
-              </label>
-              <FileUpload
-                label="Upload GST Registration"
-                onFilesQueued={(files, fieldName, bucketPath) => {
-                  queueFiles(files, `factory_addresses[${index}].gst_reg`, bucketPath);
-                  const currentFiles = address.gst_reg || [];
-                  const placeholderUrls = files.map(file => `queued:${file.name}`);
-                  formik.setFieldValue(`factory_addresses[${index}].gst_reg`, [...currentFiles, ...placeholderUrls]);
-                  setFileSnackbar(true);
-                }}
-                fieldName={`factory_addresses[${index}].gst_reg`}
-                bucketPath={`gst-registration-${index}`}
-                multiple={true}
-                acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png']}
+              </label>            <FileUpload
+              label="Upload GST Registration"
+              onFilesUploaded={(uploadedFiles) => {
+                formik.setFieldValue(`factory_addresses[${index}].gst_reg`, [...(address.gst_reg || []), ...uploadedFiles]);
+                setFileSnackbar(true);
+              }}
+              bucketPath={`gst-registration-${index}`}
+              multiple={true}
+              acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png']}
+              customerName={formik.values.name_of_individual}
               />
               {address.gst_reg?.length > 0 && (
                 <ImagePreview
@@ -1310,18 +1286,14 @@ function CustomerKycForm() {
             </label>
             <FileUpload
               label="Upload Photos"
-              onFilesQueued={(files, fieldName, bucketPath) => {
-                queueFiles(files, fieldName, bucketPath);
-                // Immediately update form with placeholder values for validation
-                const currentFiles = formik.values.authorised_signatories || [];
-                const placeholderUrls = files.map(file => `queued:${file.name}`);
-                formik.setFieldValue("authorised_signatories", [...currentFiles, ...placeholderUrls]);
+              onFilesUploaded={(uploadedFiles) => {
+                formik.setFieldValue("authorised_signatories", [...(formik.values.authorised_signatories || []), ...uploadedFiles]);
                 setFileSnackbar(true);
               }}
-              fieldName="authorised_signatories"
               bucketPath="authorised-signatories"
               multiple={true}
               acceptedFileTypes={['.jpg', '.jpeg', '.png', '.pdf']}
+              customerName={formik.values.name_of_individual}
             />
             {formik.touched.authorised_signatories && formik.errors.authorised_signatories && (
               <div className="error-message" style={{ fontSize: '0.8rem', marginTop: '4px' }}>
@@ -1352,17 +1324,14 @@ function CustomerKycForm() {
             </label>
             <FileUpload
               label="Upload Letter"
-              onFilesQueued={(files, fieldName, bucketPath) => {
-                queueFiles(files, fieldName, bucketPath);
-                const currentFiles = formik.values.authorisation_letter || [];
-                const placeholderUrls = files.map(file => `queued:${file.name}`);
-                formik.setFieldValue("authorisation_letter", [...currentFiles, ...placeholderUrls]);
+              onFilesUploaded={(uploadedFiles) => {
+                formik.setFieldValue("authorisation_letter", [...(formik.values.authorisation_letter || []), ...uploadedFiles]);
                 setFileSnackbar(true);
               }}
-              fieldName="authorisation_letter"
               bucketPath="authorisation_letter"
               multiple={true}
               acceptedFileTypes={['.jpg', '.jpeg', '.png', '.pdf']}
+              customerName={formik.values.name_of_individual}
             />
             {formik.touched.authorisation_letter && formik.errors.authorisation_letter && (
               <div className="error-message" style={{ fontSize: '0.8rem', marginTop: '4px' }}>
@@ -1418,17 +1387,14 @@ function CustomerKycForm() {
             </label>
             <FileUpload
               label="Upload IEC Copy"
-              onFilesQueued={(files, fieldName, bucketPath) => {
-                queueFiles(files, fieldName, bucketPath);
-                const currentFiles = formik.values.iec_copy || [];
-                const placeholderUrls = files.map(file => `queued:${file.name}`);
-                formik.setFieldValue("iec_copy", [...currentFiles, ...placeholderUrls]);
+              onFilesUploaded={(uploadedFiles) => {
+                formik.setFieldValue("iec_copy", [...(formik.values.iec_copy || []), ...uploadedFiles]);
                 setFileSnackbar(true);
               }}
-              fieldName="iec_copy"
               bucketPath="iec_copy"
               multiple={true}
               acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png']}
+              customerName={formik.values.name_of_individual}
             />
             {formik.touched.iec_copy && formik.errors.iec_copy ? (
               <div className="error-message">{formik.errors.iec_copy}</div>
@@ -1475,17 +1441,14 @@ function CustomerKycForm() {
             </label>
             <FileUpload
               label="Upload PAN Copy"
-              onFilesQueued={(files, fieldName, bucketPath) => {
-                queueFiles(files, fieldName, bucketPath);
-                const currentFiles = formik.values.pan_copy || [];
-                const placeholderUrls = files.map(file => `queued:${file.name}`);
-                formik.setFieldValue("pan_copy", [...currentFiles, ...placeholderUrls]);
+              onFilesUploaded={(uploadedFiles) => {
+                formik.setFieldValue("pan_copy", [...(formik.values.pan_copy || []), ...uploadedFiles]);
                 setFileSnackbar(true);
               }}
-              fieldName="pan_copy"
               bucketPath="pan-copy"
               multiple={true}
               acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png']}
+              customerName={formik.values.name_of_individual}
             />
             {formik.touched.pan_copy && formik.errors.pan_copy ? (
               <div className="error-message">{formik.errors.pan_copy}</div>
@@ -1670,17 +1633,15 @@ function CustomerKycForm() {
               </label>
               <FileUpload
                 label="Upload AD Code File"
-                onFilesQueued={(files, fieldName, bucketPath) => {
-                  queueFiles(files, `banks[${index}].adCode_file`, bucketPath);
-                  const currentFiles = bank.adCode_file || [];
-                  const placeholderUrls = files.map(file => `queued:${file.name}`);
-                  formik.setFieldValue(`banks[${index}].adCode_file`, [...currentFiles, ...placeholderUrls]);
+                onFilesUploaded={(uploadedFiles) => {
+                  const current = bank.adCode_file || [];
+                  formik.setFieldValue(`banks[${index}].adCode_file`, [...current, ...uploadedFiles]);
                   setFileSnackbar(true);
                 }}
-                fieldName={`banks[${index}].adCode_file`}
                 bucketPath={`ad-code-${index}`}
                 multiple={true}
                 acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png']}
+                customerName={formik.values.name_of_individual}
               />
               {bank.adCode_file?.length > 0 && (
                 <ImagePreview
@@ -1761,17 +1722,14 @@ function CustomerKycForm() {
             </label>
             <FileUpload
               label="Upload Other Documents"
-              onFilesQueued={(files, fieldName, bucketPath) => {
-                queueFiles(files, fieldName, bucketPath);
-                const currentFiles = formik.values.other_documents || [];
-                const placeholderUrls = files.map(file => `queued:${file.name}`);
-                formik.setFieldValue("other_documents", [...currentFiles, ...placeholderUrls]);
+              onFilesUploaded={(uploadedFiles) => {
+                formik.setFieldValue("other_documents", [...(formik.values.other_documents || []), ...uploadedFiles]);
                 setFileSnackbar(true);
               }}
-              fieldName="other_documents"
               bucketPath="other-documents"
               multiple={true}
               acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png', '.doc', '.docx', '.zip', '.xls', '.xlsx']}
+              customerName={formik.values.name_of_individual}
             />
             {formik.touched.other_documents && formik.errors.other_documents && (
               <div className="error-message" style={{ marginTop: '8px' }}>{formik.errors.other_documents}</div>
@@ -1807,17 +1765,14 @@ function CustomerKycForm() {
             </label>
             <FileUpload
               label="Upload SPCB Registration Certificate"
-              onFilesQueued={(files, fieldName, bucketPath) => {
-                queueFiles(files, fieldName, bucketPath);
-                const currentFiles = formik.values.spcb_reg || [];
-                const placeholderUrls = files.map(file => `queued:${file.name}`);
-                formik.setFieldValue("spcb_reg", [...currentFiles, ...placeholderUrls]);
+              onFilesUploaded={(uploadedFiles) => {
+                formik.setFieldValue("spcb_reg", [...(formik.values.spcb_reg || []), ...uploadedFiles]);
                 setFileSnackbar(true);
               }}
-              fieldName="spcb_reg"
               bucketPath="spcb-registration"
               multiple={true}
               acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png']}
+              customerName={formik.values.name_of_individual}
             />
             {formik.touched.spcb_reg && formik.errors.spcb_reg && (
               <div className="error-message" style={{ marginTop: '8px' }}>{formik.errors.spcb_reg}</div>
@@ -1857,17 +1812,14 @@ function CustomerKycForm() {
             </label>
             <FileUpload
               label="Upload KYC Verification Images"
-              onFilesQueued={(files, fieldName, bucketPath) => {
-                queueFiles(files, fieldName, bucketPath);
-                const currentFiles = formik.values.kyc_verification_images || [];
-                const placeholderUrls = files.map(file => `queued:${file.name}`);
-                formik.setFieldValue("kyc_verification_images", [...currentFiles, ...placeholderUrls]);
+              onFilesUploaded={(uploadedFiles) => {
+                formik.setFieldValue("kyc_verification_images", [...(formik.values.kyc_verification_images || []), ...uploadedFiles]);
                 setFileSnackbar(true);
               }}
-              fieldName="kyc_verification_images"
               bucketPath="kyc-verification-images"
               multiple={true}
               acceptedFileTypes={['.jpg', '.jpeg', '.png', '.pdf']}
+              customerName={formik.values.name_of_individual}
             />
             {formik.touched.kyc_verification_images && formik.errors.kyc_verification_images && (
               <div className="error-message" style={{ marginTop: '8px' }}>
@@ -1905,17 +1857,14 @@ function CustomerKycForm() {
             </label>
             <FileUpload
               label="Upload GST Returns"
-              onFilesQueued={(files, fieldName, bucketPath) => {
-                queueFiles(files, fieldName, bucketPath);
-                const currentFiles = formik.values.gst_returns || [];
-                const placeholderUrls = files.map(file => `queued:${file.name}`);
-                formik.setFieldValue("gst_returns", [...currentFiles, ...placeholderUrls]);
+              onFilesUploaded={(uploadedFiles) => {
+                formik.setFieldValue("gst_returns", [...(formik.values.gst_returns || []), ...uploadedFiles]);
                 setFileSnackbar(true);
               }}
-              fieldName="gst_returns"
               bucketPath="gst-returns"
               multiple={true}
               acceptedFileTypes={['.pdf', '.jpg', '.jpeg', '.png', '.xls', '.xlsx', '.zip', '.doc', '.docx']}
+              customerName={formik.values.name_of_individual}
             />
             {formik.touched.gst_returns && formik.errors.gst_returns && (
               <div className="error-message" style={{ marginTop: '8px' }}>{formik.errors.gst_returns}</div>
