@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useFormik } from "formik";
 import { TextField } from "@mui/material";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -19,9 +19,14 @@ import Preview from "./Preview";
 import { getCityAndStateByPinCode } from "../utils/getCityAndStateByPinCode";
 import BackButton from "./BackButton";
 import { useSnackbar } from "../contexts/SnackbarContext";
+import { UserContext } from "../contexts/UserContext";
 import { validationSchema } from "../schemas/customerKyc/customerKycSchema";
+import { draftValidationSchema, hasMinimumDraftData } from "../schemas/customerKyc/draftValidationSchema";
 
 function CustomerKycForm() {
+  // Get current user context for permission checks
+  const { user } = useContext(UserContext);
+  
   const [submitType, setSubmitType] = useState("");
   const [open, setOpen] = React.useState(false);
   const [submissionAttempted, setSubmissionAttempted] = useState(false);
@@ -32,6 +37,7 @@ function CustomerKycForm() {
     fieldCount: 0,
     submitType: ""
   });
+  const [showClearConfirmation, setShowClearConfirmation] = useState(false);
   
   const { showError, showSuccess, showWarning } = useSnackbar();
 
@@ -142,96 +148,135 @@ function CustomerKycForm() {
       trust_telephone_of_founder: "",
       trust_email_of_founder: "",
     },
-    validationSchema,
+    // Use a dynamic validation function that checks submit type
+    validate: (values) => {
+      // Choose schema based on submit type
+      const schema = submitType === "save_draft" ? draftValidationSchema : validationSchema;
+      
+      try {
+        // Synchronously validate using Yup
+        schema.validateSync(values, { abortEarly: false });
+        return {}; // No errors
+      } catch (err) {
+        // Convert Yup ValidationError to formik errors format
+        const errors = {};
+        if (err.inner) {
+          err.inner.forEach((error) => {
+            if (error.path) {
+              errors[error.path] = error.message;
+            }
+          });
+        }
+        return errors;
+      }
+    },
     onSubmit: async (values, { resetForm, setErrors, setTouched, validateForm }) => {
       try {
-        // First validate the form
+        // Validate form based on submit type
         const errors = await validateForm();
         
         // Check if form has validation errors
         if (Object.keys(errors).length > 0) {
-          // Set all fields as touched to show validation errors
-          const touchedFields = {
-            category: true,
-            name_of_individual: true,
-            status: true,
-            permanent_address_line_1: true,
-            permanent_address_city: true,
-            permanent_address_state: true,
-            permanent_address_pin_code: true,
-            permanent_address_telephone: true,
-            permanent_address_email: true,
-            principle_business_address_line_1: true,
-            principle_business_address_city: true,
-            principle_business_address_state: true,
-            principle_business_address_pin_code: true,
-            principle_business_telephone: true,
-            principle_address_email: true,
-            iec_no: true,
-            pan_no: true,
-            factory_addresses: values.factory_addresses?.map(() => ({
-              factory_address_line_1: true,
-              factory_address_city: true,
-              factory_address_state: true,
-              factory_address_pin_code: true,
-              gst: true,
-            })),
-            banks: values.banks?.map(() => ({
-              bankers_name: true,
-              branch_address: true,
-              account_no: true,
-              ifsc: true,
-              adCode: true,
-            })),
-          };
+          console.log("Validation errors:", errors);
+          console.log("Submit type:", submitType);
           
-          setTouched(touchedFields);
-          
-          // Find the first error field and scroll to it
-          scrollToFirstError(errors);
-          
-          // Show custom validation snackbar with field-specific message
-          const errorCount = countErrors(errors);
-          const firstErrorField = getFirstErrorFieldName(errors);
-          
-          // Enhanced user-friendly message
-          let userMessage = "";
-          const actionText = submitType === "save_draft" ? "save as draft" : "submit for approval";
-          
-          if (errorCount === 1) {
-            userMessage = `Please fill the required field to ${actionText}: ${firstErrorField}`;
-          } else if (errorCount <= 5) {
-            userMessage = `Please fill ${errorCount} required fields to ${actionText}. First missing: ${firstErrorField}`;
+          if (submitType === "save_draft") {
+            // For draft, only show errors if basic requirements aren't met
+            if (errors.iec_no || errors.name_of_individual) {
+              setValidationSnackbar({
+                open: true,
+                message: "Please fill IEC number and name to save as draft",
+                severity: "warning",
+                fieldCount: Object.keys(errors).length,
+                submitType: "save_draft"
+              });
+              
+              // Touch only the required draft fields
+              setTouched({
+                iec_no: true,
+                name_of_individual: true,
+              });
+              
+              return;
+            }
+            // If only IEC and name are filled, proceed with draft save
           } else {
-            userMessage = `Please complete the form to ${actionText}. ${errorCount} required fields are missing. First: ${firstErrorField}`;
+            // For final submission, enforce full validation
+            setTouched({
+              category: true,
+              name_of_individual: true,
+              status: true,
+              permanent_address_line_1: true,
+              permanent_address_city: true,
+              permanent_address_state: true,
+              permanent_address_pin_code: true,
+              permanent_address_telephone: true,
+              permanent_address_email: true,
+              principle_business_address_line_1: true,
+              principle_business_address_city: true,
+              principle_business_address_state: true,
+              principle_business_address_pin_code: true,
+              principle_business_telephone: true,
+              principle_address_email: true,
+              iec_no: true,
+              pan_no: true,
+              factory_addresses: values.factory_addresses?.map(() => ({
+                factory_address_line_1: true,
+                factory_address_city: true,
+                factory_address_state: true,
+                factory_address_pin_code: true,
+                gst: true,
+              })),
+              banks: values.banks?.map(() => ({
+                bankers_name: true,
+                branch_address: true,
+                account_no: true,
+                ifsc: true,
+                adCode: true,
+              })),
+            });
+            
+            // Find the first error field and scroll to it
+            scrollToFirstError(errors);
+            
+            // Show custom validation snackbar with field-specific message
+            const errorCount = countErrors(errors);
+            const firstErrorField = getFirstErrorFieldName(errors);
+            
+            // Enhanced user-friendly message
+            let userMessage = "";
+            
+            if (errorCount === 1) {
+              userMessage = `Please fill the required field to submit for approval: ${firstErrorField}`;
+            } else if (errorCount <= 5) {
+              userMessage = `Please fill ${errorCount} required fields to submit for approval. First missing: ${firstErrorField}`;
+            } else {
+              userMessage = `Please complete the form to submit for approval. ${errorCount} required fields are missing. First: ${firstErrorField}`;
+            }
+            
+            setValidationSnackbar({
+              open: true,
+              message: userMessage,
+              severity: "error",
+              fieldCount: errorCount,
+              submitType: submitType
+            });
+            
+            return;
           }
-          
-          setValidationSnackbar({
-            open: true,
-            message: userMessage,
-            severity: "error",
-            fieldCount: errorCount,
-            submitType: submitType
-          });
-          
-          return;
         }
 
         validateBanks(values.banks);
 
         let res;
         if (submitType === "save_draft") {
-          if (values.iec_no === "") {
-            showWarning("IEC number is required");
-            return;
-          } else {
-            res = await axios.post(
-              `${process.env.REACT_APP_API_STRING}/customer-kyc-draft`,
-              { ...values, draft: "true" }
-            );
-            showSuccess(res.data.message);
-            resetForm();
-          }
+          console.log("Saving draft with values:", { iec_no: values.iec_no, name_of_individual: values.name_of_individual });
+          res = await axios.post(
+            `${process.env.REACT_APP_API_STRING}/customer-kyc-draft`,
+            { ...values, draft: "true" }
+          );
+          showSuccess(res.data.message);
+          resetForm();
         } else if (submitType === "save") {
           const res = await axios.post(
             `${process.env.REACT_APP_API_STRING}/add-customer-kyc`,
@@ -250,6 +295,34 @@ function CustomerKycForm() {
 
   const { getSupportingDocs, fileSnackbar, setFileSnackbar } =
     useSupportingDocuments(formik);
+
+  // Clear All Form Function
+  const handleClearAll = () => {
+    // Reset formik to initial values
+    formik.resetForm();
+    
+    // Clear localStorage
+    localStorage.removeItem("kycFormValues");
+    
+    // Reset all state
+    setSubmitType("");
+    setSubmissionAttempted(false);
+    setValidationSnackbar({
+      open: false,
+      message: "",
+      severity: "error",
+      fieldCount: 0,
+      submitType: ""
+    });
+    setShowClearConfirmation(false);
+    
+    // Show success message
+    showSuccess("Form cleared successfully! All data has been reset.");
+  };
+
+  const handleClearConfirmation = () => {
+    setShowClearConfirmation(true);
+  };
 
   // Save form data to localStorage every 5 seconds
   useEffect(() => {
@@ -625,7 +698,7 @@ function CustomerKycForm() {
             variant="outlined"
             id="name_of_individual"
             name="name_of_individual"
-            label="Name of Individual/Firm/Company *"
+            label="Name of Individual/Firm/Company * (Required for Draft)"
             value={formik.values.name_of_individual}
             onChange={formik.handleChange}
             error={
@@ -1228,6 +1301,10 @@ function CustomerKycForm() {
                     const updatedImages = address.gst_reg.filter((_, i) => i !== deleteIndex);
                     formik.setFieldValue(`factory_addresses[${index}].gst_reg`, updatedImages);
                   }}
+                  allowUserDelete={true}
+                  applicationStatus="draft"
+                  currentUserId={user?.id}
+                  applicationCreatorId={user?.id}
                 />
               )}
             </div>
@@ -1307,6 +1384,10 @@ function CustomerKycForm() {
                   const updatedImages = formik.values.authorised_signatories.filter((_, i) => i !== index);
                   formik.setFieldValue("authorised_signatories", updatedImages);
                 }}
+                allowUserDelete={true}
+                applicationStatus="draft"
+                currentUserId={user?.id}
+                applicationCreatorId={user?.id}
               />
             )}
           </div>
@@ -1345,6 +1426,10 @@ function CustomerKycForm() {
                   const updatedImages = formik.values.authorisation_letter.filter((_, i) => i !== index);
                   formik.setFieldValue("authorisation_letter", updatedImages);
                 }}
+                allowUserDelete={true}
+                applicationStatus="draft"
+                currentUserId={user?.id}
+                applicationCreatorId={user?.id}
               />
             )}
           </div>
@@ -1366,7 +1451,7 @@ function CustomerKycForm() {
             variant="filled"
             id="iec_no"
             name="iec_no"
-            label="IEC No *"
+            label="IEC No * (Required for Draft)"
             value={formik.values.iec_no}
             onChange={formik.handleChange}
             error={formik.touched.iec_no && Boolean(formik.errors.iec_no)}
@@ -1406,6 +1491,10 @@ function CustomerKycForm() {
                   const updatedImages = formik.values.iec_copy.filter((_, i) => i !== index);
                   formik.setFieldValue("iec_copy", updatedImages);
                 }}
+                allowUserDelete={true}
+                applicationStatus="draft"
+                currentUserId={user?.id}
+                applicationCreatorId={user?.id}
               />
             )}
           </div>
@@ -1464,6 +1553,10 @@ function CustomerKycForm() {
                     formik.setFieldValue("pan_copy", []);
                   }
                 }}
+                allowUserDelete={true}
+                applicationStatus="draft"
+                currentUserId={user?.id}
+                applicationCreatorId={user?.id}
               />
             )}
           </div>
@@ -1650,6 +1743,10 @@ function CustomerKycForm() {
                     const updatedImages = bank.adCode_file.filter((_, i) => i !== deleteIndex);
                     formik.setFieldValue(`banks[${index}].adCode_file`, updatedImages);
                   }}
+                  allowUserDelete={true}
+                  applicationStatus="draft"
+                  currentUserId={user?.id}
+                  applicationCreatorId={user?.id}
                 />
               )}
             </div>
@@ -1742,6 +1839,10 @@ function CustomerKycForm() {
                     const updatedImages = formik.values.other_documents.filter((_, i) => i !== index);
                     formik.setFieldValue("other_documents", updatedImages);
                   }}
+                  allowUserDelete={true}
+                  applicationStatus="draft"
+                  currentUserId={user?.id}
+                  applicationCreatorId={user?.id}
                 />
               </div>
             )}
@@ -1789,6 +1890,10 @@ function CustomerKycForm() {
                       formik.setFieldValue("spcb_reg", []);
                     }
                   }}
+                  allowUserDelete={true}
+                  applicationStatus="draft"
+                  currentUserId={user?.id}
+                  applicationCreatorId={user?.id}
                 />
               </div>
             )}
@@ -1834,6 +1939,10 @@ function CustomerKycForm() {
                     const updatedImages = formik.values.kyc_verification_images.filter((_, i) => i !== index);
                     formik.setFieldValue("kyc_verification_images", updatedImages);
                   }}
+                  allowUserDelete={true}
+                  applicationStatus="draft"
+                  currentUserId={user?.id}
+                  applicationCreatorId={user?.id}
                 />
               </div>
             )}
@@ -1877,6 +1986,10 @@ function CustomerKycForm() {
                     const updatedImages = formik.values.gst_returns.filter((_, i) => i !== index);
                     formik.setFieldValue("gst_returns", updatedImages);
                   }}
+                  allowUserDelete={true}
+                  applicationStatus="draft"
+                  currentUserId={user?.id}
+                  applicationCreatorId={user?.id}
                 />
               </div>
             )}
@@ -1893,6 +2006,27 @@ function CustomerKycForm() {
         borderTop: '1px solid rgba(0, 0, 0, 0.1)',
         marginTop: 'var(--spacing-xl)',
       }}>
+        {/* Draft Requirements Info */}
+        <div style={{
+          width: '100%',
+          textAlign: 'center',
+          marginBottom: 'var(--spacing-md)',
+          padding: 'var(--spacing-sm)',
+          backgroundColor: '#f8f9fa',
+          borderRadius: '6px',
+          border: '1px solid #e9ecef'
+        }}>
+          <p style={{ 
+            margin: 0, 
+            fontSize: '0.9rem', 
+            color: '#6c757d',
+            lineHeight: '1.4'
+          }}>
+            💡 <strong>Save Draft:</strong> Only requires IEC Number and Name • 
+            <strong>Submit:</strong> All mandatory fields must be completed
+          </p>
+        </div>
+        
         <button
           type="button"
           className="btn btn-secondary"
@@ -1902,6 +2036,20 @@ function CustomerKycForm() {
           Preview
         </button>
         <button
+          type="button"
+          className="btn btn-warning"
+          aria-label="clear-all-btn"
+          onClick={handleClearConfirmation}
+          title="Clear all form data and start fresh"
+          style={{ 
+            backgroundColor: "#f39c12", 
+            borderColor: "#e67e22",
+            color: "white"
+          }}
+        >
+          🗑️ Clear All
+        </button>
+        <button
           type="submit"
           className="btn btn-primary"
           aria-label="save-draft-btn"
@@ -1909,8 +2057,9 @@ function CustomerKycForm() {
             setSubmitType("save_draft");
             setSubmissionAttempted(true);
           }}
+          title="Save with minimal information (IEC Number + Name required)"
         >
-          Save Draft
+          💾 Save Draft
         </button>
         <button
           type="submit"
@@ -1920,8 +2069,9 @@ function CustomerKycForm() {
             setSubmitType("save");
             setSubmissionAttempted(true);
           }}
+          title="Submit complete application (all mandatory fields required)"
         >
-          Submit
+          📤 Submit
         </button>
       </div>
       
@@ -2004,6 +2154,107 @@ function CustomerKycForm() {
                 📊 Total fields to complete: {validationSnackbar.fieldCount}
               </div>
             )}
+          </div>
+        </Alert>
+      </Snackbar>
+      
+      {/* Clear All Confirmation Dialog */}
+      <Snackbar
+        open={showClearConfirmation}
+        autoHideDuration={null}
+        onClose={() => setShowClearConfirmation(false)}
+        anchorOrigin={{ vertical: 'center', horizontal: 'center' }}
+        sx={{ 
+          position: 'fixed !important',
+          top: '50% !important',
+          left: '50% !important',
+          transform: 'translate(-50%, -50%) !important',
+          zIndex: 10000,
+        }}
+      >
+        <Alert 
+          severity="warning"
+          variant="filled"
+          sx={{
+            width: '100%',
+            minWidth: '400px',
+            maxWidth: '500px',
+            backgroundColor: '#f39c12',
+            color: 'white',
+            fontSize: '1rem',
+            fontWeight: 500,
+            boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+            borderRadius: '12px',
+            border: '3px solid rgba(255,255,255,0.3)',
+            '& .MuiAlert-icon': {
+              color: 'white',
+              fontSize: '28px'
+            },
+            '& .MuiAlert-action': {
+              display: 'none' // Hide the default close button
+            }
+          }}
+        >
+          <div>
+            <div style={{ 
+              fontWeight: 'bold', 
+              marginBottom: '12px',
+              fontSize: '1.2rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              🗑️ Clear All Form Data
+            </div>
+            <div style={{ fontSize: '1rem', lineHeight: '1.4', marginBottom: '16px' }}>
+              Are you sure you want to clear all form data? This action cannot be undone.
+              <br /><br />
+              <strong>This will remove:</strong>
+              <ul style={{ margin: '8px 0', paddingLeft: '20px' }}>
+                <li>All filled form fields</li>
+                <li>All uploaded files</li>
+                <li>Auto-saved draft data</li>
+              </ul>
+            </div>
+            <div style={{ 
+              display: 'flex', 
+              gap: '12px', 
+              justifyContent: 'flex-end',
+              marginTop: '16px'
+            }}>
+              <button
+                type="button"
+                onClick={() => setShowClearConfirmation(false)}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: 'rgba(255,255,255,0.2)',
+                  border: '1px solid rgba(255,255,255,0.5)',
+                  borderRadius: '6px',
+                  color: 'white',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem',
+                  fontWeight: 500
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleClearAll}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: '#e74c3c',
+                  border: '1px solid #c0392b',
+                  borderRadius: '6px',
+                  color: 'white',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem',
+                  fontWeight: 500
+                }}
+              >
+                Yes, Clear All
+              </button>
+            </div>
           </div>
         </Alert>
       </Snackbar>

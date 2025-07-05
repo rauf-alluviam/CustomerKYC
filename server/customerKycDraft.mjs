@@ -4,10 +4,15 @@ import CustomerKycModel from "./models/customerKycModel.mjs";
 const router = express.Router();
 
 router.post("/customer-kyc-draft", async (req, res) => {
-  const { iec_no, ...rest } = req.body;
+  const { iec_no, name_of_individual, ...rest } = req.body;
 
+  // Validate minimum required fields for draft
   if (!iec_no) {
-    return res.status(400).json({ message: "IEC number is required" });
+    return res.status(400).json({ message: "IEC number is required to save draft" });
+  }
+  
+  if (!name_of_individual || name_of_individual.trim() === "") {
+    return res.status(400).json({ message: "Name is required to save draft" });
   }
 
   try {

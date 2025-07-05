@@ -860,21 +860,19 @@ function EditCompletedKyc() {
               id=""
               onChange={(e) => handleGstRegUpload(e, index)}
             />
-            {isValidFileUrl(address.gst_reg) && (
-              <button 
-                onClick={() => openFileInNewTab(address.gst_reg)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#007bff',
-                  textDecoration: 'underline',
-                  cursor: 'pointer',
-                  padding: 0,
-                  marginLeft: '10px'
+            {address.gst_reg && (
+              <ImagePreview 
+                images={address.gst_reg} 
+                onDeleteImage={(deleteIndex) => {
+                  if (Array.isArray(address.gst_reg)) {
+                    const updated = address.gst_reg.filter((_, i) => i !== deleteIndex);
+                    formik.setFieldValue(`factory_addresses[${index}].gst_reg`, updated);
+                  } else {
+                    formik.setFieldValue(`factory_addresses[${index}].gst_reg`, "");
+                  }
                 }}
-              >
-                View
-              </button>
+                showDeleteForAdmin={true}
+              />
             )}
             <br />
           </div>
@@ -920,7 +918,18 @@ function EditCompletedKyc() {
         ) : null}
         <br />
         {formik.values.authorised_signatories && (
-          <a href={formik.values.authorised_signatories}>View</a>
+          <ImagePreview 
+            images={formik.values.authorised_signatories} 
+            onDeleteImage={(index) => {
+              if (Array.isArray(formik.values.authorised_signatories)) {
+                const updated = formik.values.authorised_signatories.filter((_, i) => i !== index);
+                formik.setFieldValue("authorised_signatories", updated);
+              } else {
+                formik.setFieldValue("authorised_signatories", "");
+              }
+            }}
+            showDeleteForAdmin={true}
+          />
         )}
         <br />
         <br />
@@ -947,7 +956,18 @@ function EditCompletedKyc() {
         ) : null}
         <br />
         {formik.values.authorisation_letter && (
-          <a href={formik.values.authorisation_letter}>View</a>
+          <ImagePreview 
+            images={formik.values.authorisation_letter} 
+            onDeleteImage={(index) => {
+              if (Array.isArray(formik.values.authorisation_letter)) {
+                const updated = formik.values.authorisation_letter.filter((_, i) => i !== index);
+                formik.setFieldValue("authorisation_letter", updated);
+              } else {
+                formik.setFieldValue("authorisation_letter", "");
+              }
+            }}
+            showDeleteForAdmin={true}
+          />
         )}
         <TextField
           fullWidth
@@ -984,7 +1004,18 @@ function EditCompletedKyc() {
         ) : null}
         <br />
         {formik.values.iec_copy && (
-          <a href={formik.values.iec_copy}>View</a>
+          <ImagePreview 
+            images={formik.values.iec_copy} 
+            onDeleteImage={(index) => {
+              if (Array.isArray(formik.values.iec_copy)) {
+                const updated = formik.values.iec_copy.filter((_, i) => i !== index);
+                formik.setFieldValue("iec_copy", updated);
+              } else {
+                formik.setFieldValue("iec_copy", "");
+              }
+            }}
+            showDeleteForAdmin={true}
+          />
         )}
 
         <TextField
@@ -1022,7 +1053,18 @@ function EditCompletedKyc() {
         ) : null}
         <br />
         {formik.values.pan_copy && (
-          <a href={formik.values.pan_copy}>View</a>
+          <ImagePreview 
+            images={formik.values.pan_copy} 
+            onDeleteImage={(index) => {
+              if (Array.isArray(formik.values.pan_copy)) {
+                const updated = formik.values.pan_copy.filter((_, i) => i !== index);
+                formik.setFieldValue("pan_copy", updated);
+              } else {
+                formik.setFieldValue("pan_copy", "");
+              }
+            }}
+            showDeleteForAdmin={true}
+          />
         )}
         <br />
 
@@ -1149,21 +1191,19 @@ function EditCompletedKyc() {
               onChange={(e) => handleAdCodeFileUpload(e, index)}
             />
             <br />
-            {isValidFileUrl(bank.adCode_file) && (
-              <button 
-                onClick={() => openFileInNewTab(bank.adCode_file)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#007bff',
-                  textDecoration: 'underline',
-                  cursor: 'pointer',
-                  padding: 0,
-                  marginLeft: '10px'
+            {bank.adCode_file && (
+              <ImagePreview 
+                images={bank.adCode_file} 
+                onDeleteImage={(deleteIndex) => {
+                  if (Array.isArray(bank.adCode_file)) {
+                    const updated = bank.adCode_file.filter((_, i) => i !== deleteIndex);
+                    formik.setFieldValue(`banks[${index}].adCode_file`, updated);
+                  } else {
+                    formik.setFieldValue(`banks[${index}].adCode_file`, "");
+                  }
                 }}
-              >
-                View
-              </button>
+                showDeleteForAdmin={true}
+              />
             )}
           </div>
         ))}
@@ -1201,9 +1241,16 @@ function EditCompletedKyc() {
           <div style={{ color: "red" }}>{formik.errors.other_documents}</div>
         ) : null}
 
-        {formik.values.other_documents && formik.values.other_documents.length > 0 && formik.values.other_documents.map((doc, index) => (
-          <a key={index} href={doc}>View</a>
-        ))}
+        {formik.values.other_documents && formik.values.other_documents.length > 0 && (
+          <ImagePreview 
+            images={formik.values.other_documents} 
+            onDeleteImage={(index) => {
+              const updated = formik.values.other_documents.filter((_, i) => i !== index);
+              formik.setFieldValue("other_documents", updated);
+            }}
+            showDeleteForAdmin={true}
+          />
+        )}
         <br />
 
         <label style={{ marginRight: "10px" }}>
@@ -1227,7 +1274,18 @@ function EditCompletedKyc() {
         ) : null}
 
         {formik.values.spcb_reg && (
-          <a href={formik.values.spcb_reg}>View</a>
+          <ImagePreview 
+            images={formik.values.spcb_reg} 
+            onDeleteImage={(index) => {
+              if (Array.isArray(formik.values.spcb_reg)) {
+                const updated = formik.values.spcb_reg.filter((_, i) => i !== index);
+                formik.setFieldValue("spcb_reg", updated);
+              } else {
+                formik.setFieldValue("spcb_reg", "");
+              }
+            }}
+            showDeleteForAdmin={true}
+          />
         )}
         <br />
 
@@ -1254,9 +1312,16 @@ function EditCompletedKyc() {
           </div>
         ) : null}
 
-        {formik.values.kyc_verification_images && formik.values.kyc_verification_images.length > 0 && formik.values.kyc_verification_images.map((doc, index) => (
-          <a key={index} href={doc}>View</a>
-        ))}
+        {formik.values.kyc_verification_images && formik.values.kyc_verification_images.length > 0 && (
+          <ImagePreview 
+            images={formik.values.kyc_verification_images} 
+            onDeleteImage={(index) => {
+              const updated = formik.values.kyc_verification_images.filter((_, i) => i !== index);
+              formik.setFieldValue("kyc_verification_images", updated);
+            }}
+            showDeleteForAdmin={true}
+          />
+        )}
         <br />
 
         <label style={{ marginRight: "10px" }}>GST Returns:</label>
@@ -1279,11 +1344,16 @@ function EditCompletedKyc() {
           <div style={{ color: "red" }}>{formik.errors.gst_returns}</div>
         ) : null}
 
-        {formik.values.gst_returns && formik.values.gst_returns.length > 0 && formik.values.gst_returns.map((doc, index) => (
-          <a key={index} href={doc}>
-            View
-          </a>
-        ))}
+        {formik.values.gst_returns && formik.values.gst_returns.length > 0 && (
+          <ImagePreview 
+            images={formik.values.gst_returns} 
+            onDeleteImage={(index) => {
+              const updated = formik.values.gst_returns.filter((_, i) => i !== index);
+              formik.setFieldValue("gst_returns", updated);
+            }}
+            showDeleteForAdmin={true}
+          />
+        )}
         <br />
         </div>
 

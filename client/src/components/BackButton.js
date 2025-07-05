@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { IconButton, Box, Typography, Tooltip } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
 import { useNavigation } from '../contexts/NavigationContext';
+import { smartGoBack, debugNavigationState, enhancedSmartGoBack } from '../utils/navigationRecovery';
 
 const BackButton = ({ 
   variant = 'icon', // 'icon', 'text', or 'both'
@@ -25,29 +26,53 @@ const BackButton = ({
   const getPreviousLocation = navigationContext?.getPreviousLocation || (() => null);
 
   const handleBackClick = () => {
-    console.log('BackButton clicked', { canGoBack, fallbackRoute });
-    console.log('Navigation stack:', getPreviousLocation());
+    // Debug current navigation state in development
+    if (process.env.NODE_ENV === 'development') {
+      debugNavigationState();
+    }
+    
+    console.log('BackButton clicked', { 
+      canGoBack, 
+      fallbackRoute, 
+      stackLength: navigationContext?.navigationStack?.length || 0,
+      browserHistoryLength: window.history.length 
+    });
     
     try {
+      // First try custom navigation context
       const didNavigateBack = navigateBack(fallbackRoute);
-      console.log('Navigate back result:', didNavigateBack);
+      console.log('Custom navigate back result:', didNavigateBack);
+      
+      // If custom navigation failed, use enhanced smart recovery
       if (!didNavigateBack) {
-        console.log('Using fallback navigation to:', fallbackRoute);
-        // Fallback to browser history if navigation context failed
-        navigate(-1);
+        console.log('Custom navigation failed, using enhanced smart recovery...');
+        enhancedSmartGoBack(navigate, fallbackRoute);
       }
     } catch (error) {
       console.error('Error in BackButton navigation:', error);
-      // Ultimate fallback
-      navigate(fallbackRoute);
+      // Ultimate fallback using enhanced smart recovery
+      try {
+        enhancedSmartGoBack(navigate, fallbackRoute);
+      } catch (finalError) {
+        console.error('Enhanced smart recovery failed, using final fallback:', finalError);
+        navigate(fallbackRoute);
+      }
     }
   };
 
   // Get previous location info for tooltip
   const previousLocation = getPreviousLocation();
-  const tooltipText = canGoBack && previousLocation 
-    ? `Back to ${previousLocation.path}` 
-    : 'Go back';
+  const hasCustomNavigation = navigationContext?.navigationStack?.length > 0;
+  const hasBrowserHistory = window.history.length > 1;
+  
+  let tooltipText = 'Go back';
+  if (hasCustomNavigation && previousLocation) {
+    tooltipText = `Back to ${previousLocation.path}`;
+  } else if (hasBrowserHistory) {
+    tooltipText = 'Go back to previous page';
+  } else {
+    tooltipText = `Go back to ${fallbackRoute}`;
+  }
 
   const defaultStyles = {
     color: color,

@@ -94,7 +94,7 @@ export const handleFileUpload = async (event, fieldName, displayName, formik, se
 };
 
 // Function for S3 upload used by FileUpload component
-export const uploadFileToS3 = async (file, bucketPath, customerName) => {
+export const uploadFileToS3 = async (file, bucketPath, customerName, onProgress = null) => {
   try {
     // Sanitize customer name for proper S3 path organization
     const sanitizedCustomerName = sanitizeCustomerName(customerName);
@@ -109,33 +109,67 @@ export const uploadFileToS3 = async (file, bucketPath, customerName) => {
     formData.append('customerName', sanitizedCustomerName);
     formData.append('fieldName', bucketPath || 'general');
 
-    // Upload to S3 via backend API
-    const response = await fetch(`${process.env.REACT_APP_API_STRING}/api/upload-file`, {
-      method: 'POST',
-      body: formData,
+    // Create XMLHttpRequest for progress tracking
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      
+      // Track upload progress
+      if (onProgress) {
+        xhr.upload.addEventListener('progress', (event) => {
+          if (event.lengthComputable) {
+            const percentComplete = (event.loaded / event.total) * 100;
+            onProgress(Math.round(percentComplete));
+          }
+        });
+      }
+      
+      // Handle completion
+      xhr.addEventListener('load', () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            const result = JSON.parse(xhr.responseText);
+            
+            console.log(`File uploaded to S3:`);
+            console.log(`  - Original name: ${result.originalName}`);
+            console.log(`  - S3 Key/Path: ${result.key}`);
+            console.log(`  - Customer folder: ${sanitizedCustomerName}`);
+            
+            // Return S3 response format
+            resolve({
+              Location: result.fileUrl,
+              Key: result.key,
+              Bucket: process.env.REACT_APP_S3_BUCKET || 'default-bucket',
+              originalName: result.originalName,
+              size: result.size,
+              customerName: sanitizedCustomerName,
+              s3Path: result.key // Include the full S3 path for verification
+            });
+          } catch (parseError) {
+            console.error('Error parsing server response:', parseError);
+            reject(new Error('Invalid server response'));
+          }
+        } else {
+          console.error(`Upload failed with status ${xhr.status}: ${xhr.statusText}`);
+          reject(new Error(`Upload failed: ${xhr.status} ${xhr.statusText}`));
+        }
+      });
+      
+      // Handle errors
+      xhr.addEventListener('error', () => {
+        console.error('Upload request failed');
+        reject(new Error('Network error during upload'));
+      });
+      
+      xhr.addEventListener('timeout', () => {
+        console.error('Upload request timed out');
+        reject(new Error('Upload timeout'));
+      });
+      
+      // Configure and send request
+      xhr.open('POST', `${process.env.REACT_APP_API_STRING}/api/upload-file`);
+      xhr.timeout = 120000; // 2 minute timeout
+      xhr.send(formData);
     });
-
-    if (!response.ok) {
-      throw new Error(`Upload failed: ${response.statusText}`);
-    }
-
-    const result = await response.json();
-    
-    console.log(`File uploaded to S3:`);
-    console.log(`  - Original name: ${result.originalName}`);
-    console.log(`  - S3 Key/Path: ${result.key}`);
-    console.log(`  - Customer folder: ${sanitizedCustomerName}`);
-    
-    // Return S3 response format
-    return {
-      Location: result.fileUrl,
-      Key: result.key,
-      Bucket: process.env.REACT_APP_S3_BUCKET || 'default-bucket',
-      originalName: result.originalName,
-      size: result.size,
-      customerName: sanitizedCustomerName,
-      s3Path: result.key // Include the full S3 path for verification
-    };
     
   } catch (error) {
     console.error('S3 upload error:', error);

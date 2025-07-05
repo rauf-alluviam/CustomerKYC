@@ -2,7 +2,7 @@ import { useState } from 'react';
 import FileUpload from '../utils/FileUpload';
 import ImagePreview from '../utils/ImagePreview';
 
-const useSupportingDocuments = (formik) => {
+const useSupportingDocuments = (formik, onDbUpdate = null) => {
   const [fileSnackbar, setFileSnackbar] = useState(false);
 
   const getSupportingDocs = () => {
@@ -55,7 +55,12 @@ const useSupportingDocuments = (formik) => {
               } else {
                 formik.setFieldValue(fieldName, "");
               }
+              // Call database update if callback is provided
+              if (onDbUpdate) {
+                onDbUpdate(index, fieldName);
+              }
             }}
+            showDeleteForAdmin={true}
           />
         </div>
       )}

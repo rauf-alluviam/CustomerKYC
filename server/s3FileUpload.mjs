@@ -3,6 +3,7 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import multer from "multer";
 import dotenv from 'dotenv';
 import path from 'path';
+import crypto from 'crypto';
 
 dotenv.config();
 
@@ -41,18 +42,21 @@ const upload = multer({
       'image/jpeg', 'image/jpg', 'image/png', 'image/gif',
       'application/pdf', 'application/msword', 
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'application/vnd.ms-excel',
+      'application/zip',
       'text/plain' // Allow text files for testing
     ];
     
     // For files without proper MIME type detection, check extension
-    const allowedExtensions = ['.pdf', '.doc', '.docx', '.jpg', '.jpeg', '.png', '.gif', '.txt'];
+    const allowedExtensions = ['.pdf', '.doc', '.docx', '.jpg', '.jpeg', '.png', '.gif', '.txt', '.zip', '.xls', '.xlsx'];
     const fileExtension = path.extname(file.originalname).toLowerCase();
     
     if (allowedTypes.includes(file.mimetype) || allowedExtensions.includes(fileExtension)) {
       cb(null, true);
     } else {
       console.log(`Rejected file: ${file.originalname}, MIME: ${file.mimetype}, Extension: ${fileExtension}`);
-      cb(new Error('Invalid file type. Only images and documents are allowed.'), false);
+      cb(new Error(`Invalid file type: ${file.mimetype} (${fileExtension}). Allowed types: ${allowedExtensions.join(', ')}`), false);
     }
   }
 });
@@ -113,45 +117,105 @@ const generateS3Key = (customerName, fieldName, fileName) => {
 router.post("/api/upload-file", upload.single('file'), async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ message: "No file provided" });
+      return res.status(400).json({ 
+        message: "No file provided",
+        error: "FILE_MISSING"
+      });
     }
 
     const { customerName, fieldName } = req.body;
     
     if (!customerName || !fieldName) {
-      return res.status(400).json({ message: "Missing customerName or fieldName" });
+      return res.status(400).json({ 
+        message: "Missing customerName or fieldName",
+        error: "MISSING_PARAMETERS"
+      });
+    }
+
+    // Validate file buffer
+    if (!req.file.buffer || req.file.buffer.length === 0) {
+      return res.status(400).json({
+        message: "File buffer is empty or corrupted",
+        error: "INVALID_FILE_BUFFER"
+      });
     }
 
     const s3Key = generateS3Key(customerName, fieldName, req.file.originalname);
+
+    console.log(`Starting upload for file: ${req.file.originalname}`);
+    console.log(`File size: ${req.file.size} bytes`);
+    console.log(`Content type: ${req.file.mimetype}`);
+    console.log(`S3 Key: ${s3Key}`);
 
     const uploadParams = {
       Bucket: S3_BUCKET,
       Key: s3Key,
       Body: req.file.buffer,
       ContentType: req.file.mimetype,
-      // Make file publicly readable if bucket is configured for public access
-      // ACL: 'public-read'
+      // Add metadata for integrity checking
+      Metadata: {
+        'original-name': req.file.originalname,
+        'upload-timestamp': new Date().toISOString(),
+        'customer-name': customerName,
+        'field-name': fieldName
+      },
+      // Ensure data integrity during upload
+      ContentMD5: crypto.createHash('md5').update(req.file.buffer).digest('base64')
     };
 
     const command = new PutObjectCommand(uploadParams);
-    const result = await s3.send(command);
+    
+    // Upload with timeout
+    const uploadPromise = s3.send(command);
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Upload timeout')), 60000)
+    );
+    
+    const result = await Promise.race([uploadPromise, timeoutPromise]);
 
     // Generate the public URL
     const fileUrl = `https://${S3_BUCKET}.s3.${AWS_REGION}.amazonaws.com/${s3Key}`;
+
+    console.log(`File uploaded successfully:`);
+    console.log(`  - S3 Key: ${s3Key}`);
+    console.log(`  - File URL: ${fileUrl}`);
+    console.log(`  - ETag: ${result.ETag}`);
 
     res.status(200).json({
       message: "File uploaded successfully",
       fileUrl: fileUrl,
       key: s3Key,
       originalName: req.file.originalname,
-      size: req.file.size
+      size: req.file.size,
+      etag: result.ETag,
+      uploadTimestamp: new Date().toISOString()
     });
 
   } catch (error) {
     console.error('S3 upload error:', error);
+    
+    // Provide specific error messages
+    let errorMessage = "File upload failed";
+    let errorCode = "UPLOAD_ERROR";
+    
+    if (error.name === 'TimeoutError' || error.message.includes('timeout')) {
+      errorMessage = "Upload timeout - file may be too large or connection is slow";
+      errorCode = "UPLOAD_TIMEOUT";
+    } else if (error.code === 'InvalidAccessKeyId') {
+      errorMessage = "AWS credentials are invalid";
+      errorCode = "INVALID_CREDENTIALS";
+    } else if (error.code === 'NoSuchBucket') {
+      errorMessage = "S3 bucket does not exist";
+      errorCode = "BUCKET_NOT_FOUND";
+    } else if (error.code === 'AccessDenied') {
+      errorMessage = "Access denied to S3 bucket";
+      errorCode = "ACCESS_DENIED";
+    }
+
     res.status(500).json({ 
-      message: "File upload failed", 
-      error: error.message 
+      message: errorMessage,
+      error: errorCode,
+      details: error.message
     });
   }
 });

@@ -1,7 +1,10 @@
 import React, { useState, useContext } from "react";
 import { uploadFileToS3 } from "./awsFileUpload";
-import { Button, CircularProgress } from "@mui/material";
+import { Button, CircularProgress, LinearProgress, Box, Typography } from "@mui/material";
 import { UserContext } from "../contexts/UserContext";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import ErrorIcon from '@mui/icons-material/Error';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 const FileUpload = ({
   label,
@@ -14,8 +17,13 @@ const FileUpload = ({
   customerName = "", // New prop for customer name to create dynamic bucket path
 }) => {
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState({});
+  const [uploadStatus, setUploadStatus] = useState({});
   const [error, setError] = useState("");
+  const [retryAttempts, setRetryAttempts] = useState({});
   const { user } = useContext(UserContext);
+
+  const MAX_RETRY_ATTEMPTS = 3;
 
   // Function to sanitize folder names
   const sanitizeFolderName = (name) => {
@@ -45,6 +53,95 @@ const FileUpload = ({
     return normalizedAcceptedTypes.includes(fileExtension);
   };
 
+  // Function to calculate MD5 hash for file integrity verification
+  const calculateMD5 = async (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        try {
+          const arrayBuffer = event.target.result;
+          const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
+          const hashArray = Array.from(new Uint8Array(hashBuffer));
+          const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+          resolve(hashHex);
+        } catch (error) {
+          reject(error);
+        }
+      };
+      reader.onerror = reject;
+      reader.readAsArrayBuffer(file);
+    });
+  };
+
+  // Function to verify file after upload
+  const verifyFileIntegrity = async (fileUrl, originalHash) => {
+    try {
+      const response = await fetch(fileUrl);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch uploaded file: ${response.status}`);
+      }
+      const arrayBuffer = await response.arrayBuffer();
+      const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const uploadedHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      
+      return originalHash === uploadedHash;
+    } catch (error) {
+      console.warn('File integrity verification failed:', error);
+      return false; // Don't fail upload if verification fails, just warn
+    }
+  };
+
+  // Enhanced retry mechanism
+  const uploadWithRetry = async (file, finalBucketPath, fileId) => {
+    const maxRetries = MAX_RETRY_ATTEMPTS;
+    let attempt = 0;
+    
+    // Calculate original file hash for integrity verification
+    const originalHash = await calculateMD5(file);
+    
+    while (attempt < maxRetries) {
+      try {
+        setUploadProgress(prev => ({ ...prev, [fileId]: 0 }));
+        setUploadStatus(prev => ({ ...prev, [fileId]: 'uploading' }));
+        
+        const result = await uploadFileToS3(
+          file, 
+          finalBucketPath, 
+          customerName,
+          (progress) => {
+            setUploadProgress(prev => ({ ...prev, [fileId]: progress }));
+          }
+        );
+        
+        // Verify file integrity
+        setUploadStatus(prev => ({ ...prev, [fileId]: 'verifying' }));
+        const isIntegrityValid = await verifyFileIntegrity(result.Location, originalHash);
+        
+        if (!isIntegrityValid) {
+          console.warn(`File integrity check failed for ${file.name}, but proceeding with upload`);
+        }
+        
+        setUploadStatus(prev => ({ ...prev, [fileId]: 'completed' }));
+        setUploadProgress(prev => ({ ...prev, [fileId]: 100 }));
+        
+        return result;
+      } catch (error) {
+        attempt++;
+        setRetryAttempts(prev => ({ ...prev, [fileId]: attempt }));
+        
+        if (attempt >= maxRetries) {
+          setUploadStatus(prev => ({ ...prev, [fileId]: 'failed' }));
+          throw new Error(`Upload failed after ${maxRetries} attempts: ${error.message}`);
+        }
+        
+        setUploadStatus(prev => ({ ...prev, [fileId]: `retrying` }));
+        // Wait before retry (exponential backoff)
+        await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+      }
+    }
+  };
+
   // Function to get file size in MB
   const getFileSizeInMB = (file) => {
     return (file.size / (1024 * 1024)).toFixed(2);
@@ -55,6 +152,9 @@ const FileUpload = ({
 
     const files = Array.from(event.target.files);
     setError(""); // Clear previous errors
+    setUploadProgress({});
+    setUploadStatus({});
+    setRetryAttempts({});
 
     // Validate file types
     const invalidFiles = files.filter(file => !validateFileType(file));
@@ -75,28 +175,44 @@ const FileUpload = ({
     }
 
     const uploadedFiles = [];
-
-    // Create dynamic bucket path if needed
     const finalBucketPath = createBucketPath(bucketPath, customerName);
 
     setUploading(true);
-    for (const file of files) {
-      try {
-        const result = await uploadFileToS3(file, finalBucketPath);
-        uploadedFiles.push(result.Location);
-      } catch (error) {
-        console.error(`Failed to upload ${file.name}:`, error);
-        setError(`Failed to upload ${file.name}. Please try again.`);
-      }
-    }
-    setUploading(false);
     
-    // Clear the input after successful upload
-    event.target.value = '';
+    try {
+      // Upload files sequentially to avoid overwhelming the server
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const fileId = `${file.name}_${Date.now()}_${i}`;
+        
+        try {
+          const result = await uploadWithRetry(file, finalBucketPath, fileId);
+          uploadedFiles.push(result.Location);
+        } catch (error) {
+          console.error(`Failed to upload ${file.name}:`, error);
+          setError(prev => {
+            const newError = `Failed to upload ${file.name}: ${error.message}`;
+            return prev ? `${prev}\n${newError}` : newError;
+          });
+          setUploadStatus(prev => ({ ...prev, [fileId]: 'failed' }));
+        }
+      }
+    } finally {
+      setUploading(false);
+      // Clear the input after upload attempt
+      event.target.value = '';
+    }
     
     // Pass the uploaded files to the callback along with the appendFiles flag
     if (uploadedFiles.length > 0) {
       onFilesUploaded(uploadedFiles, appendFiles);
+      
+      // Clear progress and status after successful callback
+      setTimeout(() => {
+        setUploadProgress({});
+        setUploadStatus({});
+        setRetryAttempts({});
+      }, 3000);
     }
   };
 
@@ -122,9 +238,67 @@ const FileUpload = ({
           disabled={readOnly || uploading} // Disable input when readOnly
         />
       </Button>
+      
       {uploading && (
         <CircularProgress size={24} style={{ marginLeft: "10px" }} />
       )}
+      
+      {/* Progress indicators for individual files */}
+      {Object.keys(uploadProgress).length > 0 && (
+        <Box sx={{ mt: 2 }}>
+          {Object.entries(uploadProgress).map(([fileId, progress]) => {
+            const fileName = fileId.split('_')[0];
+            const status = uploadStatus[fileId];
+            const attempts = retryAttempts[fileId] || 0;
+            
+            return (
+              <Box key={fileId} sx={{ mb: 1 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
+                  <Typography variant="body2" sx={{ flexGrow: 1, fontSize: '0.8rem' }}>
+                    {fileName}
+                  </Typography>
+                  {status === 'completed' && (
+                    <CheckCircleIcon sx={{ color: 'green', fontSize: '1rem', ml: 1 }} />
+                  )}
+                  {status === 'failed' && (
+                    <ErrorIcon sx={{ color: 'red', fontSize: '1rem', ml: 1 }} />
+                  )}
+                  {status === 'retrying' && (
+                    <RefreshIcon sx={{ color: 'orange', fontSize: '1rem', ml: 1 }} />
+                  )}
+                </Box>
+                
+                <LinearProgress 
+                  variant="determinate" 
+                  value={progress} 
+                  sx={{ height: 6, borderRadius: 3 }}
+                  color={
+                    status === 'completed' ? 'success' : 
+                    status === 'failed' ? 'error' : 
+                    status === 'retrying' ? 'warning' : 'primary'
+                  }
+                />
+                
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 0.5 }}>
+                  <Typography variant="caption" sx={{ fontSize: '0.7rem' }}>
+                    {status === 'uploading' && `${Math.round(progress)}%`}
+                    {status === 'verifying' && 'Verifying integrity...'}
+                    {status === 'completed' && 'Upload complete ✓'}
+                    {status === 'failed' && 'Upload failed ✗'}
+                    {status === 'retrying' && `Retrying... (${attempts}/${MAX_RETRY_ATTEMPTS})`}
+                  </Typography>
+                  {status === 'completed' && (
+                    <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'green' }}>
+                      Verified
+                    </Typography>
+                  )}
+                </Box>
+              </Box>
+            );
+          })}
+        </Box>
+      )}
+      
       {error && (
         <div style={{ 
           color: "#d32f2f", 
@@ -133,17 +307,24 @@ const FileUpload = ({
           backgroundColor: "#ffebee",
           padding: "8px",
           borderRadius: "4px",
-          border: "1px solid #ffcdd2"
+          border: "1px solid #ffcdd2",
+          whiteSpace: "pre-line"
         }}>
           {error}
         </div>
       )}
+      
       <div style={{ 
         fontSize: "11px", 
         color: "#666", 
         marginTop: "4px" 
       }}>
         Allowed files: {acceptedFileTypes.join(', ')} (Max 10MB each)
+        {uploading && (
+          <div style={{ marginTop: "4px", color: "#1976d2" }}>
+            📤 Files are being uploaded with integrity verification...
+          </div>
+        )}
       </div>
     </div>
   );

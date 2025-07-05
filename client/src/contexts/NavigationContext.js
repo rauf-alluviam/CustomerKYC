@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { isPageRefresh, reconstructNavigationContext } from '../utils/navigationRecovery';
 
 const NavigationContext = createContext();
 
@@ -26,7 +27,17 @@ export const useNavigation = () => {
 
 export const NavigationProvider = ({ children }) => {
   // Initialize states from localStorage if available
-  const [navigationStack, setNavigationStack] = useState([]);
+  const [navigationStack, setNavigationStack] = useState(() => {
+    try {
+      const saved = localStorage.getItem('kyc-navigation-stack');
+      const parsed = saved ? JSON.parse(saved) : [];
+      // Only restore recent navigation (last 30 minutes)
+      const thirtyMinutesAgo = Date.now() - (30 * 60 * 1000);
+      return parsed.filter(item => item.timestamp > thirtyMinutesAgo);
+    } catch {
+      return [];
+    }
+  });
   const [tabStates, setTabStates] = useState(() => {
     try {
       const saved = localStorage.getItem('kyc-tab-states');
@@ -47,6 +58,55 @@ export const NavigationProvider = ({ children }) => {
       console.warn('Failed to save tab states to localStorage:', error);
     }
   }, [tabStates]);
+
+  // Persist navigation stack to localStorage (with size limit)
+  React.useEffect(() => {
+    try {
+      // Keep only last 10 navigation items and remove items older than 30 minutes
+      const thirtyMinutesAgo = Date.now() - (30 * 60 * 1000);
+      const recentNavigation = navigationStack
+        .filter(item => item.timestamp > thirtyMinutesAgo)
+        .slice(-10);
+      localStorage.setItem('kyc-navigation-stack', JSON.stringify(recentNavigation));
+    } catch (error) {
+      console.warn('Failed to save navigation stack to localStorage:', error);
+    }
+  }, [navigationStack]);
+
+  // Handle browser refresh - try to reconstruct navigation context from URL
+  React.useEffect(() => {
+    // Check if this is a page refresh
+    if (isPageRefresh()) {
+      console.log('Page refresh detected, attempting to restore navigation context...');
+      
+      const restored = reconstructNavigationContext();
+      if (restored && restored.length > 0) {
+        console.log('Restored navigation context:', restored);
+        setNavigationStack(restored);
+      }
+    }
+    
+    const handlePageShow = (event) => {
+      // If page was loaded from cache (back/forward navigation)
+      if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+        // Try to restore navigation state from localStorage
+        try {
+          const saved = localStorage.getItem('kyc-navigation-stack');
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            const thirtyMinutesAgo = Date.now() - (30 * 60 * 1000);
+            const recentNavigation = parsed.filter(item => item.timestamp > thirtyMinutesAgo);
+            setNavigationStack(recentNavigation);
+          }
+        } catch (error) {
+          console.warn('Failed to restore navigation stack:', error);
+        }
+      }
+    };
+
+    window.addEventListener('pageshow', handlePageShow);
+    return () => window.removeEventListener('pageshow', handlePageShow);
+  }, []);
 
   // Debug mode - expose navigation state to window for testing
   React.useEffect(() => {
@@ -111,8 +171,11 @@ export const NavigationProvider = ({ children }) => {
 
   // Navigate back to the previous location with state restoration
   const navigateBack = useCallback((fallbackRoute = '/customer-kyc') => {
+    console.log('NavigateBack called with stack length:', navigationStack.length);
+    
     if (navigationStack.length > 0) {
       const previousLocation = navigationStack[navigationStack.length - 1];
+      console.log('Navigating back to:', previousLocation.path);
       
       // Remove the last entry from stack
       setNavigationStack(prev => prev.slice(0, -1));
@@ -127,9 +190,25 @@ export const NavigationProvider = ({ children }) => {
       
       return true;
     } else {
-      // No previous location in stack, use fallback
-      navigate(fallbackRoute);
-      return false;
+      console.log('No navigation stack, checking browser history...');
+      
+      // Check if we can use browser history
+      if (window.history.length > 1) {
+        try {
+          // Try to go back using browser history
+          window.history.back();
+          return true;
+        } catch (error) {
+          console.warn('Browser back failed, using fallback route:', error);
+          navigate(fallbackRoute);
+          return false;
+        }
+      } else {
+        // No browser history either, use fallback
+        console.log('No browser history, using fallback route:', fallbackRoute);
+        navigate(fallbackRoute);
+        return false;
+      }
     }
   }, [navigationStack, navigate]);
 
@@ -141,7 +220,7 @@ export const NavigationProvider = ({ children }) => {
   }, []);
 
   // Check if there's a previous location to go back to
-  const canGoBack = navigationStack.length > 0;
+  const canGoBack = navigationStack.length > 0 || window.history.length > 1;
 
   // Get the previous location info without navigating
   const getPreviousLocation = useCallback(() => {
@@ -150,6 +229,61 @@ export const NavigationProvider = ({ children }) => {
     }
     return null;
   }, [navigationStack]);
+
+  // Cleanup function to prevent memory leaks
+  const cleanupOldEntries = useCallback(() => {
+    const oneDayAgo = Date.now() - (24 * 60 * 60 * 1000);
+    
+    setNavigationStack(prev => {
+      const cleaned = prev.filter(entry => entry.timestamp > oneDayAgo);
+      if (cleaned.length !== prev.length) {
+        console.log(`Cleaned ${prev.length - cleaned.length} old navigation entries`);
+      }
+      return cleaned;
+    });
+    
+    // Also cleanup localStorage
+    try {
+      const saved = localStorage.getItem('kyc-navigation-stack');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        const cleaned = parsed.filter(entry => entry.timestamp > oneDayAgo);
+        if (cleaned.length !== parsed.length) {
+          localStorage.setItem('kyc-navigation-stack', JSON.stringify(cleaned));
+        }
+      }
+    } catch (error) {
+      console.warn('Failed to cleanup localStorage:', error);
+    }
+  }, []);
+
+  // Run cleanup periodically
+  React.useEffect(() => {
+    const cleanup = () => cleanupOldEntries();
+    
+    // Run cleanup on mount
+    cleanup();
+    
+    // Run cleanup every hour
+    const interval = setInterval(cleanup, 60 * 60 * 1000);
+    
+    return () => clearInterval(interval);
+  }, [cleanupOldEntries]);
+
+  // Add error boundary protection
+  const safeNavigate = useCallback((to, options = {}) => {
+    try {
+      navigate(to, options);
+    } catch (error) {
+      console.error('Navigation failed:', error);
+      // Fallback: try window.location
+      try {
+        window.location.href = to;
+      } catch (locationError) {
+        console.error('Location fallback also failed:', locationError);
+      }
+    }
+  }, [navigate]);
 
   const value = {
     navigateWithRef,
@@ -161,7 +295,8 @@ export const NavigationProvider = ({ children }) => {
     getTabState,
     saveScrollPosition,
     getScrollPosition,
-    navigationStack
+    navigationStack,
+    safeNavigate // Add the safe navigate function
   };
 
   return (
