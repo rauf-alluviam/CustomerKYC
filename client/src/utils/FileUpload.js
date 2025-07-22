@@ -53,52 +53,10 @@ const FileUpload = ({
     return normalizedAcceptedTypes.includes(fileExtension);
   };
 
-  // Function to calculate MD5 hash for file integrity verification
-  const calculateMD5 = async (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-        try {
-          const arrayBuffer = event.target.result;
-          const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
-          const hashArray = Array.from(new Uint8Array(hashBuffer));
-          const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-          resolve(hashHex);
-        } catch (error) {
-          reject(error);
-        }
-      };
-      reader.onerror = reject;
-      reader.readAsArrayBuffer(file);
-    });
-  };
-
-  // Function to verify file after upload
-  const verifyFileIntegrity = async (fileUrl, originalHash) => {
-    try {
-      const response = await fetch(fileUrl);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch uploaded file: ${response.status}`);
-      }
-      const arrayBuffer = await response.arrayBuffer();
-      const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      const uploadedHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-      
-      return originalHash === uploadedHash;
-    } catch (error) {
-      console.warn('File integrity verification failed:', error);
-      return false; // Don't fail upload if verification fails, just warn
-    }
-  };
-
-  // Enhanced retry mechanism
+  // Enhanced retry mechanism (without integrity verification)
   const uploadWithRetry = async (file, finalBucketPath, fileId) => {
     const maxRetries = MAX_RETRY_ATTEMPTS;
     let attempt = 0;
-    
-    // Calculate original file hash for integrity verification
-    const originalHash = await calculateMD5(file);
     
     while (attempt < maxRetries) {
       try {
@@ -113,14 +71,6 @@ const FileUpload = ({
             setUploadProgress(prev => ({ ...prev, [fileId]: progress }));
           }
         );
-        
-        // Verify file integrity
-        setUploadStatus(prev => ({ ...prev, [fileId]: 'verifying' }));
-        const isIntegrityValid = await verifyFileIntegrity(result.Location, originalHash);
-        
-        if (!isIntegrityValid) {
-          console.warn(`File integrity check failed for ${file.name}, but proceeding with upload`);
-        }
         
         setUploadStatus(prev => ({ ...prev, [fileId]: 'completed' }));
         setUploadProgress(prev => ({ ...prev, [fileId]: 100 }));
@@ -282,16 +232,10 @@ const FileUpload = ({
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 0.5 }}>
                   <Typography variant="caption" sx={{ fontSize: '0.7rem' }}>
                     {status === 'uploading' && `${Math.round(progress)}%`}
-                    {status === 'verifying' && 'Verifying integrity...'}
                     {status === 'completed' && 'Upload complete ✓'}
                     {status === 'failed' && 'Upload failed ✗'}
                     {status === 'retrying' && `Retrying... (${attempts}/${MAX_RETRY_ATTEMPTS})`}
                   </Typography>
-                  {status === 'completed' && (
-                    <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'green' }}>
-                      Verified
-                    </Typography>
-                  )}
                 </Box>
               </Box>
             );
@@ -322,7 +266,7 @@ const FileUpload = ({
         Allowed files: {acceptedFileTypes.join(', ')} (Max 10MB each)
         {uploading && (
           <div style={{ marginTop: "4px", color: "#1976d2" }}>
-            📤 Files are being uploaded with integrity verification...
+            📤 Files are being uploaded...
           </div>
         )}
       </div>

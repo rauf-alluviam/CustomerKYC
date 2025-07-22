@@ -357,7 +357,15 @@ function CustomerKyc() {
                 label="Revisions" 
                 {...a11yProps(2)} 
               />
+              <Tab 
+                icon={getTabIcon(5)}
+                iconPosition="start"
+                label="Completed KYC" 
+                {...a11yProps(5)} 
+              />
             </Tabs>
+            
+
           </Box>
 
           <Box sx={{ 
@@ -374,6 +382,9 @@ function CustomerKyc() {
             <CustomTabPanel value={value} index={2}>
               <RevisionList />
             </CustomTabPanel>
+            <CustomTabPanel value={value} index={3}>
+  <CompletedKyc />
+</CustomTabPanel>
           </Box>
         </Paper>
       )}

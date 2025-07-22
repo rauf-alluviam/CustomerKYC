@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Row, Col } from "react-bootstrap";
@@ -7,11 +7,13 @@ import BackButton from "./BackButton";
 import { ViewButton, MultipleViewButtons } from "../utils/documentHelpers";
 import ImagePreview from "../utils/ImagePreview";
 import { useSnackbar } from "../contexts/SnackbarContext";
+import { UserContext } from "../contexts/UserContext";
 
 function ViewCompletedKycDetails() {
   const { _id } = useParams();
   const [data, setData] = useState();
   const { showSuccess, showError } = useSnackbar();
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     async function getData() {
@@ -336,6 +338,14 @@ function ViewCompletedKycDetails() {
 
   // Remove duplicate helper functions since we're importing from utils
   // isValidFileUrl and openFileInNewTab are now imported from documentHelpers
+
+  if (!user || user.role !== "Admin") {
+    return (
+      <div style={{ padding: 40, textAlign: 'center', color: '#d32f2f', fontWeight: 600 }}>
+        You do not have permission to view this page.
+      </div>
+    );
+  }
 
   return (
     <div
