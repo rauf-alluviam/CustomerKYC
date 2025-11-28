@@ -5,12 +5,12 @@
   --background-white: #fffefe;
   --primary-blue: #2171c2;
   --accent-orange: #e87538;
-  
+
   /* Legacy mappings for compatibility */
   --primary-gradient: #2171c2;
   --primary-orange: #2171c2;
   --primary-light: #fffefe;
-  
+
   /* Soft Color Palette - updated for minimal design */
   --soft-blue: #f8faff;
   --soft-green: #f8fffe;
@@ -18,7 +18,7 @@
   --soft-pink: #fffafa;
   --soft-orange: #fff9f6;
   --soft-yellow: #fffffe;
-  
+
   /* Neutral Colors - minimal approach */
   --white: #fffefe;
   --light-gray: #f5f5f5;
@@ -27,15 +27,16 @@
   --dark-gray: #4b5563;
   --text-primary: #000000;
   --text-secondary: #6b7280;
-  
+
   /* Modern Typography */
-  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  --font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif;
   --font-weight-light: 300;
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
-  
+
   /* Spacing */
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
@@ -43,46 +44,43 @@
   --spacing-lg: 1.5rem;
   --spacing-xl: 2rem;
   --spacing-xxl: 3rem;
-  
+
   /* Border Radius - minimal design */
   --radius-sm: 4px;
   --radius-md: 6px;
   --radius-lg: 8px;
   --radius-xl: 12px;
-  
+
   /* Shadows - subtle and minimal */
   --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.05);
   --shadow-medium: 0 2px 6px rgba(0, 0, 0, 0.08);
   --shadow-strong: 0 4px 12px rgba(0, 0, 0, 0.12);
-  
+
   /* Transitions */
   --transition-fast: 0.15s ease-in-out;
   --transition-medium: 0.3s ease-in-out;
   --transition-slow: 0.5s ease-in-out;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
 body {
-  margin: 0;
-  font-family: var(--font-family);
-  font-weight: var(--font-weight-normal);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background: var(--background-white);
-  color: var(--primary-text);
-  line-height: 1.6;
+  margin: 0; /* Removes default body margin */
+  padding: 0; /* Removes default body padding */
+  line-height: 1.5; /* Sets a base line height for better readability */
 }
 
 code {
-  font-family: 'Fira Code', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-family: "Fira Code", source-code-pro, Menlo, Monaco, Consolas,
+    "Courier New", monospace;
   background: var(--soft-gray);
   padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: var(--radius-sm);
 }
 
 /* Modern Card Styles - Clean Minimal */
-.feedback-form, .kyc-form-container {
+.feedback-form,
+.kyc-form-container {
   background: var(--background-white);
   padding: 24px;
   border-radius: var(--radius-lg);
@@ -94,11 +92,12 @@ code {
 }
 
 .kyc-form-container {
- max-width: 150rem;  /* Even wider form */
+  max-width: 150rem; /* Even wider form */
   width: 100%;
 }
 
-.feedback-form:hover, .kyc-form-container:hover {
+.feedback-form:hover,
+.kyc-form-container:hover {
   box-shadow: var(--shadow-medium);
   transform: none;
 }
@@ -190,13 +189,15 @@ code {
 }
 
 /* CTA/Warning Button - Using accent color */
-.btn-warning, .btn-cta {
+.btn-warning,
+.btn-cta {
   background: var(--accent-orange);
   color: var(--white);
   border: 1px solid var(--accent-orange);
 }
 
-.btn-warning:hover, .btn-cta:hover {
+.btn-warning:hover,
+.btn-cta:hover {
   background: #d86030;
   border-color: #d86030;
 }
@@ -371,7 +372,8 @@ code {
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -412,7 +414,7 @@ code {
     margin: 0.5rem;
     padding: 1rem;
   }
-  
+
   .btn {
     width: 100%;
     margin-bottom: 0.5rem;
@@ -695,9 +697,16 @@ code {
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
 }
 
 .validation-error-field .MuiOutlinedInput-root {
@@ -751,13 +760,22 @@ code {
 }
 
 @keyframes fieldPulse {
-  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-  50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0.1); }
-  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0.1);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
 }
 
 /* Clean Table Empty State */
-.clean-table .MuiTableBody-root .MuiTableRow-root:only-child .MuiTableCell-root {
+.clean-table
+  .MuiTableBody-root
+  .MuiTableRow-root:only-child
+  .MuiTableCell-root {
   text-align: center !important;
   color: #6b7280 !important;
   font-style: italic !important;
