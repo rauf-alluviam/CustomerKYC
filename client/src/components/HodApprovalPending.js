@@ -69,7 +69,7 @@ function HodApprovalPending() {
           }}
           onClick={() => navigateWithRef(`/view-customer-kyc/${cell.row.original._id}`)}
         >
-          
+          <PersonOutline sx={{ fontSize: 16, color: '#ff9800' }} />
           {cell.getValue()}
         </Box>
       ),
@@ -138,34 +138,34 @@ function HodApprovalPending() {
         </Tooltip>
       ),
     },
-    // {
-    //   accessorKey: "view",
-    //   header: "Actions",
-    //   enableSorting: false,
-    //   size: 250,
-    //   Cell: ({ cell }) =>
-    //     user.role === "Admin" ? (
-    //       <Tooltip title="Review Application" arrow>
-    //         {/* <Badge badgeContent={<AccessTime sx={{ fontSize: 12 }} />} color="warning"> */}
-    //           <IconButton
-    //             onClick={() => navigateWithRef(`/view-customer-kyc/${cell.row.original._id}`)}
-    //             size="small"
-    //             sx={{
-    //               color: '#ed6c02',
-    //               '&:hover': {
-    //                 backgroundColor: 'rgba(237, 108, 2, 0.1)',
-    //                 transform: 'scale(1.1)',
-    //               }
-    //             }}
-    //           >
-    //             <Visibility fontSize="small" />
-    //           </IconButton>
-    //         {/* </Badge> */}
-    //       </Tooltip>
-    //     ) : (
-    //       <Box sx={{ color: '#ccc', fontSize: '0.75rem' }}>No Access</Box>
-    //     ),
-    // },
+    {
+      accessorKey: "view",
+      header: "Actions",
+      enableSorting: false,
+      size: 250,
+      Cell: ({ cell }) =>
+        user.role === "Admin" ? (
+          <Tooltip title="Review Application" arrow>
+            {/* <Badge badgeContent={<AccessTime sx={{ fontSize: 12 }} />} color="warning"> */}
+              <IconButton
+                onClick={() => navigateWithRef(`/view-customer-kyc/${cell.row.original._id}`)}
+                size="small"
+                sx={{
+                  color: '#ed6c02',
+                  '&:hover': {
+                    backgroundColor: 'rgba(237, 108, 2, 0.1)',
+                    transform: 'scale(1.1)',
+                  }
+                }}
+              >
+                <Visibility fontSize="small" />
+              </IconButton>
+            {/* </Badge> */}
+          </Tooltip>
+        ) : (
+          <Box sx={{ color: '#ccc', fontSize: '0.75rem' }}>No Access</Box>
+        ),
+    },
   ];
   
   const table = useTableConfig(data, columns);

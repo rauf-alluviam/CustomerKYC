@@ -36,47 +36,29 @@ function ViewCustomerKyc() {
             <Row>
               <Col>
                 <strong>Passport:&nbsp;</strong>
-                <MultipleViewButtons
-                  urls={data.individual_passport_img}
-                  label="Passport"
-                />
+                <MultipleViewButtons urls={data.individual_passport_img} label="Passport" />
               </Col>
               <Col>
                 <strong>Voter Card:&nbsp;</strong>
-                <MultipleViewButtons
-                  urls={data.individual_voter_card_img}
-                  label="Voter Card"
-                />
+                <MultipleViewButtons urls={data.individual_voter_card_img} label="Voter Card" />
               </Col>
               <Col>
                 <strong>Driving License:&nbsp;</strong>
-                <MultipleViewButtons
-                  urls={data.individual_driving_license_img}
-                  label="License"
-                />
+                <MultipleViewButtons urls={data.individual_driving_license_img} label="License" />
               </Col>
             </Row>
             <Row>
               <Col>
                 <strong>Bank Statement:&nbsp;</strong>
-                <MultipleViewButtons
-                  urls={data.individual_bank_statement_img}
-                  label="Statement"
-                />
+                <MultipleViewButtons urls={data.individual_bank_statement_img} label="Statement" />
               </Col>
               <Col>
                 <strong>Ration Card:&nbsp;</strong>
-                <MultipleViewButtons
-                  urls={data.individual_ration_card_img}
-                  label="Ration Card"
-                />
+                <MultipleViewButtons urls={data.individual_ration_card_img} label="Ration Card" />
               </Col>
               <Col>
                 <strong>Aadhar Card:&nbsp;</strong>
-                <MultipleViewButtons
-                  urls={data.individual_aadhar_card}
-                  label="Aadhar"
-                />
+                <MultipleViewButtons urls={data.individual_aadhar_card} label="Aadhar" />
               </Col>
             </Row>
           </>
@@ -87,56 +69,35 @@ function ViewCustomerKyc() {
             <Row>
               <Col>
                 <strong>Registration Certificate:&nbsp;</strong>
-                <MultipleViewButtons
-                  urls={data.partnership_registration_certificate_img}
-                  label="Certificate"
-                />
+                <MultipleViewButtons urls={data.partnership_registration_certificate_img} label="Certificate" />
               </Col>
               <Col>
                 <strong>Partnership Deed:&nbsp;</strong>
-                <MultipleViewButtons
-                  urls={data.partnership_deed_img}
-                  label="Deed"
-                />
+                <MultipleViewButtons urls={data.partnership_deed_img} label="Deed" />
               </Col>
               <Col>
                 <strong>Power of Attorney:&nbsp;</strong>
-                <MultipleViewButtons
-                  urls={data.partnership_power_of_attorney_img}
-                  label="Power of Attorney"
-                />
+                <MultipleViewButtons urls={data.partnership_power_of_attorney_img} label="Power of Attorney" />
               </Col>
             </Row>
             <Row>
               <Col>
                 <strong>Valid Document:&nbsp;</strong>
-                <MultipleViewButtons
-                  urls={data.partnership_valid_document}
-                  label="Document"
-                />
+                <MultipleViewButtons urls={data.partnership_valid_document} label="Document" />
               </Col>
               <Col>
                 <strong>Aadhar Card Front:&nbsp;</strong>
-                <MultipleViewButtons
-                  urls={data.partnership_aadhar_card_front_photo}
-                  label="Aadhar Front"
-                />
+                <MultipleViewButtons urls={data.partnership_aadhar_card_front_photo} label="Aadhar Front" />
               </Col>
               <Col>
                 <strong>Aadhar Card Back:&nbsp;</strong>
-                <MultipleViewButtons
-                  urls={data.partnership_aadhar_card_back_photo}
-                  label="Aadhar Back"
-                />
+                <MultipleViewButtons urls={data.partnership_aadhar_card_back_photo} label="Aadhar Back" />
               </Col>
             </Row>
             <Row>
               <Col>
                 <strong>Telephone Bill:&nbsp;</strong>
-                <MultipleViewButtons
-                  urls={data.partnership_telephone_bill}
-                  label="Telephone Bill"
-                />
+                <MultipleViewButtons urls={data.partnership_telephone_bill} label="Telephone Bill" />
               </Col>
               <Col></Col>
               <Col></Col>
@@ -149,47 +110,29 @@ function ViewCustomerKyc() {
             <Row>
               <Col>
                 <strong>Certificate of Incorporation:&nbsp;</strong>
-                <MultipleViewButtons
-                  urls={data.company_certificate_of_incorporation_img}
-                  label="Certificate"
-                />
+                <MultipleViewButtons urls={data.company_certificate_of_incorporation_img} label="Certificate" />
               </Col>
               <Col>
                 <strong>Memorandum of Association:&nbsp;</strong>
-                <MultipleViewButtons
-                  urls={data.company_memorandum_of_association_img}
-                  label="Memorandum"
-                />
+                <MultipleViewButtons urls={data.company_memorandum_of_association_img} label="Memorandum" />
               </Col>
               <Col>
                 <strong>Articles of Association:&nbsp;</strong>
-                <MultipleViewButtons
-                  urls={data.company_articles_of_association_img}
-                  label="Articles"
-                />
+                <MultipleViewButtons urls={data.company_articles_of_association_img} label="Articles" />
               </Col>
             </Row>
             <Row>
               <Col>
                 <strong>Power of Attorney:&nbsp;</strong>
-                <MultipleViewButtons
-                  urls={data.company_power_of_attorney_img}
-                  label="Power of Attorney"
-                />
+                <MultipleViewButtons urls={data.company_power_of_attorney_img} label="Power of Attorney" />
               </Col>
               <Col>
                 <strong>Telephone Bill:&nbsp;</strong>
-                <MultipleViewButtons
-                  urls={data.company_telephone_bill_img}
-                  label="Telephone Bill"
-                />
+                <MultipleViewButtons urls={data.company_telephone_bill_img} label="Telephone Bill" />
               </Col>
               <Col>
                 <strong>PAN Allotment Letter:&nbsp;</strong>
-                <MultipleViewButtons
-                  urls={data.company_pan_allotment_letter_img}
-                  label="PAN Letter"
-                />
+                <MultipleViewButtons urls={data.company_pan_allotment_letter_img} label="PAN Letter" />
               </Col>
             </Row>
           </>
@@ -200,33 +143,21 @@ function ViewCustomerKyc() {
             <Row>
               <Col>
                 <strong>Certificate of Registration:&nbsp;</strong>
-                <MultipleViewButtons
-                  urls={data.trust_certificate_of_registration_img}
-                  label="Certificate"
-                />
+                <MultipleViewButtons urls={data.trust_certificate_of_registration_img} label="Certificate" />
               </Col>
               <Col>
                 <strong>Power of Attorney:&nbsp;</strong>
-                <MultipleViewButtons
-                  urls={data.trust_power_of_attorney_img}
-                  label="Power of Attorney"
-                />
+                <MultipleViewButtons urls={data.trust_power_of_attorney_img} label="Power of Attorney" />
               </Col>
               <Col>
                 <strong>Offically Valid Document:&nbsp;</strong>
-                <MultipleViewButtons
-                  urls={data.trust_officially_valid_document_img}
-                  label="Valid Document"
-                />
+                <MultipleViewButtons urls={data.trust_officially_valid_document_img} label="Valid Document" />
               </Col>
             </Row>
             <Row>
               <Col>
                 <strong>Resoultion of Managing Body:&nbsp;</strong>
-                <MultipleViewButtons
-                  urls={data.trust_resolution_of_managing_body_img}
-                  label="Resolution"
-                />
+                <MultipleViewButtons urls={data.trust_resolution_of_managing_body_img} label="Resolution" />
               </Col>
               <Col>
                 <strong>Name of Trustees:&nbsp;</strong>
@@ -270,7 +201,7 @@ function ViewCustomerKyc() {
         `${process.env.REACT_APP_API_STRING}/customer-kyc-approval/${_id}`,
         { approval, remarks, approved_by }
       );
-
+      
       showSuccess("KYC status updated successfully");
       navigate("/customer-kyc");
     }
@@ -290,26 +221,22 @@ function ViewCustomerKyc() {
         border: "1px solid rgba(243, 163, 16, 0.1)",
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "16px",
-          marginBottom: "var(--spacing-lg)",
-          paddingBottom: "16px",
-          borderBottom: "2px solid rgba(243, 163, 16, 0.2)",
-        }}
-      >
+      <div style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        gap: '16px', 
+        marginBottom: 'var(--spacing-lg)',
+        paddingBottom: '16px',
+        borderBottom: '2px solid rgba(243, 163, 16, 0.2)'
+      }}>
         <BackButton />
-        <h2
-          style={{
-            color: "var(--primary-orange)",
-            margin: 0,
-            textAlign: "center",
-            flex: 1,
-          }}
-        >
-          View Customer KYC Details
+        <h2 style={{ 
+          color: 'var(--primary-orange)', 
+          margin: 0,
+          textAlign: 'center',
+          flex: 1
+        }}>
+           View Customer KYC Details
         </h2>
       </div>
       {data && (
@@ -407,10 +334,7 @@ function ViewCustomerKyc() {
                 <Row>
                   <Col>
                     <strong>GST Registration Certificate: </strong>
-                    <MultipleViewButtons
-                      urls={address.gst_reg}
-                      label="Certificate"
-                    />
+                    <MultipleViewButtons urls={address.gst_reg} label="Certificate" />
                   </Col>
                 </Row>
               </div>
@@ -427,10 +351,7 @@ function ViewCustomerKyc() {
           </h6>
           <Row>
             <Col>
-              <MultipleViewButtons
-                urls={data.authorised_signatories}
-                label="Photo"
-              />
+              <MultipleViewButtons urls={data.authorised_signatories} label="Photo" />
             </Col>
           </Row>
           <br />
@@ -439,10 +360,7 @@ function ViewCustomerKyc() {
           </h6>
           <Row>
             <Col>
-              <MultipleViewButtons
-                urls={data.authorisation_letter}
-                label="Letter"
-              />
+              <MultipleViewButtons urls={data.authorisation_letter} label="Letter" />
             </Col>
           </Row>
           <br />
@@ -499,10 +417,7 @@ function ViewCustomerKyc() {
                   </Col>
                   <Col>
                     <strong>AD Code File: </strong>
-                    <MultipleViewButtons
-                      urls={bank.adCode_file}
-                      label="AD Code Document"
-                    />
+                    <MultipleViewButtons urls={bank.adCode_file} label="AD Code Document" />
                   </Col>
                 </Row>
               </div>
@@ -516,17 +431,11 @@ function ViewCustomerKyc() {
           <Row>
             <Col>
               <strong>SPCB Registration Certificate: </strong>
-              <MultipleViewButtons
-                urls={data.spcb_reg}
-                label="SPCB Certificate"
-              />
+              <MultipleViewButtons urls={data.spcb_reg} label="SPCB Certificate" />
             </Col>
             <Col>
               <strong>KYC Verification Images: </strong>
-              <MultipleViewButtons
-                urls={data.kyc_verification_images}
-                label="Image"
-              />
+              <MultipleViewButtons urls={data.kyc_verification_images} label="Image" />
             </Col>
             <Col>
               <strong>GST Returns: </strong>
