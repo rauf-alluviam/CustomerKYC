@@ -107,10 +107,10 @@ function ViewDrafts() {
   ];
 
   return (
-    <div className="premium-card" style={{ padding: '0' }}>
+    <div className="premium-card">
       <div className="card-header">
-        <h2 className="page-title" style={{ fontSize: '1.5rem', margin: 0 }}>Draft Applications</h2>
-        <p className="page-subtitle" style={{ margin: 0 }}>Resume your incomplete applications</p>
+           <h2 className="page-title" style={{ fontSize: "1.5rem", paddingBottom: "0.5rem" }}>Draft Applications</h2>
+        <p className="page-subtitle">Resume your incomplete applications</p>
       </div>
 
       <div className="card-body">

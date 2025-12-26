@@ -25,12 +25,15 @@ function HodApprovalPending() {
   }, []);
 
   const getCategoryChip = (category) => {
-    let type = 'neutral';
-    if (category?.includes('Individual')) type = 'info';
-    if (category?.includes('Company')) type = 'success';
+    let type = "neutral";
+    if (category?.includes("Individual")) type = "info";
+    if (category?.includes("Company")) type = "success";
 
     return (
-      <span className={`badge badge-${type === 'neutral' ? 'info' : type}`} style={{ fontWeight: 500, textTransform: 'none' }}>
+      <span
+        className={`badge badge-${type === "neutral" ? "info" : type}`}
+        style={{ fontWeight: 500, textTransform: "none" }}
+      >
         {category}
       </span>
     );
@@ -45,15 +48,17 @@ function HodApprovalPending() {
         <span
           style={{
             fontWeight: 600,
-            color: 'var(--primary-600)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            cursor: 'pointer'
+            color: "var(--primary-600)",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            cursor: "pointer",
           }}
-          onClick={() => navigateWithRef(`/view-customer-kyc/${cell.row.original._id}`)}
+          onClick={() =>
+            navigateWithRef(`/view-customer-kyc/${cell.row.original._id}`)
+          }
         >
-          <PersonOutline style={{ fontSize: 16, color: 'var(--accent-500)' }} />
+          <PersonOutline style={{ fontSize: 16, color: "var(--accent-500)" }} />
           {cell.getValue()}
         </span>
       ),
@@ -69,7 +74,11 @@ function HodApprovalPending() {
       header: "Business Type",
       size: 250,
       Cell: ({ cell }) => (
-        <span className={`status-pill ${cell.getValue() === 'Manufacturer' ? 'success' : 'info'}`}>
+        <span
+          className={`status-pill ${
+            cell.getValue() === "Manufacturer" ? "success" : "info"
+          }`}
+        >
           {cell.getValue()}
         </span>
       ),
@@ -78,7 +87,11 @@ function HodApprovalPending() {
       accessorKey: "iec_no",
       header: "IEC Number",
       size: 250,
-      Cell: ({ cell }) => <span style={{ fontFamily: 'monospace', color: 'var(--slate-600)' }}>{cell.getValue()}</span>
+      Cell: ({ cell }) => (
+        <span style={{ fontFamily: "monospace", color: "var(--slate-600)" }}>
+          {cell.getValue()}
+        </span>
+      ),
     },
     {
       accessorKey: "remarks",
@@ -86,17 +99,17 @@ function HodApprovalPending() {
       size: 220,
       Cell: ({ cell }) => (
         <span
-          title={cell.getValue() || 'No remarks'}
+          title={cell.getValue() || "No remarks"}
           style={{
-            maxWidth: '200px',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            color: 'var(--slate-500)',
-            fontSize: '0.9rem'
+            maxWidth: "200px",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            color: "var(--slate-500)",
+            fontSize: "0.9rem",
           }}
         >
-          {cell.getValue() || 'No remarks'}
+          {cell.getValue() || "No remarks"}
         </span>
       ),
     },
@@ -109,39 +122,51 @@ function HodApprovalPending() {
           <button
             className="table-action-btn"
             title="Review Application"
-            onClick={() => navigateWithRef(`/view-customer-kyc/${cell.row.original._id}`)}
+            onClick={() =>
+              navigateWithRef(`/view-customer-kyc/${cell.row.original._id}`)
+            }
           >
             <Visibility fontSize="small" />
           </button>
         ) : (
-          <span style={{ color: 'var(--slate-400)', fontSize: '0.75rem' }}>No Access</span>
+          <span style={{ color: "var(--slate-400)", fontSize: "0.75rem" }}>
+            No Access
+          </span>
         ),
     },
   ];
 
   return (
-    <div className="premium-card" style={{ padding: '0' }}>
+    <div className="premium-card">
       <div className="card-header">
-        <h2 className="page-title" style={{ fontSize: '1.5rem', margin: 0 }}>Pending Approval</h2>
-        <p className="page-subtitle" style={{ margin: 0 }}>Applications awaiting final review</p>
+        <h2
+          className="page-title"
+          style={{ fontSize: "1.5rem", paddingBottom: "0.5rem" }}
+        >
+          Pending Approval
+        </h2>
+        <p className="page-subtitle">Applications awaiting final review</p>
       </div>
 
       <div className="card-body">
         {data.length > 0 && (
-          <div style={{
-            marginBottom: '1.5rem',
-            padding: '1rem',
-            background: 'var(--info-light)',
-            border: '1px solid var(--info)',
-            borderRadius: 'var(--radius-md)',
-            color: '#0369a1',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem'
-          }}>
+          <div
+            style={{
+              marginBottom: "1.5rem",
+              padding: "1rem",
+              background: "var(--info-light)",
+              border: "1px solid var(--info)",
+              borderRadius: "var(--radius-md)",
+              color: "#0369a1",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+            }}
+          >
             <AccessTime />
             <span>
-              <strong>{data.length}</strong> application{data.length !== 1 ? 's' : ''} awaiting approval.
+              <strong>{data.length}</strong> application
+              {data.length !== 1 ? "s" : ""} awaiting approval.
             </span>
           </div>
         )}

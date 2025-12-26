@@ -25,12 +25,15 @@ function RevisionList() {
   }, []);
 
   const getCategoryChip = (category) => {
-    let type = 'neutral';
-    if (category?.includes('Individual')) type = 'info';
-    if (category?.includes('Company')) type = 'success';
+    let type = "neutral";
+    if (category?.includes("Individual")) type = "info";
+    if (category?.includes("Company")) type = "success";
 
     return (
-      <span className={`badge badge-${type === 'neutral' ? 'info' : type}`} style={{ fontWeight: 500, textTransform: 'none' }}>
+      <span
+        className={`badge badge-${type === "neutral" ? "info" : type}`}
+        style={{ fontWeight: 500, textTransform: "none" }}
+      >
         {category}
       </span>
     );
@@ -45,15 +48,17 @@ function RevisionList() {
         <span
           style={{
             fontWeight: 600,
-            color: 'var(--primary-600)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            cursor: 'pointer'
+            color: "var(--primary-600)",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            cursor: "pointer",
           }}
-          onClick={() => navigateWithRef(`/revise-customer-kyc/${cell.row.original._id}`)}
+          onClick={() =>
+            navigateWithRef(`/revise-customer-kyc/${cell.row.original._id}`)
+          }
         >
-          <PersonOutline style={{ fontSize: 16, color: 'var(--accent-500)' }} />
+          <PersonOutline style={{ fontSize: 16, color: "var(--accent-500)" }} />
           {cell.getValue()}
         </span>
       ),
@@ -69,7 +74,11 @@ function RevisionList() {
       header: "Business Type",
       size: 250,
       Cell: ({ cell }) => (
-        <span className={`status-pill ${cell.getValue() === 'Manufacturer' ? 'success' : 'info'}`}>
+        <span
+          className={`status-pill ${
+            cell.getValue() === "Manufacturer" ? "success" : "info"
+          }`}
+        >
           {cell.getValue()}
         </span>
       ),
@@ -78,15 +87,22 @@ function RevisionList() {
       accessorKey: "iec_no",
       header: "IEC Number",
       size: 250,
-      Cell: ({ cell }) => <span style={{ fontFamily: 'monospace', color: 'var(--slate-600)' }}>{cell.getValue()}</span>
+      Cell: ({ cell }) => (
+        <span style={{ fontFamily: "monospace", color: "var(--slate-600)" }}>
+          {cell.getValue()}
+        </span>
+      ),
     },
     {
       accessorKey: "approval",
       header: "Status",
       size: 250,
       Cell: ({ cell }) => (
-        <span className="status-pill warning" style={{ display: 'inline-flex', gap: '0.25rem' }}>
-          <Warning style={{ fontSize: '1rem' }} /> {cell.getValue()}
+        <span
+          className="status-pill warning"
+          style={{ display: "inline-flex", gap: "0.25rem" }}
+        >
+          <Warning style={{ fontSize: "1rem" }} /> {cell.getValue()}
         </span>
       ),
     },
@@ -95,8 +111,13 @@ function RevisionList() {
       header: "Reviewed By",
       size: 250,
       Cell: ({ cell }) => (
-        <span style={{ fontStyle: cell.getValue() ? 'normal' : 'italic', color: 'var(--slate-500)' }}>
-          {cell.getValue() || 'System'}
+        <span
+          style={{
+            fontStyle: cell.getValue() ? "normal" : "italic",
+            color: "var(--slate-500)",
+          }}
+        >
+          {cell.getValue() || "System"}
         </span>
       ),
     },
@@ -106,18 +127,18 @@ function RevisionList() {
       size: 220,
       Cell: ({ cell }) => (
         <span
-          title={cell.getValue() || 'No specific remarks'}
+          title={cell.getValue() || "No specific remarks"}
           style={{
-            maxWidth: '200px',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            color: 'var(--error)',
+            maxWidth: "200px",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            color: "var(--error)",
             fontWeight: 500,
-            display: 'block'
+            display: "block",
           }}
         >
-          {cell.getValue() || 'Requires attention'}
+          {cell.getValue() || "Requires attention"}
         </span>
       ),
     },
@@ -130,39 +151,49 @@ function RevisionList() {
           <button
             className="table-action-btn"
             title="Start Revision Process"
-            onClick={() => navigateWithRef(`/revise-customer-kyc/${cell.row.original._id}`)}
+            onClick={() =>
+              navigateWithRef(`/revise-customer-kyc/${cell.row.original._id}`)
+            }
           >
             <Edit fontSize="small" />
           </button>
         ) : (
-          <span style={{ color: 'var(--slate-400)', fontSize: '0.75rem' }}>No Access</span>
+          <span style={{ color: "var(--slate-400)", fontSize: "0.75rem" }}>
+            No Access
+          </span>
         ),
     },
   ];
 
-  return (
-    <div className="premium-card" style={{ padding: '0' }}>
+  return (  
+    <div className="premium-card">
       <div className="card-header">
-        <h2 className="page-title" style={{ fontSize: '1.5rem', margin: 0 }}>Applications Requiring Revision</h2>
-        <p className="page-subtitle" style={{ margin: 0 }}>Review feedback and update applications</p>
+        <h2 style={{ fontSize: "1.5rem", paddingBottom: "0.5rem" }}>
+          Applications Requiring Revision
+        </h2>
+        <p className="page-subtitle">Review feedback and update applications</p>
       </div>
 
       <div className="card-body">
         {data.length > 0 && (
-          <div style={{
-            marginBottom: '1.5rem',
-            padding: '1rem',
-            background: 'var(--warning-light)',
-            border: '1px solid var(--warning)',
-            borderRadius: 'var(--radius-md)',
-            color: '#b45309',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem'
-          }}>
+          <div
+            style={{
+              marginBottom: "1.5rem",
+              padding: "1rem",
+              background: "var(--warning-light)",
+              border: "1px solid var(--warning)",
+              borderRadius: "var(--radius-md)",
+              color: "#b45309",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+            }}
+          >
             <Warning />
             <span>
-              <strong>{data.length}</strong> application{data.length !== 1 ? 's' : ''} require{data.length === 1 ? 's' : ''} revision.
+              <strong>{data.length}</strong> application
+              {data.length !== 1 ? "s" : ""} require
+              {data.length === 1 ? "s" : ""} revision.
             </span>
           </div>
         )}

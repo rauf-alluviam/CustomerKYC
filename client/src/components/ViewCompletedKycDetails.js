@@ -22,11 +22,10 @@ function ViewCompletedKycDetails() {
       );
 
       setData(res.data);
-       console.log("Fetching KYC details for ID:",res);
+      console.log("Fetching KYC details for ID:", res);
     }
     console.log(data, "data.authorisation_letter");
     getData();
-   
   }, [_id]);
 
   // Handle file deletion by admin
@@ -34,10 +33,10 @@ function ViewCompletedKycDetails() {
     try {
       // Create a copy of data to update
       const updatedData = { ...data };
-      
-      if (arrayIndex !== null && fieldName.includes('.')) {
+
+      if (arrayIndex !== null && fieldName.includes(".")) {
         // Handle nested array fields (like factory_addresses.gst_reg or banks.adCode_file)
-        const [arrayField, subField] = fieldName.split('.');
+        const [arrayField, subField] = fieldName.split(".");
         if (updatedData[arrayField] && updatedData[arrayField][arrayIndex]) {
           if (Array.isArray(updatedData[arrayField][arrayIndex][subField])) {
             const newArray = [...updatedData[arrayField][arrayIndex][subField]];
@@ -45,14 +44,14 @@ function ViewCompletedKycDetails() {
             updatedData[arrayField] = [...updatedData[arrayField]];
             updatedData[arrayField][arrayIndex] = {
               ...updatedData[arrayField][arrayIndex],
-              [subField]: newArray
+              [subField]: newArray,
             };
           } else {
             // Handle single file in nested structure
             updatedData[arrayField] = [...updatedData[arrayField]];
             updatedData[arrayField][arrayIndex] = {
               ...updatedData[arrayField][arrayIndex],
-              [subField]: ""
+              [subField]: "",
             };
           }
         }
@@ -91,25 +90,31 @@ function ViewCompletedKycDetails() {
             <Row>
               <Col>
                 <strong>Passport:&nbsp;</strong>
-                <ImagePreview 
-                  images={data.individual_passport_img} 
-                  onDeleteImage={(index) => handleFileDelete(index, 'individual_passport_img')}
+                <ImagePreview
+                  images={data.individual_passport_img}
+                  onDeleteImage={(index) =>
+                    handleFileDelete(index, "individual_passport_img")
+                  }
                   showDeleteForAdmin={true}
                 />
               </Col>
               <Col>
                 <strong>Voter Card:&nbsp;</strong>
-                <ImagePreview 
-                  images={data.individual_voter_card_img} 
-                  onDeleteImage={(index) => handleFileDelete(index, 'individual_voter_card_img')}
+                <ImagePreview
+                  images={data.individual_voter_card_img}
+                  onDeleteImage={(index) =>
+                    handleFileDelete(index, "individual_voter_card_img")
+                  }
                   showDeleteForAdmin={true}
                 />
               </Col>
               <Col>
                 <strong>Driving License:&nbsp;</strong>
-                <ImagePreview 
-                  images={data.individual_driving_license_img} 
-                  onDeleteImage={(index) => handleFileDelete(index, 'individual_driving_license_img')}
+                <ImagePreview
+                  images={data.individual_driving_license_img}
+                  onDeleteImage={(index) =>
+                    handleFileDelete(index, "individual_driving_license_img")
+                  }
                   showDeleteForAdmin={true}
                 />
               </Col>
@@ -117,25 +122,31 @@ function ViewCompletedKycDetails() {
             <Row>
               <Col>
                 <strong>Bank Statement:&nbsp;</strong>
-                <ImagePreview 
-                  images={data.individual_bank_statement_img} 
-                  onDeleteImage={(index) => handleFileDelete(index, 'individual_bank_statement_img')}
+                <ImagePreview
+                  images={data.individual_bank_statement_img}
+                  onDeleteImage={(index) =>
+                    handleFileDelete(index, "individual_bank_statement_img")
+                  }
                   showDeleteForAdmin={true}
                 />
               </Col>
               <Col>
                 <strong>Ration Card:&nbsp;</strong>
-                <ImagePreview 
-                  images={data.individual_ration_card_img} 
-                  onDeleteImage={(index) => handleFileDelete(index, 'individual_ration_card_img')}
+                <ImagePreview
+                  images={data.individual_ration_card_img}
+                  onDeleteImage={(index) =>
+                    handleFileDelete(index, "individual_ration_card_img")
+                  }
                   showDeleteForAdmin={true}
                 />
               </Col>
               <Col>
                 <strong>Aadhar Card:&nbsp;</strong>
-                <ImagePreview 
-                  images={data.individual_aadhar_card} 
-                  onDeleteImage={(index) => handleFileDelete(index, 'individual_aadhar_card')}
+                <ImagePreview
+                  images={data.individual_aadhar_card}
+                  onDeleteImage={(index) =>
+                    handleFileDelete(index, "individual_aadhar_card")
+                  }
                   showDeleteForAdmin={true}
                 />
               </Col>
@@ -148,25 +159,34 @@ function ViewCompletedKycDetails() {
             <Row>
               <Col>
                 <strong>Registration Certificate:&nbsp;</strong>
-                <ImagePreview 
-                  images={data.partnership_registration_certificate_img} 
-                  onDeleteImage={(index) => handleFileDelete(index, 'partnership_registration_certificate_img')}
+                <ImagePreview
+                  images={data.partnership_registration_certificate_img}
+                  onDeleteImage={(index) =>
+                    handleFileDelete(
+                      index,
+                      "partnership_registration_certificate_img"
+                    )
+                  }
                   showDeleteForAdmin={true}
                 />
               </Col>
               <Col>
                 <strong>Partnership Deed:&nbsp;</strong>
-                <ImagePreview 
-                  images={data.partnership_deed_img} 
-                  onDeleteImage={(index) => handleFileDelete(index, 'partnership_deed_img')}
+                <ImagePreview
+                  images={data.partnership_deed_img}
+                  onDeleteImage={(index) =>
+                    handleFileDelete(index, "partnership_deed_img")
+                  }
                   showDeleteForAdmin={true}
                 />
               </Col>
               <Col>
                 <strong>Power of Attorney:&nbsp;</strong>
-                <ImagePreview 
-                  images={data.partnership_power_of_attorney_img} 
-                  onDeleteImage={(index) => handleFileDelete(index, 'partnership_power_of_attorney_img')}
+                <ImagePreview
+                  images={data.partnership_power_of_attorney_img}
+                  onDeleteImage={(index) =>
+                    handleFileDelete(index, "partnership_power_of_attorney_img")
+                  }
                   showDeleteForAdmin={true}
                 />
               </Col>
@@ -174,25 +194,37 @@ function ViewCompletedKycDetails() {
             <Row>
               <Col>
                 <strong>Valid Document:&nbsp;</strong>
-                <ImagePreview 
-                  images={data.partnership_valid_document} 
-                  onDeleteImage={(index) => handleFileDelete(index, 'partnership_valid_document')}
+                <ImagePreview
+                  images={data.partnership_valid_document}
+                  onDeleteImage={(index) =>
+                    handleFileDelete(index, "partnership_valid_document")
+                  }
                   showDeleteForAdmin={true}
                 />
               </Col>
               <Col>
                 <strong>Aadhar Card Front:&nbsp;</strong>
-                <ImagePreview 
-                  images={data.partnership_aadhar_card_front_photo} 
-                  onDeleteImage={(index) => handleFileDelete(index, 'partnership_aadhar_card_front_photo')}
+                <ImagePreview
+                  images={data.partnership_aadhar_card_front_photo}
+                  onDeleteImage={(index) =>
+                    handleFileDelete(
+                      index,
+                      "partnership_aadhar_card_front_photo"
+                    )
+                  }
                   showDeleteForAdmin={true}
                 />
               </Col>
               <Col>
                 <strong>Aadhar Card Back:&nbsp;</strong>
-                <ImagePreview 
-                  images={data.partnership_aadhar_card_back_photo} 
-                  onDeleteImage={(index) => handleFileDelete(index, 'partnership_aadhar_card_back_photo')}
+                <ImagePreview
+                  images={data.partnership_aadhar_card_back_photo}
+                  onDeleteImage={(index) =>
+                    handleFileDelete(
+                      index,
+                      "partnership_aadhar_card_back_photo"
+                    )
+                  }
                   showDeleteForAdmin={true}
                 />
               </Col>
@@ -200,9 +232,11 @@ function ViewCompletedKycDetails() {
             <Row>
               <Col>
                 <strong>Telephone Bill:&nbsp;</strong>
-                <ImagePreview 
-                  images={data.partnership_telephone_bill} 
-                  onDeleteImage={(index) => handleFileDelete(index, 'partnership_telephone_bill')}
+                <ImagePreview
+                  images={data.partnership_telephone_bill}
+                  onDeleteImage={(index) =>
+                    handleFileDelete(index, "partnership_telephone_bill")
+                  }
                   showDeleteForAdmin={true}
                 />
               </Col>
@@ -217,25 +251,40 @@ function ViewCompletedKycDetails() {
             <Row>
               <Col>
                 <strong>Certificate of Incorporation:&nbsp;</strong>
-                <ImagePreview 
-                  images={data.company_certificate_of_incorporation_img} 
-                  onDeleteImage={(index) => handleFileDelete(index, 'company_certificate_of_incorporation_img')}
+                <ImagePreview
+                  images={data.company_certificate_of_incorporation_img}
+                  onDeleteImage={(index) =>
+                    handleFileDelete(
+                      index,
+                      "company_certificate_of_incorporation_img"
+                    )
+                  }
                   showDeleteForAdmin={true}
                 />
               </Col>
               <Col>
                 <strong>Memorandum of Association:&nbsp;</strong>
-                <ImagePreview 
-                  images={data.company_memorandum_of_association_img} 
-                  onDeleteImage={(index) => handleFileDelete(index, 'company_memorandum_of_association_img')}
+                <ImagePreview
+                  images={data.company_memorandum_of_association_img}
+                  onDeleteImage={(index) =>
+                    handleFileDelete(
+                      index,
+                      "company_memorandum_of_association_img"
+                    )
+                  }
                   showDeleteForAdmin={true}
                 />
               </Col>
               <Col>
                 <strong>Articles of Association:&nbsp;</strong>
-                <ImagePreview 
-                  images={data.company_articles_of_association_img} 
-                  onDeleteImage={(index) => handleFileDelete(index, 'company_articles_of_association_img')}
+                <ImagePreview
+                  images={data.company_articles_of_association_img}
+                  onDeleteImage={(index) =>
+                    handleFileDelete(
+                      index,
+                      "company_articles_of_association_img"
+                    )
+                  }
                   showDeleteForAdmin={true}
                 />
               </Col>
@@ -243,25 +292,31 @@ function ViewCompletedKycDetails() {
             <Row>
               <Col>
                 <strong>Power of Attorney:&nbsp;</strong>
-                <ImagePreview 
-                  images={data.company_power_of_attorney_img} 
-                  onDeleteImage={(index) => handleFileDelete(index, 'company_power_of_attorney_img')}
+                <ImagePreview
+                  images={data.company_power_of_attorney_img}
+                  onDeleteImage={(index) =>
+                    handleFileDelete(index, "company_power_of_attorney_img")
+                  }
                   showDeleteForAdmin={true}
                 />
               </Col>
               <Col>
                 <strong>Telephone Bill:&nbsp;</strong>
-                <ImagePreview 
-                  images={data.company_telephone_bill_img} 
-                  onDeleteImage={(index) => handleFileDelete(index, 'company_telephone_bill_img')}
+                <ImagePreview
+                  images={data.company_telephone_bill_img}
+                  onDeleteImage={(index) =>
+                    handleFileDelete(index, "company_telephone_bill_img")
+                  }
                   showDeleteForAdmin={true}
                 />
               </Col>
               <Col>
                 <strong>PAN Allotment Letter:&nbsp;</strong>
-                <ImagePreview 
-                  images={data.company_pan_allotment_letter_img} 
-                  onDeleteImage={(index) => handleFileDelete(index, 'company_pan_allotment_letter_img')}
+                <ImagePreview
+                  images={data.company_pan_allotment_letter_img}
+                  onDeleteImage={(index) =>
+                    handleFileDelete(index, "company_pan_allotment_letter_img")
+                  }
                   showDeleteForAdmin={true}
                 />
               </Col>
@@ -274,25 +329,37 @@ function ViewCompletedKycDetails() {
             <Row>
               <Col>
                 <strong>Certificate of Registration:&nbsp;</strong>
-                <ImagePreview 
-                  images={data.trust_certificate_of_registration_img} 
-                  onDeleteImage={(index) => handleFileDelete(index, 'trust_certificate_of_registration_img')}
+                <ImagePreview
+                  images={data.trust_certificate_of_registration_img}
+                  onDeleteImage={(index) =>
+                    handleFileDelete(
+                      index,
+                      "trust_certificate_of_registration_img"
+                    )
+                  }
                   showDeleteForAdmin={true}
                 />
               </Col>
               <Col>
                 <strong>Power of Attorney:&nbsp;</strong>
-                <ImagePreview 
-                  images={data.trust_power_of_attorney_img} 
-                  onDeleteImage={(index) => handleFileDelete(index, 'trust_power_of_attorney_img')}
+                <ImagePreview
+                  images={data.trust_power_of_attorney_img}
+                  onDeleteImage={(index) =>
+                    handleFileDelete(index, "trust_power_of_attorney_img")
+                  }
                   showDeleteForAdmin={true}
                 />
               </Col>
               <Col>
                 <strong>Offically Valid Document:&nbsp;</strong>
-                <ImagePreview 
-                  images={data.trust_officially_valid_document_img} 
-                  onDeleteImage={(index) => handleFileDelete(index, 'trust_officially_valid_document_img')}
+                <ImagePreview
+                  images={data.trust_officially_valid_document_img}
+                  onDeleteImage={(index) =>
+                    handleFileDelete(
+                      index,
+                      "trust_officially_valid_document_img"
+                    )
+                  }
                   showDeleteForAdmin={true}
                 />
               </Col>
@@ -300,9 +367,14 @@ function ViewCompletedKycDetails() {
             <Row>
               <Col>
                 <strong>Resoultion of Managing Body:&nbsp;</strong>
-                <ImagePreview 
-                  images={data.trust_resolution_of_managing_body_img} 
-                  onDeleteImage={(index) => handleFileDelete(index, 'trust_resolution_of_managing_body_img')}
+                <ImagePreview
+                  images={data.trust_resolution_of_managing_body_img}
+                  onDeleteImage={(index) =>
+                    handleFileDelete(
+                      index,
+                      "trust_resolution_of_managing_body_img"
+                    )
+                  }
                   showDeleteForAdmin={true}
                 />
               </Col>
@@ -341,7 +413,14 @@ function ViewCompletedKycDetails() {
 
   if (!user || user.role !== "Admin") {
     return (
-      <div style={{ padding: 40, textAlign: 'center', color: '#d32f2f', fontWeight: 600 }}>
+      <div
+        style={{
+          padding: 40,
+          textAlign: "center",
+          color: "#d32f2f",
+          fontWeight: 600,
+        }}
+      >
         You do not have permission to view this page.
       </div>
     );
@@ -357,24 +436,28 @@ function ViewCompletedKycDetails() {
       }}
     >
       {/* Header with Back Button */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        marginBottom: '20px',
-        padding: '10px 0',
-        borderBottom: '2px solid #e0e0e0'
-      }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          marginBottom: "20px",
+          padding: "10px 0",
+          borderBottom: "2px solid #e0e0e0",
+        }}
+      >
         <BackButton />
-        <h2 style={{ 
-          color: 'var(--primary-orange)', 
-          margin: '0 auto',
-          textAlign: 'center',
-          flex: 1
-        }}>
+        <h2
+          style={{
+            color: "var(--primary-orange)",
+            margin: "0 auto",
+            textAlign: "center",
+            flex: 1,
+          }}
+        >
           📋 View Completed KYC Details
         </h2>
       </div>
-      
+
       {data && (
         <>
           <Row>
@@ -470,9 +553,11 @@ function ViewCompletedKycDetails() {
                 <Row>
                   <Col>
                     <strong>GST Registration Certificate: </strong>
-                    <ImagePreview 
-                      images={address.gst_reg} 
-                      onDeleteImage={(index) => handleFileDelete(index, 'factory_addresses.gst_reg', id)}
+                    <ImagePreview
+                      images={address.gst_reg}
+                      onDeleteImage={(index) =>
+                        handleFileDelete(index, "factory_addresses.gst_reg", id)
+                      }
                       showDeleteForAdmin={true}
                     />
                   </Col>
@@ -491,9 +576,11 @@ function ViewCompletedKycDetails() {
           </h6>
           <Row>
             <Col>
-              <ImagePreview 
-                images={data.authorised_signatories} 
-                onDeleteImage={(index) => handleFileDelete(index, 'authorised_signatories')}
+              <ImagePreview
+                images={data.authorised_signatories}
+                onDeleteImage={(index) =>
+                  handleFileDelete(index, "authorised_signatories")
+                }
                 showDeleteForAdmin={true}
               />
             </Col>
@@ -504,9 +591,11 @@ function ViewCompletedKycDetails() {
           </h6>
           <Row>
             <Col>
-              <ImagePreview 
-                images={data.authorisation_letter} 
-                onDeleteImage={(index) => handleFileDelete(index, 'authorisation_letter')}
+              <ImagePreview
+                images={data.authorisation_letter}
+                onDeleteImage={(index) =>
+                  handleFileDelete(index, "authorisation_letter")
+                }
                 showDeleteForAdmin={true}
               />
             </Col>
@@ -519,9 +608,9 @@ function ViewCompletedKycDetails() {
             </Col>
             <Col>
               <strong>IEC Copy:&nbsp;</strong>
-              <ImagePreview 
-                images={data.iec_copy} 
-                onDeleteImage={(index) => handleFileDelete(index, 'iec_copy')}
+              <ImagePreview
+                images={data.iec_copy}
+                onDeleteImage={(index) => handleFileDelete(index, "iec_copy")}
                 showDeleteForAdmin={true}
               />
             </Col>
@@ -535,9 +624,9 @@ function ViewCompletedKycDetails() {
             </Col>
             <Col>
               <strong>PAN Copy:&nbsp;</strong>
-              <ImagePreview 
-                images={data.pan_copy} 
-                onDeleteImage={(index) => handleFileDelete(index, 'pan_copy')}
+              <ImagePreview
+                images={data.pan_copy}
+                onDeleteImage={(index) => handleFileDelete(index, "pan_copy")}
                 showDeleteForAdmin={true}
               />
             </Col>
@@ -573,9 +662,11 @@ function ViewCompletedKycDetails() {
                   </Col>
                   <Col>
                     <strong>AD Code File: </strong>
-                    <ImagePreview 
-                      images={bank.adCode_file} 
-                      onDeleteImage={(index) => handleFileDelete(index, 'banks.adCode_file', id)}
+                    <ImagePreview
+                      images={bank.adCode_file}
+                      onDeleteImage={(index) =>
+                        handleFileDelete(index, "banks.adCode_file", id)
+                      }
                       showDeleteForAdmin={true}
                     />
                   </Col>
@@ -588,9 +679,11 @@ function ViewCompletedKycDetails() {
           <h4>Other Documents</h4>
           <Row>
             <Col>
-              <ImagePreview 
-                images={data.other_documents} 
-                onDeleteImage={(index) => handleFileDelete(index, 'other_documents')}
+              <ImagePreview
+                images={data.other_documents}
+                onDeleteImage={(index) =>
+                  handleFileDelete(index, "other_documents")
+                }
                 showDeleteForAdmin={true}
               />
             </Col>
@@ -599,25 +692,29 @@ function ViewCompletedKycDetails() {
           <Row>
             <Col>
               <strong>SPCB Registration Certificate: </strong>
-              <ImagePreview 
-                images={data.spcb_reg} 
-                onDeleteImage={(index) => handleFileDelete(index, 'spcb_reg')}
+              <ImagePreview
+                images={data.spcb_reg}
+                onDeleteImage={(index) => handleFileDelete(index, "spcb_reg")}
                 showDeleteForAdmin={true}
               />
             </Col>
             <Col>
               <strong>KYC Verification Images: </strong>
-              <ImagePreview 
-                images={data.kyc_verification_images} 
-                onDeleteImage={(index) => handleFileDelete(index, 'kyc_verification_images')}
+              <ImagePreview
+                images={data.kyc_verification_images}
+                onDeleteImage={(index) =>
+                  handleFileDelete(index, "kyc_verification_images")
+                }
                 showDeleteForAdmin={true}
               />
             </Col>
             <Col>
               <strong>GST Returns: </strong>
-              <ImagePreview 
-                images={data.gst_returns} 
-                onDeleteImage={(index) => handleFileDelete(index, 'gst_returns')}
+              <ImagePreview
+                images={data.gst_returns}
+                onDeleteImage={(index) =>
+                  handleFileDelete(index, "gst_returns")
+                }
                 showDeleteForAdmin={true}
               />
             </Col>
