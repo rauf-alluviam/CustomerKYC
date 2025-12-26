@@ -1,13 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { MaterialReactTable } from "material-react-table";
-import useTableConfig from "../customHooks/useTableConfig";
-import { Link } from "react-router-dom";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigation } from "../contexts/NavigationContext";
-import { Box, Chip, IconButton, Tooltip } from "@mui/material";
+import CustomTable from "./common/CustomTable";
 import { Visibility, Edit, CheckCircle, Cancel, PendingOutlined } from "@mui/icons-material";
-import BackButton from "./BackButton";
 
 function CompletedKyc() {
   const [data, setData] = useState([]);
@@ -16,63 +12,43 @@ function CompletedKyc() {
 
   useEffect(() => {
     async function getData() {
-      const res = await axios.get(
-        `${process.env.REACT_APP_API_STRING}/view-completed-kyc`
-      );
-      setData(res.data);
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_STRING}/view-completed-kyc`
+        );
+        setData(res.data);
+      } catch (error) {
+        console.error("Error fetching completed KYC list:", error);
+      }
     }
     getData();
   }, []);
 
   const getStatusChip = (status) => {
-    const statusConfig = {
-      'Approved': { color: 'success', icon: <CheckCircle sx={{ fontSize: 16 }} /> },
-   
-      'Rejected': { color: 'error', icon: <Cancel sx={{ fontSize: 16 }} /> },
-      'Pending': { color: 'warning', icon: <PendingOutlined sx={{ fontSize: 16 }} /> },
-      'Sent for revision': { color: 'info', icon: <Edit sx={{ fontSize: 16 }} /> }
-    };
-    
-    const config = statusConfig[status] || { color: 'default', icon: null };
-    
+    let type = 'neutral';
+    let icon = null;
+
+    if (status === 'Approved') { type = 'success'; icon = <CheckCircle style={{ fontSize: '1rem' }} />; }
+    else if (status === 'Rejected') { type = 'error'; icon = <Cancel style={{ fontSize: '1rem' }} />; }
+    else if (status === 'Pending') { type = 'warning'; icon = <PendingOutlined style={{ fontSize: '1rem' }} />; }
+    else if (status === 'Sent for revision') { type = 'info'; icon = <Edit style={{ fontSize: '1rem' }} />; }
+
     return (
-      <Chip
-        label={status}
-        color={config.color}
-        icon={config.icon}
-        size="small"
-        sx={{
-          fontWeight: 500,
-          fontSize: '0.75rem',
-          height: '24px',
-          '& .MuiChip-icon': {
-            fontSize: '16px'
-          }
-        }}
-      />
+      <span className={`status-pill ${type}`} style={{ display: 'inline-flex', gap: '0.25rem' }}>
+        {icon} {status}
+      </span>
     );
   };
 
   const getCategoryChip = (category) => {
-    const categoryColors = {
-      'Individual/ Proprietary Firm': 'primary',
-      'Partnership Firm': 'secondary',
-      'Company': 'success',
-      'Trust Foundations': 'info'
-    };
-    
+    let type = 'neutral';
+    if (category?.includes('Individual')) type = 'info';
+    if (category?.includes('Company')) type = 'success';
+
     return (
-      <Chip
-        label={category}
-        color={categoryColors[category] || 'default'}
-        variant="outlined"
-        size="small"
-        sx={{
-          fontWeight: 500,
-          fontSize: '0.75rem',
-          height: '24px'
-        }}
-      />
+      <span className={`badge badge-${type === 'neutral' ? 'info' : type}`} style={{ fontWeight: 500, textTransform: 'none' }}>
+        {category}
+      </span>
     );
   };
 
@@ -80,197 +56,133 @@ function CompletedKyc() {
     {
       accessorKey: "name_of_individual",
       header: "Customer Name",
-      enableSorting: true,
       size: 250,
       Cell: ({ cell }) => (
-        <Box 
-          sx={{ 
-            fontWeight: 500, 
-            color: '#1976d2',
-            cursor: 'pointer',
-            '&:hover': {
-              color: '#0d47a1',
-              textDecoration: 'underline',
-            }
+        <span
+          style={{
+            fontWeight: 600,
+            color: 'var(--primary-600)',
+            cursor: 'pointer'
           }}
           onClick={() => navigateWithRef(`/view-completed-kyc/${cell.row.original._id}`)}
         >
           {cell.getValue()}
-        </Box>
+        </span>
       ),
     },
     {
       accessorKey: "category",
       header: "Category",
-      enableSorting: true,
       size: 250,
       Cell: ({ cell }) => getCategoryChip(cell.getValue()),
     },
     {
       accessorKey: "status",
       header: "Business Type",
-      enableSorting: true,
       size: 250,
       Cell: ({ cell }) => (
-        <Chip
-          label={cell.getValue()}
-          variant="filled"
-          size="small"
-          sx={{
-            backgroundColor: cell.getValue() === 'Manufacturer' ? '#e8f5e8' : '#e3f2fd',
-            color: cell.getValue() === 'Manufacturer' ? '#2e7d32' : '#1976d2',
-            fontWeight: 500,
-            fontSize: '0.75rem',
-          }}
-        />
+        <span className={`status-pill ${cell.getValue() === 'Manufacturer' ? 'success' : 'info'}`}>
+          {cell.getValue()}
+        </span>
       ),
     },
-    { 
-      accessorKey: "iec_no", 
-      header: "🆔 IEC Number", 
-      enableSorting: true, 
+    {
+      accessorKey: "iec_no",
+      header: "IEC Number",
       size: 250,
-      Cell: ({ cell }) => (
-        <Box sx={{ 
-          fontFamily: 'monospace', 
-          fontSize: '0.85rem',
-          backgroundColor: '#f5f5f5',
-          padding: '4px 8px',
-          borderRadius: '6px',
-          display: 'inline-block'
-        }}>
-          {cell.getValue() || 'N/A'}
-        </Box>
-      ),
+      Cell: ({ cell }) => <span style={{ fontFamily: 'monospace', color: 'var(--slate-600)' }}>{cell.getValue() || 'N/A'}</span>
     },
     {
       accessorKey: "approval",
       header: "Approval Status",
-      enableSorting: true,
       size: 250,
       Cell: ({ cell }) => getStatusChip(cell.getValue()),
     },
     {
       accessorKey: "approved_by",
       header: "Approved By",
-      enableSorting: true,
       size: 250,
       Cell: ({ cell }) => (
-        <Box sx={{ 
-          fontStyle: cell.getValue() ? 'normal' : 'italic',
-          color: cell.getValue() ? '#2c3e50' : '#6c757d'
-        }}>
+        <span style={{ fontStyle: cell.getValue() ? 'normal' : 'italic', color: 'var(--slate-500)' }}>
           {cell.getValue() || 'Not Assigned'}
-        </Box>
+        </span>
       ),
     },
     {
       accessorKey: "remarks",
       header: "Remarks",
-      enableSorting: false,
       size: 220,
       Cell: ({ cell }) => (
-        <Tooltip title={cell.getValue() || 'No remarks'} arrow>
-          <Box sx={{ 
+        <span
+          title={cell.getValue() || 'No remarks'}
+          style={{
             maxWidth: '200px',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
-            fontSize: '0.85rem',
-            color: '#6c757d'
-          }}>
-            {cell.getValue() || 'No remarks'}
-          </Box>
-        </Tooltip>
+            color: 'var(--slate-500)',
+            fontSize: '0.9rem'
+          }}
+        >
+          {cell.getValue() || 'No remarks'}
+        </span>
       ),
     },
     {
       accessorKey: "view",
       header: "Actions",
-      enableSorting: false,
-      size: 250,
+      size: 150,
       Cell: ({ cell }) =>
         user.role === "Admin" ? (
-          <Tooltip title="View Details" arrow>
-            <IconButton
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <button
+              className="table-action-btn"
+              title="View Details"
               onClick={() => navigateWithRef(`/view-completed-kyc/${cell.row.original._id}`)}
-              size="small"
-              sx={{
-                color: '#1976d2',
-                '&:hover': {
-                  backgroundColor: 'rgba(25, 118, 210, 0.1)',
-                  transform: 'scale(1.1)',
-                }
-              }}
             >
               <Visibility fontSize="small" />
-            </IconButton>
-          </Tooltip>
+            </button>
+            <button
+              className="table-action-btn"
+              title="Edit KYC"
+              onClick={() => navigateWithRef(`/revise-customer-kyc/${cell.row.original._id}`)}
+            >
+              <Edit fontSize="small" />
+            </button>
+          </div>
         ) : (
-          <Box sx={{ color: '#ccc', fontSize: '0.75rem' }}>No Access</Box>
+          <span style={{ color: 'var(--slate-400)', fontSize: '0.75rem' }}>No Access</span>
         ),
     },
-    ...(user.role === "Admin"
-      ? [
-          {
-            accessorKey: "edit",
-            header: "✏️ Edit",
-            enableSorting: false,
-            size: 100,
-            Cell: ({ cell }) => (
-              <Tooltip title="Edit KYC" arrow>
-                <IconButton
-                  onClick={() => navigateWithRef(`/revise-customer-kyc/${cell.row.original._id}`)}
-                  size="small"
-                  sx={{
-                    color: '#ed6c02',
-                    '&:hover': {
-                      backgroundColor: 'rgba(237, 108, 2, 0.1)',
-                      transform: 'scale(1.1)',
-                    }
-                  }}
-                >
-                  <Edit fontSize="small" />
-                </IconButton>
-              </Tooltip>
-            ),
-          },
-        ]
-      : []),
   ];
-  
-  const table = useTableConfig(data, columns);
-  
+
   return (
-    <Box sx={{
-      padding: '24px',
-      background: 'linear-gradient(135deg, rgba(243, 163, 16, 0.05) 0%, rgba(160, 160, 160, 0.05) 100%)',
-      borderRadius: '16px',
-      minHeight: '400px'
-    }}>
-      {/* Header with Back Button */}
-      
-      
-      <Box sx={{
-        marginBottom: '24px',
-        textAlign: 'center',
-      }}>
-        <h2 style={{
-          color: '#2c3e50',
-          fontWeight: 600,
-          fontSize: '1.75rem',
-          marginBottom: '8px',
-          background: 'linear-gradient(135deg, rgba(243, 163, 16, 0.94) 0%, rgb(160, 160, 160) 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text',
+    <div className="premium-card" style={{ padding: '0' }}>
+      <div className="card-header">
+        <h2 className="page-title" style={{ fontSize: '1.5rem', margin: 0 }}>Completed KYC</h2>
+        <p className="page-subtitle" style={{ margin: 0 }}>Archive of processed applications</p>
+      </div>
+
+      <div className="card-body">
+        <div style={{
+          marginBottom: '1.5rem',
+          padding: '1rem',
+          background: 'var(--success-light)',
+          border: '1px solid var(--success)',
+          borderRadius: 'var(--radius-md)',
+          color: '#047857',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem'
         }}>
-           Completed KYC 
-        </h2>
-      
-      </Box>
-      <MaterialReactTable table={table} />
-    </Box>
+          <CheckCircle />
+          <span>
+            <strong>{data.length}</strong> completed applications found.
+          </span>
+        </div>
+        <CustomTable columns={columns} data={data} />
+      </div>
+    </div>
   );
 }
 

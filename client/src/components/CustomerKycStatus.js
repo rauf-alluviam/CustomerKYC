@@ -1,36 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { MaterialReactTable } from "material-react-table";
-import useTableConfig from "../customHooks/useTableConfig";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigation } from "../contexts/NavigationContext";
-import { 
-  Box, 
-  Chip, 
-  IconButton, 
-  Tooltip, 
-  TextField, 
-  FormControl, 
-  Select, 
-  MenuItem, 
-  InputLabel,
-  Paper,
-  Typography,
-  Card,
-  CardContent,
-  Grid
-} from "@mui/material";
-import { 
-  Visibility, 
-  CheckCircle, 
-  Cancel, 
-  PendingOutlined, 
-  Edit, 
+import CustomTable from "./common/CustomTable";
+import {
+  Visibility,
+  CheckCircle,
+  Settings as Edit, // Changed to simple edit icon
   Search,
-  Assessment,
   Group,
-  HourglassEmpty,
-  TrendingUp
+  HourglassEmpty
 } from "@mui/icons-material";
 
 function CustomerKycStatus() {
@@ -64,13 +43,13 @@ function CustomerKycStatus() {
   }, []);
 
   const calculateStats = (data) => {
-    const stats = {
+    const newStats = {
       total: data.length,
       pending: data.filter(item => item.approval === "Pending").length,
       approved: data.filter(item => item.approval === "Approved" || item.approval === "Approved by HOD").length,
       sentForRevision: data.filter(item => item.approval === "Sent for revision").length
     };
-    setStats(stats);
+    setStats(newStats);
   };
 
   useEffect(() => {
@@ -84,7 +63,7 @@ function CustomerKycStatus() {
     // Apply search filter
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(item => 
+      filtered = filtered.filter(item =>
         item.name_of_individual?.toLowerCase().includes(query) ||
         item.iec_no?.toLowerCase().includes(query) ||
         item.pan_no?.toLowerCase().includes(query)
@@ -94,423 +73,205 @@ function CustomerKycStatus() {
     setFilteredData(filtered);
   }, [data, statusFilter, searchQuery]);
 
+  // --- Helper Components for Table Cells ---
+
   const getStatusChip = (status) => {
-    const statusConfig = {
-      'Approved': { 
-        style: { 
-          backgroundColor: '#f0f9ff', 
-          color: '#2171c2',
-          border: '1px solid #2171c2'
-        }
-      },
-      'Approved by HOD': { 
-        style: { 
-          backgroundColor: '#f0f9ff', 
-          color: '#2171c2',
-          border: '1px solid #2171c2'
-        }
-      },
-      'Pending': { 
-        style: { 
-          backgroundColor: '#fff9f6', 
-          color: '#e87538',
-          border: '1px solid #e87538'
-        }
-      },
-      'Sent for revision': { 
-        style: { 
-          backgroundColor: '#f9fafb', 
-          color: '#6b7280',
-          border: '1px solid #6b7280'
-        }
-      }
-    };
-    
-    const config = statusConfig[status] || { style: { backgroundColor: '#f3f4f6', color: '#6b7280', border: 'none' } };
-    
+    let type = 'neutral';
+    if (status === 'Approved' || status === 'Approved by HOD') type = 'success';
+    else if (status === 'Pending') type = 'warning';
+    else if (status === 'Sent for revision') type = 'error';
+
     return (
-      <span
-        style={{
-          ...config.style,
-          padding: '4px 10px',
-          borderRadius: '4px',
-          fontSize: '0.75rem',
-          fontWeight: 500,
-          textTransform: 'uppercase',
-          letterSpacing: '0.5px',
-          display: 'inline-block'
-        }}
-      >
-        {status}
+      <span className={`status-pill ${type}`}>
+        {status === 'Approved by HOD' ? 'Approved' : status}
       </span>
     );
   };
 
   const getCategoryChip = (category) => {
     return (
-      <span style={{
-        fontSize: '0.875rem',
-        color: '#4b5563',
-        fontWeight: 400
-      }}>
+      <span className="badge badge-info" style={{ fontWeight: 500, textTransform: 'none' }}>
         {category}
       </span>
     );
   };
 
-  const StatCard = ({ title, value, icon, color, bgColor }) => (
-    <Card sx={{ 
-      background: '#fffefe',
-      border: '1px solid #e5e7eb',
-      borderRadius: '8px',
-      height: '100%',
-      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
-      transition: 'all 0.2s ease',
-      '&:hover': {
-        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.08)',
-        transform: 'none',
-      }
-    }}>
-      <CardContent sx={{ p: 3 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Box>
-            <Typography variant="h3" sx={{ 
-              fontWeight: 600, 
-              color: '#000000',
-              marginBottom: '4px',
-              fontSize: '2rem'
-            }}>
-              {value}
-            </Typography>
-            <Typography variant="body2" sx={{ 
-              color: '#6b7280',
-              fontWeight: 400,
-              fontSize: '0.875rem'
-            }}>
-              {title}
-            </Typography>
-          </Box>
-          <Box sx={{ 
-            color: '#9ca3af',
-            backgroundColor: '#f9fafb',
-            borderRadius: '8px',
-            p: 2,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}>
-            {React.cloneElement(icon, { sx: { fontSize: 24 } })}
-          </Box>
-        </Box>
-      </CardContent>
-    </Card>
-  );
+  // --- Columns Definition ---
 
   const columns = [
     {
       accessorKey: "name_of_individual",
       header: "Customer Name",
-      enableSorting: true,
       size: 250,
       Cell: ({ cell }) => (
-        <Box 
-          sx={{ 
-            fontWeight: 600, 
-            color: '#1976d2',
-            fontSize: '0.9rem',
-            cursor: 'pointer',
-            '&:hover': {
-              color: '#0d47a1',
-              textDecoration: 'underline',
-            }
+        <span
+          style={{
+            fontWeight: 600,
+            color: 'var(--primary-600)',
+            cursor: 'pointer'
           }}
           onClick={() => {
             const status = cell.row.original.approval;
-            if (status === "Pending") {
-              navigateWithRef(`/view-customer-kyc/${cell.row.original._id}`);
-            } else if (status === "Approved" || status === "Approved by HOD") {
-              navigateWithRef(`/view-completed-kyc/${cell.row.original._id}`);
-            } else if (status === "Sent for revision") {
-              navigateWithRef(`/revise-customer-kyc/${cell.row.original._id}`);
-            }
+            if (status === "Pending") navigateWithRef(`/view-customer-kyc/${cell.row.original._id}`);
+            else if (status.includes("Approved")) navigateWithRef(`/view-completed-kyc/${cell.row.original._id}`);
+            else if (status === "Sent for revision") navigateWithRef(`/revise-customer-kyc/${cell.row.original._id}`);
           }}
         >
           {cell.getValue() || 'N/A'}
-        </Box>
+        </span>
       ),
     },
     {
       accessorKey: "category",
       header: "Category",
-      enableSorting: true,
       size: 180,
       Cell: ({ cell }) => getCategoryChip(cell.getValue()),
     },
-    { 
-      accessorKey: "iec_no", 
-      header: "IEC Code", 
-      enableSorting: true, 
-      size: 200,
-      Cell: ({ cell }) => (
-        <Box sx={{ 
-          fontFamily: 'monospace', 
-          fontSize: '0.85rem',
-          color: '#374151',
-          fontWeight: 500
-        }}>
-          {cell.getValue() || 'N/A'}
-        </Box>
-      ),
+    {
+      accessorKey: "iec_no",
+      header: "IEC Code",
+      Cell: ({ cell }) => <span style={{ fontFamily: 'monospace', color: 'var(--slate-600)' }}>{cell.getValue()}</span>
     },
-    { 
-      accessorKey: "pan_no", 
-      header: "PAN Number", 
-      enableSorting: true, 
-      size: 200,
-      Cell: ({ cell }) => (
-        <Box sx={{ 
-          fontFamily: 'monospace', 
-          fontSize: '0.85rem',
-          color: '#374151',
-          fontWeight: 500
-        }}>
-          {cell.getValue() || 'N/A'}
-        </Box>
-      ),
+    {
+      accessorKey: "pan_no",
+      header: "PAN Number",
+      Cell: ({ cell }) => <span style={{ fontFamily: 'monospace', color: 'var(--slate-600)' }}>{cell.getValue()}</span>
     },
-    { 
-      accessorKey: "permanent_address_telephone", 
-      header: "Mobile", 
-      enableSorting: true, 
-      size: 180,
-      Cell: ({ cell }) => (
-        <Box sx={{ 
-          fontSize: '0.875rem',
-          color: '#374151'
-        }}>
-          {cell.getValue() || 'N/A'}
-        </Box>
-      ),
-    },
-    { 
-      accessorKey: "permanent_address_email", 
-      header: "Email", 
-      enableSorting: true, 
-      size: 220,
-      Cell: ({ cell }) => (
-        <Box sx={{ 
-          fontSize: '0.875rem',
-          color: '#374151',
-          wordBreak: 'break-word'
-        }}>
-          {cell.getValue() || 'N/A'}
-        </Box>
-      ),
+    {
+      accessorKey: "permanent_address_telephone",
+      header: "Mobile",
     },
     {
       accessorKey: "approval",
       header: "Status",
-      enableSorting: true,
-      size: 150,
       Cell: ({ cell }) => getStatusChip(cell.getValue()),
     },
     {
       accessorKey: "approved_by",
       header: "Processed By",
-      enableSorting: true,
-      size: 180,
       Cell: ({ cell }) => (
-        <Box sx={{ 
-          fontSize: '0.875rem',
-          color: '#6b7280',
-          fontStyle: cell.getValue() ? 'normal' : 'italic'
-        }}>
+        <span style={{ color: 'var(--slate-500)', fontStyle: cell.getValue() ? 'normal' : 'italic' }}>
           {cell.getValue() || 'Pending Review'}
-        </Box>
+        </span>
       ),
     },
     {
       accessorKey: "actions",
       header: "Actions",
-      enableSorting: false,
       size: 100,
       Cell: ({ cell }) => (
-        <Tooltip title="View Details" arrow>
-          <IconButton
-            onClick={() => {
-              const status = cell.row.original.approval;
-              if (status === "Pending") {
-                navigateWithRef(`/view-customer-kyc/${cell.row.original._id}`);
-              } else if (status === "Approved" || status === "Approved by HOD") {
-                navigateWithRef(`/view-completed-kyc/${cell.row.original._id}`);
-              } else if (status === "Sent for revision") {
-                navigateWithRef(`/revise-customer-kyc/${cell.row.original._id}`);
-              }
-            }}
-            size="small"
-            sx={{
-              color: '#6b7280',
-              '&:hover': {
-                backgroundColor: '#f3f4f6',
-                color: '#374151',
-              }
-            }}
-          >
-            <Visibility fontSize="small" />
-          </IconButton>
-        </Tooltip>
+        <button
+          className="table-action-btn"
+          title="View Details"
+          onClick={() => {
+            const status = cell.row.original.approval;
+            if (status === "Pending") navigateWithRef(`/view-customer-kyc/${cell.row.original._id}`);
+            else if (status.includes("Approved")) navigateWithRef(`/view-completed-kyc/${cell.row.original._id}`);
+            else if (status === "Sent for revision") navigateWithRef(`/revise-customer-kyc/${cell.row.original._id}`);
+          }}
+        >
+          <Visibility fontSize="small" />
+        </button>
       ),
     },
   ];
 
-  const table = useTableConfig(filteredData, columns);    return (
-      <Box sx={{
-        padding: '24px',
-        background: '#fffefe',
-        borderRadius: '8px',
-        minHeight: '400px'
-      }}>
-        {/* Clean Header */}
-        <Box sx={{
-          marginBottom: '32px',
-          textAlign: 'center',
-        }}>
-          <h2 style={{
-            color: '#000000',
-            fontWeight: 500,
-            fontSize: '1.75rem',
-            marginBottom: '8px',
-            margin: 0,
-          }}>
-            Customer KYC Status
-          </h2>
-        </Box>
+  // --- Main Render ---
 
-      {/* Statistics Cards */}
-      <Grid container spacing={3} sx={{ marginBottom: '32px' }}>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard 
-            title="Total Customers"
-            value={stats.total}
-            icon={<Group />}
-            color="#2c3e50"
-            bgColor="#34495e"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard 
-            title="Pending KYC"
-            value={stats.pending}
-            icon={<HourglassEmpty />}
-            color="#f39c12"
-            bgColor="#f39c12"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard 
-            title="Approved KYC"
-            value={stats.approved}
-            icon={<CheckCircle />}
-            color="#27ae60"
-            bgColor="#27ae60"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <StatCard 
-            title="Revisions Required"
-            value={stats.sentForRevision}
-            icon={<Edit />}
-            color="#3498db"
-            bgColor="#3498db"
-          />
-        </Grid>
-      </Grid>
-
-      {/* Clean Filters */}
-      <Paper sx={{ 
-        p: 3, 
-        mb: 3, 
-        borderRadius: '8px',
-        background: '#fffefe',
-        border: '1px solid #e5e7eb',
-        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
-      }}>
-        <Grid container spacing={3} alignItems="center">
-          <Grid item xs={12} md={6}>
-            <TextField
-              fullWidth
-              size="small"
-              variant="outlined"
-              placeholder="Search by customer name, IEC code, or PAN number..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              InputProps={{
-                startAdornment: <Search sx={{ color: '#6b7280', mr: 1 }} />,
-              }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '6px',
-                  backgroundColor: '#f9fafb',
-                  border: '1px solid #d1d5db',
-                  '&:hover': {
-                    backgroundColor: '#ffffff',
-                    borderColor: '#9ca3af',
-                  },
-                  '&.Mui-focused': {
-                    backgroundColor: '#fffefe',
-                    borderColor: '#2171c2',
-                    boxShadow: '0 0 0 3px rgba(33, 113, 194, 0.1)',
-                  }
-                }
-              }}
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <FormControl fullWidth size="small">
-              <InputLabel>Filter by Status</InputLabel>
-              <Select
-                value={statusFilter}
-                label="Filter by Status"
-                onChange={(e) => setStatusFilter(e.target.value)}
-                sx={{
-                  borderRadius: '6px',
-                  backgroundColor: '#f9fafb',
-                  border: '1px solid #d1d5db',
-                  '&:hover': {
-                    backgroundColor: '#ffffff',
-                    borderColor: '#9ca3af',
-                  },
-                  '&.Mui-focused': {
-                    backgroundColor: '#fffefe',
-                    borderColor: '#2171c2',
-                  }
-                }}
-              >
-                <MenuItem value="All">All Statuses</MenuItem>
-                <MenuItem value="Pending">Pending</MenuItem>
-                <MenuItem value="Approved">Approved</MenuItem>
-                {/* <MenuItem value="Approved by HOD">Approved by HOD</MenuItem> */}
-                <MenuItem value="Sent for revision">Sent for Revision</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-        </Grid>
-      </Paper>
-
-      {/* Results Summary */}
-      <Box sx={{ mb: 2 }}>
-        <Typography variant="body2" sx={{ color: '#6c757d', fontStyle: 'italic' }}>
-          Showing {filteredData.length} of {data.length} customers
-          {statusFilter !== "All" && ` with status: ${statusFilter}`}
-          {searchQuery && ` matching "${searchQuery}"`}
-        </Typography>
-      </Box>
-
-      {/* Data Table */}
-      <div className="clean-table">
-        <MaterialReactTable table={table} />
+  return (
+    <div className="premium-card" style={{ padding: '0' }}>
+      <div className="card-header">
+        <h2 className="page-title" style={{ fontSize: '1.5rem', margin: 0 }}>KYC Status Overview</h2>
+        <p className="page-subtitle" style={{ margin: 0 }}>Monitor and manage customer applications</p>
       </div>
-    </Box>
+
+      <div className="card-body">
+
+        {/* Statistics Cards */}
+        <div className="grid-3" style={{ marginBottom: '2rem', gridTemplateColumns: 'repeat(4, 1fr)' }}>
+          <div className="form-section" style={{ padding: '1.5rem', margin: 0, display: 'flex', alignItems: 'center', gap: '1rem', borderLeft: '4px solid var(--primary-500)' }}>
+            <div style={{ background: 'var(--primary-50)', padding: '1rem', borderRadius: '50%', color: 'var(--primary-600)' }}>
+              <Group />
+            </div>
+            <div>
+              <h3 style={{ margin: 0, fontSize: '1.5rem' }}>{stats.total}</h3>
+              <p style={{ margin: 0, fontSize: '0.85rem' }}>Total Customers</p>
+            </div>
+          </div>
+
+          <div className="form-section" style={{ padding: '1.5rem', margin: 0, display: 'flex', alignItems: 'center', gap: '1rem', borderLeft: '4px solid var(--warning)' }}>
+            <div style={{ background: 'var(--warning-light)', padding: '1rem', borderRadius: '50%', color: 'var(--warning)' }}>
+              <HourglassEmpty />
+            </div>
+            <div>
+              <h3 style={{ margin: 0, fontSize: '1.5rem' }}>{stats.pending}</h3>
+              <p style={{ margin: 0, fontSize: '0.85rem' }}>Pending</p>
+            </div>
+          </div>
+
+          <div className="form-section" style={{ padding: '1.5rem', margin: 0, display: 'flex', alignItems: 'center', gap: '1rem', borderLeft: '4px solid var(--success)' }}>
+            <div style={{ background: 'var(--success-light)', padding: '1rem', borderRadius: '50%', color: 'var(--success)' }}>
+              <CheckCircle />
+            </div>
+            <div>
+              <h3 style={{ margin: 0, fontSize: '1.5rem' }}>{stats.approved}</h3>
+              <p style={{ margin: 0, fontSize: '0.85rem' }}>Approved</p>
+            </div>
+          </div>
+
+          <div className="form-section" style={{ padding: '1.5rem', margin: 0, display: 'flex', alignItems: 'center', gap: '1rem', borderLeft: '4px solid var(--info)' }}>
+            <div style={{ background: 'var(--info-light)', padding: '1rem', borderRadius: '50%', color: 'var(--info)' }}>
+              <Edit />
+            </div>
+            <div>
+              <h3 style={{ margin: 0, fontSize: '1.5rem' }}>{stats.sentForRevision}</h3>
+              <p style={{ margin: 0, fontSize: '0.85rem' }}>Revisions</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Filters */}
+        <div className="premium-card" style={{ padding: '1.5rem', marginBottom: '2rem', background: 'var(--slate-50)', border: 'none' }}>
+          <div className="grid-2">
+            <div>
+              <label className="form-label">Search</label>
+              <div style={{ position: 'relative' }}>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Search by name, IEC, or PAN..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  style={{ paddingLeft: '2.5rem' }}
+                />
+                <Search style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--slate-400)', fontSize: '1.2rem' }} />
+              </div>
+            </div>
+            <div>
+              <label className="form-label">Filter Status</label>
+              <select
+                className="form-control"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+              >
+                <option value="All">All Statuses</option>
+                <option value="Pending">Pending</option>
+                <option value="Approved">Approved</option>
+                <option value="Sent for revision">Sent for Revision</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* Results Info */}
+        <div style={{ marginBottom: '1rem', color: 'var(--slate-500)', fontSize: '0.9rem', fontStyle: 'italic' }}>
+          Showing {filteredData.length} result(s)
+        </div>
+
+        {/* Data Table */}
+        <CustomTable columns={columns} data={filteredData} />
+      </div>
+    </div>
   );
 }
 

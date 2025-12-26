@@ -1,35 +1,21 @@
 import * as React from "react";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
 import CustomerKycForm from "./CustomerKycForm";
 import CompletedKyc from "./CompletedKyc";
 import CustomerKycStatus from "./CustomerKycStatus";
-import useTabs from "../customHooks/useTabs";
+import useTabs from "../customHooks/useTabs"; // Keeping for logic if needed, but UI is custom
 import ViewDrafts from "./ViewDrafts";
 import HodApprovalPending from "./HodApprovalPending";
 import RevisionList from "./RevisionList";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigation } from "../contexts/NavigationContext";
-import { Paper, Typography, Chip } from "@mui/material";
-import { 
-  PersonAdd, 
-  DraftsOutlined, 
-  Edit, 
-  HourglassEmpty, 
-  CheckCircle,
-  AdminPanelSettings,
-  Assessment
-} from "@mui/icons-material";
 import BackButton from "./BackButton";
 
 function CustomerKyc() {
   const { user } = React.useContext(UserContext);
   const { saveTabState, getTabState } = useNavigation();
   const [value, setValue] = React.useState(() => getTabState('/customer-kyc'));
-  const { a11yProps, CustomTabPanel } = useTabs();
-  
-  const handleChange = (event, newValue) => {
+
+  const handleTabChange = (newValue) => {
     setValue(newValue);
     saveTabState('/customer-kyc', newValue);
   };
@@ -47,348 +33,93 @@ function CustomerKyc() {
     };
   }, [value, saveTabState]);
 
-  const getTabIcon = (index) => {
-    const icons = [
-      <PersonAdd />,
-      <Assessment />,
-      <DraftsOutlined />,
-      <Edit />,
-      <HourglassEmpty />,
-      <CheckCircle />
-    ];
-    return icons[index];
+  const tabs = user.role === "Admin" ? [
+    { label: "Dashboard", icon: "📊" },
+    { label: "New Application", icon: "👤" },
+    { label: "Draft Applications", icon: "📝" },
+    { label: "Revisions Required", icon: "✍️" },
+    { label: "Pending Approval", icon: "⏳" },
+    { label: "Completed KYC", icon: "✅" }
+  ] : [
+    { label: "New Application", icon: "👤" },
+    { label: "My Drafts", icon: "📝" },
+    { label: "Revisions", icon: "✍️" },
+    { label: "Completed KYC", icon: "✅" }
+  ];
+
+  const renderContent = () => {
+    if (user.role === "Admin") {
+      switch (value) {
+        case 0: return <CustomerKycStatus />;
+        case 1: return <CustomerKycForm />;
+        case 2: return <ViewDrafts />;
+        case 3: return <RevisionList />;
+        case 4: return <HodApprovalPending />;
+        case 5: return <CompletedKyc />;
+        default: return <CustomerKycStatus />;
+      }
+    } else {
+      switch (value) {
+        case 0: return <CustomerKycForm />;
+        case 1: return <ViewDrafts />;
+        case 2: return <RevisionList />;
+        case 3: return <CompletedKyc />;
+        default: return <CustomerKycForm />;
+      }
+    }
   };
 
-  const getTabLabel = (label, count = null) => (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-      <Typography variant="body2" sx={{ fontWeight: 500 }}>
-        {label}
-      </Typography>
-      {count !== null && (
-        <Chip 
-          label={count} 
-          size="small" 
-          color="primary" 
-          sx={{ 
-            height: '20px', 
-            fontSize: '0.7rem',
-            minWidth: '20px'
-          }} 
-        />
-      )}
-    </Box>
-  );
-
   return (
-    <Box 
-      sx={{ 
-        width: "100%",
-        //  bgcolor:"red",
-        padding: { xs: 1, sm: 2, md: 3 },
-      }}
-    >
-      {user.role === "Admin" ? (
-        <Paper
-          elevation={0}
-          sx={{
-            background: '#ffffff',
-            borderRadius: '8px',
-            border: '1px solid rgb(15, 16, 17)',
-            overflow: 'hidden',
-            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
-          }}
-        >
-          {/* Clean Header Section */}
-          <Box sx={{
-            background: '#ffffff',
-            padding: '24px',
-            borderBottom: '1px solid #e5e7eb',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 2
-          }}>
-            <Box sx={{ flex: 1 }}>
-              <Typography variant="h4" sx={{ 
-                fontWeight: 500, 
-                color: '#1f2937',
-                marginBottom: '4px',
-                wordWrap: 'break-word',
-                whiteSpace: 'normal',
-                lineHeight: 1.2,
-                fontSize: '1.75rem'
-              }}>
-                KYC Management Dashboard
-              </Typography>
-              <Typography variant="body1" sx={{ 
-                color: '#6b7280',
-                fontSize: '1rem',
-                wordWrap: 'break-word',
-                whiteSpace: 'normal',
-                lineHeight: 1.4
-              }}>
-                Customer verification and compliance management
-              </Typography>
-            </Box>
-          </Box>
+    <div className="app-layout">
+      {/* Left Navigation Sidebar */}
+      <aside className="side-nav">
+        <div className="nav-header">
+          <h2 className="brand-logo">OceanBreeze.</h2>
+        </div>
 
-          <Box sx={{ 
-            borderBottom: 1, 
-            borderColor: "#e5e7eb",
-            overflowX: 'auto',
-          }}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            aria-label="KYC Management tabs"
-            scrollButtons="auto"
-            allowScrollButtonsMobile
-            sx={{
-              background: '#ffffff',
-              minWidth: 'max-content',
-              '& .MuiTabs-flexContainer': {
-                justifyContent: 'center',
-                gap: 0,
-              },
-              '& .MuiTab-root': {
-                fontWeight: 500,
-                textTransform: 'none',
-                padding: '16px 24px',
-                minHeight: '64px',
-                minWidth: '200px',
-                transition: 'all 0.2s ease',
-                borderRadius: '0',
-                whiteSpace: 'nowrap',
-                color: '#6b7280',
-                borderBottom: '2px solid transparent',
-                '&:hover': {
-                  background: '#f9fafb',
-                  color: '#374151',
-                },
-                '&.Mui-selected': {
-                  background: '#ffffff',
-                  color: '#1f2937',
-                  borderBottom: '2px solid #3b82f6',
-                  fontWeight: 600,
-                },
-              },
-    '& .MuiTabs-indicator': {
-      display: 'none',
-    },
-    '& .MuiTabs-scrollButtons': {
-      color: '#ed6c02',
-      '&.Mui-disabled': {
-        opacity: 0.3,
-      },
-    },
-  }}
->
-              <Tab 
-                icon={getTabIcon(0)}
-                iconPosition="start"
-                label="Customer KYC Status" 
-                {...a11yProps(0)} 
-              />
-              <Tab 
-                icon={getTabIcon(1)}
-                iconPosition="start"
-                label="New Application" 
-                {...a11yProps(1)} 
-              />
-              <Tab 
-                icon={getTabIcon(2)}
-                iconPosition="start"
-                label="Draft Applications" 
-                {...a11yProps(2)} 
-              />
-              <Tab 
-                icon={getTabIcon(3)}
-                iconPosition="start"
-                label="Revisions Required" 
-                {...a11yProps(3)} 
-              />
-              <Tab 
-                icon={getTabIcon(4)}
-                iconPosition="start"
-                label="Pending Approval" 
-                {...a11yProps(4)} 
-              />
-              <Tab 
-                icon={getTabIcon(5)}
-                iconPosition="start"
-                label="Completed KYC" 
-                {...a11yProps(5)} 
-              />
-            </Tabs>
-          </Box>
-
-          <Box sx={{ 
-            padding: { xs: '16px', sm: '24px', md: '32px' },
-            minHeight: '60vh',
-            background: '#fffefe',
-            border: '1px solid rgb(6, 7, 7)',
-          }}>
-            <CustomTabPanel value={value} index={0}>
-              <CustomerKycStatus />
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={1}>
-              <CustomerKycForm />
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={2}>
-              <ViewDrafts />
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={3}>
-              <RevisionList />
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={4}>
-              <HodApprovalPending />
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={5}>
-              <CompletedKyc />
-            </CustomTabPanel>
-          </Box>
-        </Paper>
-      ) : (
-        <Paper
-          elevation={0}
-          sx={{
-            background: '#ffffff',
-            borderRadius: '8px',
-            border: '1px solid #e5e7eb',
-            overflow: 'hidden',
-            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
-          }}
-        >
-          {/* Clean Header Section for Non-Admin */}
-          <Box sx={{
-            background: '#ffffff',
-            padding: '24px',
-            borderBottom: '1px solid #e5e7eb',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 2
-          }}>
-            <BackButton />
-            <Box sx={{ flex: 1 }}>
-              <Typography variant="h4" sx={{ 
-                fontWeight: 500, 
-                color: '#1f2937',
-                marginBottom: '4px',
-                wordWrap: 'break-word',
-                whiteSpace: 'normal',
-                lineHeight: 1.2,
-                fontSize: '1.75rem'
-              }}>
-                Customer KYC Portal
-              </Typography>
-              <Typography variant="body1" sx={{ 
-                color: '#6b7280',
-                fontSize: '1rem',
-                wordWrap: 'break-word',
-                whiteSpace: 'normal',
-                lineHeight: 1.4
-              }}>
-                Submit and manage your KYC applications
-              </Typography>
-            </Box>
-          </Box>
-
-          <Box sx={{ 
-            borderBottom: 1, 
-            borderColor: "#e5e7eb",
-            overflowX: 'auto',
-          }}>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              aria-label="Customer KYC tabs"
-              variant="scrollable"
-              scrollButtons="auto"
-              allowScrollButtonsMobile
-              sx={{
-                background: '#fffefe',
-                minWidth: 'max-content',
-                '& .MuiTab-root': {
-                  fontWeight: 500,
-                  textTransform: 'none',
-                  padding: '16px 24px',
-                  minHeight: '64px',
-                  minWidth: '180px',
-                  transition: 'all 0.2s ease',
-                  whiteSpace: 'nowrap',
-                  color: '#6b7280',
-                  borderBottom: '2px solid transparent',
-                  '&:hover': {
-                    background: '#f9fafb',
-                    color: '#374151',
-                  },
-                  '&.Mui-selected': {
-                    background: '#fffefe',
-                    color: '#000000',
-                    borderBottom: '2px solid #2171c2',
-                    fontWeight: 600,
-                  },
-                },
-                '& .MuiTabs-indicator': {
-                  display: 'none',
-                },
-                '& .MuiTabs-scrollButtons': {
-                  color: '#2171c2',
-                  '&.Mui-disabled': {
-                    opacity: 0.3,
-                  },
-                },
-              }}
+        <nav className="nav-menu">
+          {tabs.map((tab, index) => (
+            <button
+              key={index}
+              className={`nav-item ${value === index ? 'active' : ''}`}
+              onClick={() => handleTabChange(index)}
             >
-              <Tab 
-                icon={getTabIcon(0)}
-                iconPosition="start"
-                label="New Application" 
-                {...a11yProps(0)} 
-              />
-              <Tab 
-                icon={getTabIcon(1)}
-                iconPosition="start"
-                label="My Drafts" 
-                {...a11yProps(1)} 
-              />
-              <Tab 
-                icon={getTabIcon(2)}
-                iconPosition="start"
-                label="Revisions" 
-                {...a11yProps(2)} 
-              />
-              <Tab 
-                icon={getTabIcon(5)}
-                iconPosition="start"
-                label="Completed KYC" 
-                {...a11yProps(5)} 
-              />
-            </Tabs>
-            
+              <span className="nav-icon">{tab.icon}</span>
+              {tab.label}
+            </button>
+          ))}
+        </nav>
 
-          </Box>
+        <div style={{ padding: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{
+              width: '32px', height: '32px', borderRadius: '50%',
+              background: 'linear-gradient(135deg, var(--primary-400), var(--primary-600))',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: 'white', fontWeight: 'bold', fontSize: '0.8rem'
+            }}>
+              {user.role?.[0] || 'U'}
+            </div>
+            <div style={{ overflow: 'hidden' }}>
+              <p style={{ margin: 0, color: 'white', fontSize: '0.9rem', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {user.username || user.role}
+              </p>
+              <p style={{ margin: 0, color: 'var(--slate-500)', fontSize: '0.75rem' }}>
+                {user.department || user.role}
+              </p>
+            </div>
+          </div>
+        </div>
+      </aside>
 
-          <Box sx={{ 
-            padding: { xs: '16px', sm: '24px', md: '32px' },
-            minHeight: '60vh',
-            background: '#fffefe'
-          }}>
-            <CustomTabPanel value={value} index={0}>
-              <CustomerKycForm />
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={1}>
-              <ViewDrafts />
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={2}>
-              <RevisionList />
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={3}>
-  <CompletedKyc />
-</CustomTabPanel>
-          </Box>
-        </Paper>
-      )}
-    </Box>
+      {/* Main Content Area */}
+      <main className="main-content">
+        {/* Header Removed to avoid duplication with child components */}
+        <div className="fade-in-up">
+          {renderContent()}
+        </div>
+      </main>
+    </div>
   );
 }
 

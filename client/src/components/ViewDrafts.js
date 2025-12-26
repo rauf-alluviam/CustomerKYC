@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { MaterialReactTable } from "material-react-table";
-import useTableConfig from "../customHooks/useTableConfig";
 import { Link } from "react-router-dom";
 import { useNavigation } from "../contexts/NavigationContext";
-import { Box, Chip, IconButton, Tooltip } from "@mui/material";
+import CustomTable from "./common/CustomTable";
 import { Visibility, DraftsOutlined } from "@mui/icons-material";
-import BackButton from "./BackButton";
 
 function ViewDrafts() {
   const [data, setData] = useState([]);
@@ -14,161 +11,112 @@ function ViewDrafts() {
 
   useEffect(() => {
     async function getData() {
-      const res = await axios.get(
-        `${process.env.REACT_APP_API_STRING}/view-customer-kyc-drafts`
-      );
-      setData(res.data);
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_STRING}/view-customer-kyc-drafts`
+        );
+        setData(res.data);
+      } catch (error) {
+        console.error("Error fetching drafts:", error);
+      }
     }
     getData();
   }, []);
 
   const getCategoryChip = (category) => {
-    const categoryColors = {
-      'Individual/ Proprietary Firm': 'primary',
-      'Partnership Firm': 'secondary',
-      'Company': 'success',
-      'Trust Foundations': 'info'
-    };
-    
+    let type = 'neutral';
+    if (category?.includes('Individual')) type = 'info';
+    if (category?.includes('Company')) type = 'success';
+
     return (
-      <Chip
-        label={category}
-        color={categoryColors[category] || 'default'}
-        variant="outlined"
-        size="small"
-        sx={{
-          fontWeight: 500,
-          fontSize: '0.75rem',
-          height: '24px'
-        }}
-      />
+      <span className={`badge badge-${type === 'neutral' ? 'info' : type}`} style={{ fontWeight: 500, textTransform: 'none' }}>
+        {category}
+      </span>
     );
   };
 
   const columns = [
     {
       accessorKey: "name_of_individual",
-      header: " Customer Name",
-      enableSorting: true,
+      header: "Customer Name",
       size: 280,
       Cell: ({ cell }) => (
-        <Box 
-          sx={{ 
-            fontWeight: 500, 
-            color: '#1976d2',
+        <span
+          style={{
+            fontWeight: 600,
+            color: 'var(--primary-600)',
             display: 'flex',
             alignItems: 'center',
-            gap: 1,
-            cursor: 'pointer',
-            '&:hover': {
-              color: '#0d47a1',
-              textDecoration: 'underline',
-            }
+            gap: '0.5rem',
+            cursor: 'pointer'
           }}
           onClick={() => navigateWithRef(`/view-draft-details/${cell.row.original._id}`)}
         >
-          <DraftsOutlined sx={{ fontSize: 16, color: '#ff9800' }} />
+          <DraftsOutlined style={{ fontSize: 16, color: 'var(--accent-500)' }} />
           {cell.getValue()}
-        </Box>
+        </span>
       ),
     },
     {
       accessorKey: "category",
-      header: " Category",
-      enableSorting: true,
+      header: "Category",
       size: 250,
       Cell: ({ cell }) => getCategoryChip(cell.getValue()),
     },
     {
       accessorKey: "status",
       header: "Business Type",
-      enableSorting: true,
       size: 250,
       Cell: ({ cell }) => (
-        <Chip
-          label={cell.getValue()}
-          variant="filled"
-          size="small"
-          sx={{
-            backgroundColor: cell.getValue() === 'Manufacturer' ? '#e8f5e8' : '#e3f2fd',
-            color: cell.getValue() === 'Manufacturer' ? '#2e7d32' : '#1976d2',
-            fontWeight: 500,
-            fontSize: '0.75rem',
-          }}
-        />
+        <span className={`status-pill ${cell.getValue() === 'Manufacturer' ? 'success' : 'info'}`}>
+          {cell.getValue()}
+        </span>
       ),
     },
     {
       accessorKey: "iec_no",
       header: "IEC Number",
-      enableSorting: true,
       size: 250,
       Cell: ({ cell }) => (
-        <Box sx={{ 
-          fontFamily: 'monospace', 
+        <span style={{
+          fontFamily: 'monospace',
           fontSize: '0.85rem',
-          backgroundColor: '#f5f5f5',
-          padding: '4px 8px',
-          borderRadius: '6px',
-          display: 'inline-block'
+          backgroundColor: 'var(--slate-100)',
+          padding: '2px 8px',
+          borderRadius: '4px',
+          color: 'var(--slate-700)'
         }}>
           {cell.getValue() || 'Pending'}
-        </Box>
+        </span>
       ),
     },
     {
       accessorKey: "action",
-      header: " Actions",
-      enableSorting: false,
-      size: 250,
+      header: "Actions",
+      size: 150,
       Cell: ({ cell }) => (
-        <Tooltip title="View Draft Details" arrow>
-          <IconButton
-            onClick={() => navigateWithRef(`/view-draft-details/${cell.row.original._id}`)}
-            size="small"
-            sx={{
-              color: '#1976d2',
-              '&:hover': {
-                backgroundColor: 'rgba(25, 118, 210, 0.1)',
-                transform: 'scale(1.1)',
-              }
-            }}
-          >
-            <Visibility fontSize="small" />
-          </IconButton>
-        </Tooltip>
+        <button
+          className="table-action-btn"
+          title="View Draft Details"
+          onClick={() => navigateWithRef(`/view-draft-details/${cell.row.original._id}`)}
+        >
+          <Visibility fontSize="small" />
+        </button>
       ),
     },
   ];
 
-  const table = useTableConfig(data, columns);
-
   return (
-    <Box sx={{
-      padding: '24px',
-      background: '#fffefe',
-      borderRadius: '8px',
-      minHeight: '400px'
-    }}>
-      {/* Header with Back Button */}
-   
-      
-      <Box sx={{
-        marginBottom: '24px',
-        textAlign: 'center',
-      }}>
-        <h2 style={{
-          color: '#000000',
-          fontWeight: 500,
-          fontSize: '1.75rem',
-          marginBottom: '8px',
-        }}>
-          Draft Applications
-        </h2>
-       
-      </Box>
-      <MaterialReactTable table={table} />
-    </Box>
+    <div className="premium-card" style={{ padding: '0' }}>
+      <div className="card-header">
+        <h2 className="page-title" style={{ fontSize: '1.5rem', margin: 0 }}>Draft Applications</h2>
+        <p className="page-subtitle" style={{ margin: 0 }}>Resume your incomplete applications</p>
+      </div>
+
+      <div className="card-body">
+        <CustomTable columns={columns} data={data} />
+      </div>
+    </div>
   );
 }
 
